@@ -1,0 +1,40 @@
+<!-- /UDAC-FED-WPwJS-PixelArtMaker/project-pixel-art-maker-starter-WF-John Kelley/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Necessary meta tags, including viewport -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    <!-- Boostrap CSS.  See: https://getbootstrap.com/docs/4.0/getting-started/download/ -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- Font Awesome SVG & JS 5.1.0 link See: https://fontawesome.com/how-to-use/on-the-web/setup/getting-started?using=svg-with-js -->
+    <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js" integrity="sha384-3LK/3kTpDE/Pkp8gTNp2gR/2gOiwQ6QaO7Td0zV76UFJVhqLl4Vl3KL1We6q6wR9" crossorigin="anonymous"></script>
+    <!-- UDAC project-supplied stylesheet providing Google fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monoton">
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <title>Pixel Art Maker!</title>
+</head>
+<body>
+    <h1>Pixel Art Maker</h1>
+
+    <h2>Choose Grid Size</h2>
+    <form id="sizePicker">
+        Grid Height:
+        <input type="number" id="inputHeight" name="height" min="1" value="1">
+        Grid Width:
+        <input type="number" id="inputWidth" name="width" min="1" value="1">
+        <button type="button" id="sizePickerSubmitButton">Submit</button>
+    </form>
+
+    <h2>Pick A Color</h2>
+    <input type="color" id="colorPicker" value="#000000">
+
+    <h2>Design Canvas</h2>
+    <table id="pixelCanvas">
+    </table>
+
+    <script src="rules.js"></script>
+</body>
+</html>
