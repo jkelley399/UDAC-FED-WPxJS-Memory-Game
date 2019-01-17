@@ -1,4 +1,4 @@
-<!-- /UDAC-FED-WPwJS-PixelArtMaker/project-pixel-art-maker-starter-WF-John Kelley/index.html -->
+<!-- /Users/johnkelley/Desktop/T/UDAC/UN-FED/A1-UN-FED-2017/A1-UN-FED-2017-PROJECTS/WPwJS-JK Memory Game/index.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,18 +6,87 @@
     <!-- Necessary meta tags, including viewport -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
-    <!-- Boostrap CSS.  See: https://getbootstrap.com/docs/4.0/getting-started/download/ -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <!-- Font Awesome SVG & JS 5.1.0 link See: https://fontawesome.com/how-to-use/on-the-web/setup/getting-started?using=svg-with-js -->
+    <!-- Boostrap CSS.  See: https://getbootstrap.com/ -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- Font Awesome SVG & JS 5.1.0 link See: https://fontawesome.com/how-to-use/on-the-web/setup/getting-started?using=svg-with-js -->
     <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js" integrity="sha384-3LK/3kTpDE/Pkp8gTNp2gR/2gOiwQ6QaO7Td0zV76UFJVhqLl4Vl3KL1We6q6wR9" crossorigin="anonymous"></script>
     <!-- UDAC project-supplied stylesheet providing Google fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Monoton">
     <!-- Local CSS -->
     <link rel="stylesheet" href="styles.css">
-    <title>Pixel Art Maker!</title>
+    <title>UDAC-FED-Projects-Memory Game</title>
 </head>
 <body>
-    <h1>Pixel Art Maker</h1>
+    <div class="container">
+        <section id="pre-game">
+            <div class="row pre-game-header col-12 m-2 justify-content-center">
+                <h1>Welcome to the Memory Game</h1>
+            </div>
+            <div class="row col-12 m-2 justify-content-center">
+                <button id="pre-game-button" class="btn-outline-primary" type="submit">Would you like to play?</button>
+            </div>
+        </section>
+        <section id="banner">
+            <div class="row banner-header col-12 m-2 justify-content-center">
+                <h1>Memory Game</h1>
+            </div>
+            <section id="board">
+                <div class="row four-cards justify-content-center">
+                    <div class="card col-2 m-1">
+                        w
+                    </div>
+                    <div class="card col-2 m-1">
+                        x
+                    </div>
+                    <div class="card col-2 m-1">
+                        y
+                    </div>
+                    <div class="card col-2 m-1">
+                        z
+                    </div>
+                </div>
+        </section>
+            <div class="row post-game-header col-12 m-2 justify-content-center">
+                <h1>Thanks for playing the Memory Game</h1>
+                <h2>Hope you had fun!</h2>
+            </div>
+        </section>
+        <section id="contact-information" class="col-12 m-2 p-2">
+            <footer>
+                <div class="row justify-content-center" id="jk-contact-info">
+                        <a href="https://github.com/jkelley399">
+                            <i class="fab fa-4x m-2 px-3 fa-github"></i>
+                        </a>
+                        <a href="https://twitter.com/jkelley399">
+                            <i class="fab fa-4x m-2 px-3 fa-twitter"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/john-kelley-a274a58/">
+                            <i class="fab fa-4x m-2 px-3 fa-linkedin-in"></i>
+                        </a>
+                        <a href="mailto:jkelley@399innovation.com">
+                            <i class="fas fa-4x m-2 px-3 fa-envelope"></i>
+                        </a>
+                </div>
+                <div class="row mr-2 justify-content-end" id=copyright-notice>© 2019 John Kelley</div>
+                <div class="row ml-1 return-to-top">
+                    <a class="nav-link" href="#banner">Return to Top</a>
+                </div>
+            </footer>
+        </section>
+    </div>
+<!-- Local JS -->
+<script src="rules.js"></script>
+<!-- Boostrap jQuery, Popper.js, Boostrap jQuery plugins (in order) -->
+<!-- See: https://getbootstrap.com/ -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+
+</body>
+</html>
+
+<!--OLD PIXEL ART MAKER CODE PIECES
 
     <h2>Choose Grid Size</h2>
     <form id="sizePicker">
@@ -35,6 +104,4 @@
     <table id="pixelCanvas">
     </table>
 
-    <script src="rules.js"></script>
-</body>
-</html>
+-->

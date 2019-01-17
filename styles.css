@@ -1,42 +1,52 @@
-body {
-    text-align: center;
-}
+/*1. Universal*/
 
-h1 {
-    font-family: Monoton;
-    font-size: 70px;
-    margin: 0.2em;
-}
+/*2. Document*/
+
+/*3. Meta Data*/
+
+/*4. Sectioning and Structuring*/
+
+/*5. Headings*/
 
 h2 {
-    margin: 1em 0 0.25em;
+    color: #44728b;
 }
 
-h2:first-of-type {
-    margin-top: 0.5em;
+/*6. Lists*/
+
+/*7. Media*/
+
+/*8. Forms*/
+
+/*9. Tables*/
+
+/*10. Phrasing*/
+
+/*11. Misc*/
+
+/*12. Attributes*/
+
+/*12(a). .class*/
+
+/*12(b). #id*/
+
+/*12(c). Other*/
+
+.board {
 }
 
-table,
-tr,
-td {
-    border: 1px solid black;
-}
-
-table {
-    border-collapse: collapse;
-    margin: 0 auto;
-}
-
-tr {
-    height: 20px;
-}
-
-td {
-    width: 20px;
-}
-
-input[type=number] {
-    width: 6em;
+.four-cards {
 }
 
 
+
+
+
+/*Notes:
+
+1.  Experimenting with trying to follow ordering in
+"How to Order CSS Selectors,"
+https://meiert.com/en/blog/how-to-order-css-selectors/
+
+2.  Although using Bootstrap, am leaving in
+@include media-breakpoints for future reference.*/
