@@ -1,5 +1,7 @@
 UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted
 
+Besides reviewing FED lessons, my answers to FED exercises, and my previous projects, I consulted the following additonal references in completing this project:
+
 Bootstrap
 https://getbootstrap.com/
 https://getbootstrap.com/docs/4.0/utilities/colors/
@@ -8,13 +10,15 @@ https://getbootstrap.com/docs/4.0/utilities/colors/
 CSS
 
 
-
 HTML
-
 
 
 JavaScript
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
+https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
+https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
+
 
 
 Font Awesome
@@ -22,6 +26,11 @@ Font Awesome
 
 
 Unicode C Normalization Forms
+
+
+StackOverflow
+https://stackoverflow.com/questions/36635392/how-to-appendchildelement-many-times-the-same-element
+https://stackoverflow.com/questions/1826735/how-do-i-prevent-div-tag-starting-a-new-line
 
 
 Other
