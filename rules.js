@@ -29,7 +29,16 @@
     Decided to use DocumentFragment, but it took me a while to figure out for loops.
     Started working on makeCards()
 
+2019-01-20:
+    feat created randomIntInRange(minInt, maxInt) & modified startGame()
+
+    added randomizing ranks and suits to cards in startGame()
+
     TODO:
+    1.  Need to add constraints to the random selection, so that
+        A.  Will always have two cards that will "match"
+        B.  Cannot have duplicates of the same cards
+            (i) E.g., only one AS per board
     1.  board object
         A.  CREATE CONTENTS OF BOARD USING LOOPS
         B.  enhance project by choosing randomly from standard card deck
@@ -48,12 +57,32 @@ const suits = ['C', 'D', 'H', 'S'];
 const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2','Joker',]
 let cards = '';
 
-function makeCards () {
+function makeCards() {
     for (let i = 0; i < 4; i++) {
         cards += suits[i];
     }
     console.log(cards);
 }
+
+// NOTE: This function is based on getRandomInt(max) in MDN - see references for Math.random()
+// TODO: Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
+//       Add fixes (if maxInt < minInt, then switch)
+
+function randomIntInRange(minInt, maxInt) { //input, two integers
+    // If either parameter is not an integer, its floor value != origiinal parameter
+    let floorMinInt = Math.floor(minInt);
+    let floorMaxInt = Math.floor(maxInt);
+    deltInt = floorMaxInt - floorMinInt;
+    // Expected output integer from minInt to (maxInt -1)
+    return (floorMinInt + Math.floor(Math.random() * Math.floor(deltInt)));
+    console.log(deltInt);
+}
+
+// uses suits.length, because randomIntInRange ranges over first-last index of array
+// let suitsRandom = suits[randomIntInRange(0,suits.length)];
+// use ranks.length, because randomIntInRange ranges over first-last index of array
+// let ranksRandom = ranks[randomIntInRange(0,ranks.length)];
+
 // TODO: create constants --- height; width; possible (playing) cards (nested for loops)
 
 let board = {
@@ -80,8 +109,14 @@ let board = {
     for (let i = 0; i < 4; i++) {
         let newFourCardHtml = '';
         for (let j = 0; j < 4; j++) {
+            // uses suits.length, because randomIntInRange ranges over
+            // first-last index of array
+            let suitsRandom = suits[randomIntInRange(0,suits.length)];
+            // use ranks.length, because randomIntInRange ranges over
+            //first-last index of array
+            let ranksRandom = ranks[randomIntInRange(0,ranks.length)];
             const newCardHtml = '<div class="card col-2 m-1">'
-                                + i + j + '</div>';
+                                + ranksRandom + suitsRandom + '</div>';
             newFourCardHtml += newCardHtml;
         }
 
