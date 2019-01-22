@@ -34,16 +34,28 @@
 
     added randomizing ranks and suits to cards in startGame()
 
+2019-01-21:
+    feat startGame produces matching cards & fixed makeCards
+
+    startGame now produces 8x2 matching cards, not 16 random cards
+    fixed makeCards to use forEach instead of for loops
+    added new doubleArray function (took a while to figure out)
+
     TODO:
-    1.  Need to add constraints to the random selection, so that
+    1.  DONE: Check on whether really using makeCards()
+    2.  Start adding play functionality
+    3.  Add styling
+    4.  Add "hiding" of different pages
+    5.  Figure out how to move the functions into methods
+    6.  DONE: Need to add constraints to the random selection, so that
         A.  Will always have two cards that will "match"
         B.  Cannot have duplicates of the same cards
             (i) E.g., only one AS per board
-    1.  board object
+    7.  board object
         A.  CREATE CONTENTS OF BOARD USING LOOPS
         B.  enhance project by choosing randomly from standard card deck
-    2.  card object
-    3.  FUTURE
+    8.  card object
+    9.  FUTURE
         A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
 */
 
@@ -53,15 +65,37 @@ const boardFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const playInputNew = document.querySelector('#pre-game-button');
 const targetDiv = document.querySelector('#board');
+const numberCards = 16;
+const dimensions = Math.sqrt(numberCards);
+
+// function makeCardsOld() {
+//     for (let i = 0; i < 4; i++) {
+//         for (let j = 0; j < 13; i++) {
+//         cards.push(suits[i]+ranks[j]);
+//         }
+//     }
+// }
+
 const suits = ['C', 'D', 'H', 'S'];
-const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2','Joker',]
-let cards = '';
+const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2']
+let cards = [];
 
 function makeCards() {
-    for (let i = 0; i < 4; i++) {
-        cards += suits[i];
-    }
+    suits.forEach(function(suit) {
+        ranks.forEach(function(rank) {
+            let card = rank + suit;
+            cards.push(card);
+        });
+    });
     console.log(cards);
+}
+
+
+function doubleArray(x) {
+    x.forEach(function(value) {
+        x.push(value);
+    });
+    return x;
 }
 
 // NOTE: This function is based on getRandomInt(max) in MDN - see references for Math.random()
@@ -103,33 +137,90 @@ let board = {
      }
  };
 
- function startGame() {
-    // console.log("board.startGameSimple() called");
+//TODO: Get this to work with 8 matching cards, instead of 16 random cards
+function startGame() {
     makeCards();
-    for (let i = 0; i < 4; i++) {
-        let newFourCardHtml = '';
-        for (let j = 0; j < 4; j++) {
-            // uses suits.length, because randomIntInRange ranges over
-            // first-last index of array
-            let suitsRandom = suits[randomIntInRange(0,suits.length)];
-            // use ranks.length, because randomIntInRange ranges over
-            //first-last index of array
-            let ranksRandom = ranks[randomIntInRange(0,ranks.length)];
-            const newCardHtml = '<div class="card col-2 m-1">'
-                                + ranksRandom + suitsRandom + '</div>';
-            newFourCardHtml += newCardHtml;
-        }
+    // using chosenCards to (a) avoid duplication and (b) create set for duplication
+    let remainingCards = cards;
+    let chosenCards = [];
+    let removedCards = [];
 
+    for (let h = 0; h < (dimensions * 2); h++) {
+        // uses remainingCards.length, because randomIntInRange ranges over
+        // first-last index of array
+        let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
+        let cardRandomIndex = remainingCards.indexOf(cardRandom);
+        removedCard = remainingCards.splice(cardRandomIndex, 1);
+        removedCards.push(removedCard[0]);
+    }
+
+    let cardsSubset = doubleArray(removedCards);
+
+    console.log(cardsSubset);
+
+    let displayedCards = [];
+
+    for (let i = 0; i < dimensions; i++) {
+        let newDimensionsCardHtml = '';
+        for (let j = 0; j < dimensions; j++) {
+            // uses cardsSubset.length, because randomIntInRange ranges over
+            // first-last index of array
+            let cardSubsetRandom = cardsSubset[randomIntInRange(0,cardsSubset.length)];
+            let cardSubsetIndex = cardsSubset.indexOf(cardSubsetRandom);
+            displayCard = cardsSubset.splice(cardSubsetIndex, 1);
+            displayedCards.push(displayCard);
+
+            const newCardHtml = '<div class="card col-2 m-1">'+ cardSubsetRandom + '</div>';
+            newDimensionsCardHtml += newCardHtml;
+        }
         const newRowDiv = document.createElement('div');
         boardFragment.appendChild(newRowDiv);
         const newRowHtml =  '<div class="row four-cards justify-content-center">' +
-                            newFourCardHtml + '</div>';
+                            newDimensionsCardHtml + '</div>';
         newRowDiv.innerHTML = newRowHtml;
     }
     targetDiv.appendChild(boardFragment);
  }
 
 playInput.addEventListener('click', startGame);
+
+// function startGameOld() {
+//     makeCards();
+//     // using chosenCards to (a) avoid duplication and (b) create set for duplication
+//     let remainingCards = cards;
+//     let chosenCards = [];
+//     let removedCards = [];
+//     for (let i = 0; i < dimensions; i++) {
+//         let newDimensionsCardHtml = '';
+//         for (let j = 0; j < dimensions; j++) {
+//             // uses remainingCards.length, because randomIntInRange ranges over
+//             // first-last index of array
+//             console.log("remainingCards.length is  " + remainingCards.length);
+//             let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
+//             console.log("cardRandom is  " + cardRandom);
+//             console.log("remainingCards.length is  " + remainingCards.length);
+//             let cardRandomIndex = remainingCards.indexOf(cardRandom);
+//             console.log("cardRandomIndex is  " + cardRandomIndex);
+//             removedCard = remainingCards.splice(cardRandomIndex, 1);
+//             removedCards.push(removedCard);
+//             console.log("after splice, remainingCards.length is now " + remainingCards.length);
+//             console.log("remainingCards are " + remainingCards);
+//             console.log("after splice, removedCards.length is now " + removedCards.length);
+//             console.log("removedCards are " + removedCards);
+//             // let remainingCards = 1;// TODO: figure this out
+
+//             const newCardHtml = '<div class="card col-2 m-1">'+ cardRandom + '</div>';
+//             newDimensionsCardHtml += newCardHtml;
+//         }
+//         const newRowDiv = document.createElement('div');
+//         boardFragment.appendChild(newRowDiv);
+//         const newRowHtml =  '<div class="row four-cards justify-content-center">' +
+//                             newDimensionsCardHtml + '</div>';
+//         newRowDiv.innerHTML = newRowHtml;
+//     }
+//     targetDiv.appendChild(boardFragment);
+//  }
+
 
 // OLD WIP CODE BELOW
 
