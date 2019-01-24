@@ -35,15 +35,27 @@
     added randomizing ranks and suits to cards in startGame()
 
 2019-01-21:
-    feat startGame produces matching cards & fixed makeCards
+    feat startGame produces matching cards; fixed makeCards
 
     startGame now produces 8x2 matching cards, not 16 random cards
     fixed makeCards to use forEach instead of for loops
     added new doubleArray function (took a while to figure out)
+    Updated TODO to include play functionality, styling, hiding, etc.
+
+2019-01-23:
+    fix got the mouseover eventListener to finally work
+
+    Problem was that I had the wrong target (adding to to board).
+    Solution was to add it to targetDiv
+    New issue will be to get it to only work on individual cards,
+    because it's currently working on entire rows.
 
     TODO:
+    0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
     2.  Start adding play functionality
+        A.  ***REVIEW EVENT DELEGATION
+        B.  Fix the the mouseover eventListener to work only on individual cards, now rows
     3.  Add styling
     4.  Add "hiding" of different pages
     5.  Figure out how to move the functions into methods
@@ -57,13 +69,13 @@
     8.  card object
     9.  FUTURE
         A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
+        B.  Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
 */
 
 // TODO: revise to add spot for changing three screens - will be container
 const playInput = document.querySelector('#pre-game-button');
 const boardFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
-const playInputNew = document.querySelector('#pre-game-button');
 const targetDiv = document.querySelector('#board');
 const numberCards = 16;
 const dimensions = Math.sqrt(numberCards);
@@ -112,6 +124,10 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
     console.log(deltInt);
 }
 
+function onMouseoverCard(evt) {
+    console.log("The mouse entered a card:" + evt.target.textContent);
+}
+
 // uses suits.length, because randomIntInRange ranges over first-last index of array
 // let suitsRandom = suits[randomIntInRange(0,suits.length)];
 // use ranks.length, because randomIntInRange ranges over first-last index of array
@@ -120,7 +136,7 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
 // TODO: create constants --- height; width; possible (playing) cards (nested for loops)
 
 let board = {
-     state: "neutral", //initial, pre, trans, post; re state of game
+     state: "preBoard", //preBoard, transBoard, postBoard; re state of game
      // messages: ["First message.", "Second message.", "Third message."],
 
      startGame: function strtGm() {
@@ -137,6 +153,8 @@ let board = {
      }
  };
 
+console.log("1st board.state is " + board.state);
+
 //TODO: Get this to work with 8 matching cards, instead of 16 random cards
 function startGame() {
     makeCards();
@@ -148,6 +166,7 @@ function startGame() {
     for (let h = 0; h < (dimensions * 2); h++) {
         // uses remainingCards.length, because randomIntInRange ranges over
         // first-last index of array
+        // TODO Turn the "let cardRandom = remainingCards..." processes in a function
         let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
         let cardRandomIndex = remainingCards.indexOf(cardRandom);
         removedCard = remainingCards.splice(cardRandomIndex, 1);
@@ -180,9 +199,25 @@ function startGame() {
         newRowDiv.innerHTML = newRowHtml;
     }
     targetDiv.appendChild(boardFragment);
+    board.state = "transBoard";
+    console.log("2nd board.state is " + board.state);
  }
 
 playInput.addEventListener('click', startGame);
+
+// 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
+targetDiv.addEventListener('mouseover', onMouseoverCard);
+
+
+// TODO: Fix error that occurs when I have the following at 197 ---
+//      Tried to move inside the startGame function didn't work either.
+//      Tried inside an IF that tests for existence of new divs, but didn't work either
+// if (board.state = "transBoard") {
+//     board.addEventListener('mouseover', onMouseoverCard);
+// };
+//         Thesis - look for help
+
+// ****TODO*** board.addEventListener('mouseover', onMouseoverCard);
 
 // function startGameOld() {
 //     makeCards();

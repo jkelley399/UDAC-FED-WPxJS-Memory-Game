@@ -14,15 +14,20 @@ HTML
 
 
 JavaScript
+https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
+https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
-https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
+https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events
 
 Font Awesome
 
@@ -34,12 +39,15 @@ Unicode C Normalization Forms
 StackOverflow
 https://stackoverflow.com/questions/36635392/how-to-appendchildelement-many-times-the-same-element
 https://stackoverflow.com/questions/1826735/how-do-i-prevent-div-tag-starting-a-new-line
+https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-why-does-this-error-occur
 
 
 Other
 
 "How to Order CSS Selectors,"
 https://meiert.com/en/blog/how-to-order-css-selectors/
+"The Basics of DOM Manipulation in Vanilla JavaScript (No jQuery)"
+https://www.sitepoint.com/dom-manipulation-vanilla-javascript-no-jquery/
 
 
 
