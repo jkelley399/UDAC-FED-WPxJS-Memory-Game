@@ -16,7 +16,9 @@ HTML
 JavaScript
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
-https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
+https://developer.mozilla.org/en-US/docs/Web/API/Element
+https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount

@@ -50,6 +50,21 @@
     New issue will be to get it to only work on individual cards,
     because it's currently working on entire rows.
 
+2019-01-25:
+    feat syntax & simple tests to discriminate cards from rows of cards
+
+    Key is to use the textContent of divs that can be single card or groups of cards
+    First use is simply in console.log statements:
+
+    if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
+        console.log("The mouse is mouseOver a div that is a card.");
+    } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
+        console.log("The mouse is mouseOver a div that is a row of cards.");
+    } else {
+        console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
+    }
+
+
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
@@ -124,8 +139,25 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
     console.log(deltInt);
 }
 
+// 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
+// To do this, can experiment with an if/else statement for different responses
+// depending on the characteristics of the div
+// But remember to look at the lesson about capitalization
+// See: "The nodeName's Capitalization" in
+// https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/85463be2-3206-434e-aa39-4604965daa29
 function onMouseoverCard(evt) {
-    console.log("The mouse entered a card:" + evt.target.textContent);
+    console.log("The textContent of evt.target is: " + evt.target.textContent);
+    console.log("The textContent.length of evt.target is: "
+        + evt.target.textContent.length);
+    console.log("The nodeName of evt.target is: " + evt.target.nodeName);
+    console.log("The Node.firstChild of evt.target is: " + evt.target.firstChild);
+    if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
+        console.log("The mouse is mouseOver a div that is a card.");
+    } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
+        console.log("The mouse is mouseOver a div that is a row of cards.");
+    } else {
+        console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
+    }
 }
 
 // uses suits.length, because randomIntInRange ranges over first-last index of array
