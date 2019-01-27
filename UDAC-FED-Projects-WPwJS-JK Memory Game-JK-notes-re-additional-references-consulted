@@ -18,6 +18,9 @@ https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 https://developer.mozilla.org/en-US/docs/Web/API/Element
+https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
@@ -46,6 +49,8 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+"Node properties: type, tag and contents"
+https://javascript.info/basic-dom-node-properties
 "How to Order CSS Selectors,"
 https://meiert.com/en/blog/how-to-order-css-selectors/
 "The Basics of DOM Manipulation in Vanilla JavaScript (No jQuery)"

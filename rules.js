@@ -42,7 +42,7 @@
     added new doubleArray function (took a while to figure out)
     Updated TODO to include play functionality, styling, hiding, etc.
 
-2019-01-23:
+2019-01-23:ds
     fix got the mouseover eventListener to finally work
 
     Problem was that I had the wrong target (adding to to board).
@@ -63,15 +63,49 @@
     } else {
         console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
     }
+2019-01-26:
+    feat simple animation as part of mouseOver
 
-
+    Had modest success with a "dancing" pattern using a series of x && y transforms
+        evt.target.animate([
+            // keyframes
+            {transform: 'translateX(-15px)'},
+            {transform: 'translateY(-15px)'},
+            {transform: 'translateX(30px)'},
+            {transform: 'translateY(30px)'},
+            {transform: 'translateX(-30px)'},
+            {transform: 'translateY(-15px)'},
+            {transform: 'translateX(15px)'},
+        ], {
+            //timing
+            delay: 200,
+            //direction: 'alternate',
+            duration: 5000,
+            iterations: 1
+        });
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
     2.  Start adding play functionality
-        A.  ***REVIEW EVENT DELEGATION
-        B.  Fix the the mouseover eventListener to work only on individual cards, now rows
+        A.  DONE: REVIEW EVENT DELEGATION
+        B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
     3.  Add styling
+        A.  Example has
+            (i) Pre-guess
+                (a) X && Y color gradations on borders
+                (b) black face down cards
+                (c) background color and icons on face up cards
+            (ii) First click
+                (a) background color of the card changes to blue when it's been clicked
+            (iii) Correct guess
+                (a) two cards expand and contract diagonally
+            (iv) Incorrect guess
+                (a) background color of both cards changes to red
+                (b) two cards shake side to side
+            (v) Winning game
+                (a) page changes, "Congratulations," etc.
+        B.  DONE: REVIEW JS ANIMATION
+        C.  REVIEW COLOR STYLING WITH BOOTSTRAP
     4.  Add "hiding" of different pages
     5.  Figure out how to move the functions into methods
     6.  DONE: Need to add constraints to the random selection, so that
@@ -107,6 +141,8 @@ const suits = ['C', 'D', 'H', 'S'];
 const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2']
 let cards = [];
 
+
+// This function generates cards by iterating over suit and rank
 function makeCards() {
     suits.forEach(function(suit) {
         ranks.forEach(function(rank) {
@@ -117,7 +153,7 @@ function makeCards() {
     console.log(cards);
 }
 
-
+// This function takes an array as input and then doubles it [x,y,z] -> [x,y,z,x,y,z]
 function doubleArray(x) {
     x.forEach(function(value) {
         x.push(value);
@@ -151,8 +187,28 @@ function onMouseoverCard(evt) {
         + evt.target.textContent.length);
     console.log("The nodeName of evt.target is: " + evt.target.nodeName);
     console.log("The Node.firstChild of evt.target is: " + evt.target.firstChild);
+    //OPTIONAL: Add tests here if desired, e.g., test whether
+    //          (a) textContent has acceptable syntax, using regex
+    //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
         console.log("The mouse is mouseOver a div that is a card.");
+        //TODO: Add a color transformation on evt.target, preferably with bootstrap
+        evt.target.animate([
+            // keyframes
+            {transform: 'translateX(-15px)'},
+            {transform: 'translateY(-15px)'},
+            {transform: 'translateX(30px)'},
+            {transform: 'translateY(30px)'},
+            {transform: 'translateX(-30px)'},
+            {transform: 'translateY(-15px)'},
+            {transform: 'translateX(15px)'},
+        ], {
+            //timing
+            delay: 200,
+            //direction: 'alternate',
+            duration: 5000,
+            iterations: 1
+        });
     } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
         console.log("The mouse is mouseOver a div that is a row of cards.");
     } else {
