@@ -23,17 +23,19 @@ h2 {
 /*10. Phrasing*/
 
 /*11. Misc*/
-
 /*12. Attributes*/
 
 /*12(a). .class*/
 
 /*12(b). #id*/
 
+#board {
+    background: radial-gradient(#ddd, #0076ff, #333)
+}
+
+
 /*12(c). Other*/
 
-.board {
-}
 
 /*.card {
     display: inline;

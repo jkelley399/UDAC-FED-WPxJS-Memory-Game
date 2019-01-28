@@ -83,6 +83,12 @@
             duration: 5000,
             iterations: 1
         });
+2019-01-27:
+    feat simple gradients on boaders && face down
+
+    WIP: onMouseClick(evt) with several helper functions
+    NOTE: so far, couldn't get bootstrap _variables.scss to work
+
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
@@ -92,8 +98,9 @@
     3.  Add styling
         A.  Example has
             (i) Pre-guess
-                (a) X && Y color gradations on borders
+                (a) X && Y color gradients on borders
                 (b) black face down cards
+                    NOTE: Have white face down cards at present
                 (c) background color and icons on face up cards
             (ii) First click
                 (a) background color of the card changes to blue when it's been clicked
@@ -105,7 +112,13 @@
             (v) Winning game
                 (a) page changes, "Congratulations," etc.
         B.  DONE: REVIEW JS ANIMATION
-        C.  REVIEW COLOR STYLING WITH BOOTSTRAP
+        C.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
+        D.  WIP RE STYLING
+            (i) Pre-guess
+                (a) DONE: X && Y color gradients on borders
+                (b) DONE: black face down cards
+                    NOTE: Have white face down cards at present
+
     4.  Add "hiding" of different pages
     5.  Figure out how to move the functions into methods
     6.  DONE: Need to add constraints to the random selection, so that
@@ -119,6 +132,7 @@
     9.  FUTURE
         A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
         B.  Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
+        C.  Figure out how to use Bootstrap with Sass options --> see Medium article
 */
 
 // TODO: revise to add spot for changing three screens - will be container
@@ -182,38 +196,125 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
 // See: "The nodeName's Capitalization" in
 // https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/85463be2-3206-434e-aa39-4604965daa29
 function onMouseoverCard(evt) {
-    console.log("The textContent of evt.target is: " + evt.target.textContent);
-    console.log("The textContent.length of evt.target is: "
-        + evt.target.textContent.length);
-    console.log("The nodeName of evt.target is: " + evt.target.nodeName);
-    console.log("The Node.firstChild of evt.target is: " + evt.target.firstChild);
+    // console.log("The textContent of evt.target is: " + evt.target.textContent);
+    // console.log("The textContent.length of evt.target is: "
+    //     + evt.target.textContent.length);
+    // console.log("The nodeName of evt.target is: " + evt.target.nodeName);
+    // console.log("The Node.firstChild of evt.target is: " + evt.target.firstChild);
+    // console.log("The innerHTML of evt.target is: " + evt.target.innerHTML);
+    // console.log("The outerHTML of evt.target is: " + evt.target.outerHTML);
     //OPTIONAL: Add tests here if desired, e.g., test whether
     //          (a) textContent has acceptable syntax, using regex
     //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        console.log("The mouse is mouseOver a div that is a card.");
+        // console.log("mouseOver a card div");
+        console.log("");
         //TODO: Add a color transformation on evt.target, preferably with bootstrap
-        evt.target.animate([
-            // keyframes
-            {transform: 'translateX(-15px)'},
-            {transform: 'translateY(-15px)'},
-            {transform: 'translateX(30px)'},
-            {transform: 'translateY(30px)'},
-            {transform: 'translateX(-30px)'},
-            {transform: 'translateY(-15px)'},
-            {transform: 'translateX(15px)'},
-        ], {
-            //timing
-            delay: 200,
-            //direction: 'alternate',
-            duration: 5000,
-            iterations: 1
-        });
+
+        // 2019-01-27: For time being, commenting out animation
+        // evt.target.animate([
+        //     // keyframes
+        //     {transform: 'translateX(-15px)'},
+        //     {transform: 'translateY(-15px)'},
+        //     {transform: 'translateX(30px)'},
+        //     {transform: 'translateY(30px)'},
+        //     {transform: 'translateX(-30px)'},
+        //     {transform: 'translateY(-15px)'},
+        //     {transform: 'translateX(15px)'},
+        // ], {
+        //     //timing
+        //     delay: 200,
+        //     //direction: 'alternate',
+        //     duration: 5000,
+        //     iterations: 1
+        // });
     } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
-        console.log("The mouse is mouseOver a div that is a row of cards.");
+        // console.log("mouseOver a row-of-cards div");
+        console.log("");
     } else {
-        console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
+        // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
+        console.log("");
     }
+}
+
+// Helper function for cardMatchSetupError
+function cardMatchSetupError(evt) {
+}
+
+// Helper function for numberCardsClickedQuery
+function cardMatchSetupError(evt) {
+}
+
+//Helper function to whether two cards
+//Parameters are two strings
+function doCardsMatchQuery (vc1, vc2) {
+    let valueCard1 = vc1;
+    let valueCard2 = vc2;
+    if (valueCard1 == valueCard2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Helper function to turn text-white to text-dark
+function textWhiteToTextDark (evt) {
+    let str = "text-white";
+    let sti = "text-dark";
+}
+
+// Helper function for cardsDoMatch alternative
+function cardsDoMatch (evt) {
+}
+
+// Helper function for cardsDoNotMatch alternative
+function cardsDoNotMatch (evt) {
+}
+
+/*
+CURRENT WORKING HYPOTHESIS: Pseudo ketch of onMouseClick
+
+if error in setup, return setup error
+
+if only one card clicked, wait for second card to be clicked
+
+if second clicked card matches first clicked card, return match function
+
+
+
+*/
+
+
+//TODO: THE FOLLOWING IS A MESS; NEED TO STRAIGHTEN EVERYTHING OUT WITH HELPER FUNCTIONS
+function onMouseClick(evt) {
+    // TODO: Will not need these once helper functions working
+    let str = "text-white";
+    let sti = "text-dark";
+
+
+    console.log("evt.target.nodeName is: " + evt.target.nodeName);
+    console.log("evt.target.outerHTML is: " + evt.target.outerHTML)
+    console.log("evt.target.innerHTML is: " + evt.target.innerHTML);
+    console.log("evt.target.textContent is: " + evt.target.textContent)
+
+    if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "notClicked")) {
+        evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
+        board.firstCardState = "clicked";
+        board.firstCardCardValue = evt.target.textContent;
+    }
+
+    //TODO: TEMPORARILY COMMENTING THE REST OUT -- JUST TO SEE WHAT WORKS AT PRESENT
+    // } else if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "clicked")) {
+
+    // else if (evt.target.outerHTML.includes(sti)) {
+    //     evt.target.outerHTML = evt.target.outerHTML.replace(sti, str);
+    // }else {
+    //     // console.log("evt.target.outerHTML.includes neither text-white nor text-dark");
+    //     board.nMouseClickTextColorError = 1;
+    //     console.log("");
+    // }
+
+    // if ()
 }
 
 // uses suits.length, because randomIntInRange ranges over first-last index of array
@@ -224,8 +325,16 @@ function onMouseoverCard(evt) {
 // TODO: create constants --- height; width; possible (playing) cards (nested for loops)
 
 let board = {
-     state: "preBoard", //preBoard, transBoard, postBoard; re state of game
+     boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
      // messages: ["First message.", "Second message.", "Third message."],
+
+     // state information about cards being clicked and clickCount stored in board object
+     firstCardState: "notClicked", //notClicked, clicked,
+     firstCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
+     secondCardState: "notClicked", //notClicked, clicked,
+     secondCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
+     clickCount: 0, // 0, 1
+     onMouseClickTextColorError: 0, // 0, 1
 
      startGame: function strtGm() {
         console.log("board.startGame() called");
@@ -241,7 +350,7 @@ let board = {
      }
  };
 
-console.log("1st board.state is " + board.state);
+console.log("1st board.boardState is " + board.boardState);
 
 //TODO: Get this to work with 8 matching cards, instead of 16 random cards
 function startGame() {
@@ -277,7 +386,7 @@ function startGame() {
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
 
-            const newCardHtml = '<div class="card col-2 m-1">'+ cardSubsetRandom + '</div>';
+            const newCardHtml = '<div class="card border border-dark text-center text-white col-2 m-1">'+ cardSubsetRandom + '</div>';
             newDimensionsCardHtml += newCardHtml;
         }
         const newRowDiv = document.createElement('div');
@@ -287,8 +396,8 @@ function startGame() {
         newRowDiv.innerHTML = newRowHtml;
     }
     targetDiv.appendChild(boardFragment);
-    board.state = "transBoard";
-    console.log("2nd board.state is " + board.state);
+    board.boardState = "transBoard";
+    console.log("2nd board.boardState is " + board.boardState);
  }
 
 playInput.addEventListener('click', startGame);
@@ -296,11 +405,13 @@ playInput.addEventListener('click', startGame);
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
 targetDiv.addEventListener('mouseover', onMouseoverCard);
 
+targetDiv.addEventListener('click', onMouseClick);
+
 
 // TODO: Fix error that occurs when I have the following at 197 ---
 //      Tried to move inside the startGame function didn't work either.
 //      Tried inside an IF that tests for existence of new divs, but didn't work either
-// if (board.state = "transBoard") {
+// if (board.boardState = "transBoard") {
 //     board.addEventListener('mouseover', onMouseoverCard);
 // };
 //         Thesis - look for help
