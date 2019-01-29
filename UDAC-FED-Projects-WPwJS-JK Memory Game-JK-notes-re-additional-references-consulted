@@ -26,6 +26,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming/direction
 https://developer.mozilla.org/en-US/docs/Web/API/Element
 https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
+https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML#Notes
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 https://developer.mozilla.org/en-US/docs/Web/API/Node
@@ -36,6 +37,7 @@ https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
@@ -59,6 +61,10 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+https://stackoverflow.com/questions/36622784/in-javascript-why-does-setting-outerhtml-on-an-element-set-its-parentnode-to-n
+"Bootstrap 4 colors"
+"Hex to RGB Color Conversion"
+https://www.rapidtables.com/convert/color/hex-to-rgb.html
 "Node properties: type, tag and contents"
 https://javascript.info/basic-dom-node-properties
 "How to Order CSS Selectors,"

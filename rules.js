@@ -84,10 +84,25 @@
             iterations: 1
         });
 2019-01-27:
-    feat simple gradients on boaders && face down
+    feat simple gradients on boaders && card face down
 
     WIP: onMouseClick(evt) with several helper functions
     NOTE: so far, couldn't get bootstrap _variables.scss to work
+
+2019-01-28--29:
+    fix wrestling with evt.target.outerHTML w some success
+
+    WIP: rewriting onMouseClick(evt) w helper functions failed
+    DISC: learned that when using Element.outerHTML,
+    " while the element will be replaced in the document,
+    the variable whose outerHTML property was set will still hold
+    a reference to the original element:..."
+    See: https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML#Notes
+    So, basically wasted a lot of time creating the helper functions,
+    at least those relying upon Element.outerHTML.
+
+    NOTE: did, however, get the right color values to match Bootstrap 4
+    using Chrome Developer Tools
 
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
@@ -100,7 +115,7 @@
             (i) Pre-guess
                 (a) X && Y color gradients on borders
                 (b) black face down cards
-                    NOTE: Have white face down cards at present
+                    NOTE: Have pseudo-Bootstrap-info face down cards at present
                 (c) background color and icons on face up cards
             (ii) First click
                 (a) background color of the card changes to blue when it's been clicked
@@ -237,17 +252,38 @@ function onMouseoverCard(evt) {
     }
 }
 
-// Helper function for cardMatchSetupError
-function cardMatchSetupError(evt) {
+//Helper function for cardMatchSetupError
+function cardMatchSetupError() {
+    console.log("In cardMatchSetupError(evt)");
 }
 
-// Helper function for numberCardsClickedQuery
-function cardMatchSetupError(evt) {
+//Parameters are two ???
+//TODO: How to get card IDs?
+function sameCardClickedTwiceQuery (ci1, ci2) {
+    let cardId1 = ci1;
+    let cardId2 = ci2;
+    if (cardId1 === cardId2) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-//Helper function to whether two cards
+//NOTE: PROBABLY DON'T NEED THIS, BECAUSE THAT'S WHAT'S IN OBJECT
+//Helper function for number cards clicked
+//TODO: How to get card IDs?
+// function numberCardsClicked() {
+//     if (board.cardClickCount === cardId2) {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
+
+
+
 //Parameters are two strings
-function doCardsMatchQuery (vc1, vc2) {
+function doDifferentCardsMatchQuery (vc1, vc2) {
     let valueCard1 = vc1;
     let valueCard2 = vc2;
     if (valueCard1 == valueCard2) {
@@ -257,38 +293,137 @@ function doCardsMatchQuery (vc1, vc2) {
     }
 }
 
-// Helper function to turn text-white to text-dark
-function textWhiteToTextDark (evt) {
-    let str = "text-white";
+//Helper function to turn text-info to text-dark
+function textInfoToTextDark (evt) {
+    let str = "text-info";
     let sti = "text-dark";
+    evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
 }
 
-// Helper function for cardsDoMatch alternative
-function cardsDoMatch (evt) {
+
+
+//Helper function for cardsDoMatch alternative
+function cardsDoMatch () {console.log("");
 }
 
 // Helper function for cardsDoNotMatch alternative
-function cardsDoNotMatch (evt) {
+function cardsDoNotMatch () {console.log("");
 }
 
-/*
-CURRENT WORKING HYPOTHESIS: Pseudo ketch of onMouseClick
+//MAIN FUNCTION
+//Display or hide value based on whether same card is clicked twice in a row
+function onCardMouseClick(evt) {
+    //setup global strings
 
-if error in setup, return setup error
+    //setup helper functions
+//Helper function to add .card card-background-up-color to .card
+    function cardToBackgroundColor(e) {
+        let str = "card";
+        let sti = "card card-background-up-color"
+        e.target.outerHTML = e.target.outerHTML.replace(str, sti);
+    }
 
-if only one card clicked, wait for second card to be clicked
+    console.log("In onCardMouseClick(evt) with evt.target = " + evt.target);
 
-if second clicked card matches first clicked card, return match function
+    //if error in setup, return setup error
+    cardMatchSetupError(evt);
 
+    //wait for first click; on first click:
+    //update states:
+    // if (board.clickCount == 0) {
+    if (true) {
+        console.log("Before click, board.clickCount = " + board.clickCount);
+        board.firstCardState = "clicked";
+        board.firstCardCardValue = evt.target.innerHTML;
+        board.clickCount += 1;
+        console.log("After click, board.clickCount = " + board.clickCount);
 
+        //change first card's text color and background color
+        let str1 = "card";
+        let sti1 = "card card-background-up-color";
+        let str2 = "text-info";
+        let sti2 = "text-dark";
 
+        if ((evt.target.outerHTML.includes("card")) && (board.firstCardState = "clicked")) {
+            textInfoToTextDark (evt);
+            cardToBackgroundColor (evt);
+        }
+    }
+}
+
+/*wait for second click
+on second click, update states, check to see if second card == first card
+    if second card == first card,
+        update states,
+        change first card's text color back, and
+        change first card's background color back
+    if second card != first card
+        update states,
+        change second card's text color, and
+        change second card's background color
+        test whether second card's value == first card's value
+            if second card's value != first card's value
+                    run mismatch animation
+                    update states
+                    change first card's text color back, and
+                    change first card's background color back
+            if second car's value == first card's value
+                    run match animation
+                    change states
+            test whether sum of cards matched == maximum number matches
+                if sum of cards matched != maximum number matches
+                    wait for first click
+                if sum of cards matched == maximum number matches
+                    update states
+                    run completion animation
+                    go to next page
 */
 
 
+/*
+CURRENT WORKING HYPOTHESIS: NL sketch of onCardMouseClick(evt)
+
+setup global strings
+if error in setup, return setup error
+wait for first click
+on first click,
+    update states,
+    change first card's text color, and
+    change first card's background color
+wait for second click
+on second click, update states, check to see if second card == first card
+    if second card == first card,
+        update states,
+        change first card's text color back, and
+        change first card's background color back
+    if second card != first card
+        update states,
+        change second card's text color, and
+        change second card's background color
+        test whether second card's value == first card's value
+            if second card's value != first card's value
+                    run mismatch animation
+                    update states
+                    change first card's text color back, and
+                    change first card's background color back
+            if second car's value == first card's value
+                    run match animation
+                    change states
+            test whether sum of cards matched == maximum number matches
+                if sum of cards matched != maximum number matches
+                    wait for first click
+                if sum of cards matched == maximum number matches
+                    update states
+                    run completion animation
+                    go to next page
+*/
+
+
+
 //TODO: THE FOLLOWING IS A MESS; NEED TO STRAIGHTEN EVERYTHING OUT WITH HELPER FUNCTIONS
-function onMouseClick(evt) {
+function onMouseClickOLD(evt) {
     // TODO: Will not need these once helper functions working
-    let str = "text-white";
+    let str = "text-info";
     let sti = "text-dark";
 
 
@@ -302,6 +437,28 @@ function onMouseClick(evt) {
         board.firstCardState = "clicked";
         board.firstCardCardValue = evt.target.textContent;
     }
+}
+//TRYING TO FIGURE OUT ERROR: "rules.js:308 Uncaught DOMException:
+// Failed to set the 'outerHTML' property on 'Element':
+// This element has no parent node."
+// Problem seems to be that when you set outerHTML, the variable points
+// to the old parent element
+function onMouseClickNEW(evt) {
+    // TODO: Will not need these once helper functions working
+    let str = "card text-info";
+    let sti = "card card-background-up-color text-dark";
+
+    console.log("evt.target.nodeName is: " + evt.target.nodeName);
+    console.log("evt.target.outerHTML is: " + evt.target.outerHTML)
+    console.log("evt.target.innerHTML is: " + evt.target.innerHTML);
+    console.log("evt.target.textContent is: " + evt.target.textContent)
+
+    if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "notClicked")) {
+        board.firstCardState = "clicked";
+        board.firstCardCardValue = evt.target.textContent;
+        evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
+        console.log("Has evt.target.outerHTML changed? " + evt.target.outerHTML)
+    }
 
     //TODO: TEMPORARILY COMMENTING THE REST OUT -- JUST TO SEE WHAT WORKS AT PRESENT
     // } else if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "clicked")) {
@@ -309,7 +466,7 @@ function onMouseClick(evt) {
     // else if (evt.target.outerHTML.includes(sti)) {
     //     evt.target.outerHTML = evt.target.outerHTML.replace(sti, str);
     // }else {
-    //     // console.log("evt.target.outerHTML.includes neither text-white nor text-dark");
+    //     // console.log("evt.target.outerHTML.includes neither text-info nor text-dark");
     //     board.nMouseClickTextColorError = 1;
     //     console.log("");
     // }
@@ -333,7 +490,7 @@ let board = {
      firstCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
      secondCardState: "notClicked", //notClicked, clicked,
      secondCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
-     clickCount: 0, // 0, 1
+     cardClickCount: 0, // 0, 1, 2
      onMouseClickTextColorError: 0, // 0, 1
 
      startGame: function strtGm() {
@@ -386,7 +543,8 @@ function startGame() {
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
 
-            const newCardHtml = '<div class="card border border-dark text-center text-white col-2 m-1">'+ cardSubsetRandom + '</div>';
+            const newCardHtml = '<div class="card text-info border border-dark text-center col-2 m-1">'+
+                                cardSubsetRandom + '</div>';
             newDimensionsCardHtml += newCardHtml;
         }
         const newRowDiv = document.createElement('div');
@@ -405,7 +563,7 @@ playInput.addEventListener('click', startGame);
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
 targetDiv.addEventListener('mouseover', onMouseoverCard);
 
-targetDiv.addEventListener('click', onMouseClick);
+targetDiv.addEventListener('click', onMouseClickNEW);
 
 
 // TODO: Fix error that occurs when I have the following at 197 ---
