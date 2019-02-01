@@ -12,27 +12,30 @@ https://medium.com/@programmiri/my-favored-scss-setup-with-bootstrap-4-547e9ea29
 https://github.com/programmiri/brunch-setup-bootstrap4/blob/master/app/scss/bootstrap/_pre_default.scss
 
 
-CSS
+MDN: CSS
 
 https://developer.mozilla.org/en-US/docs/Web/CSS/gradient
 
-HTML
+MDN: HTML
 
 
-JavaScript
+MDN: JavaScript
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
 https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming/direction
 https://developer.mozilla.org/en-US/docs/Web/API/Element
 https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
-https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML#Notes
+https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML
+https://developer.mozilla.org/en-US/docs/Web/API/EventListener
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
+https://developer.mozilla.org/en-US/docs/Web/API/Window/alert
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
@@ -61,6 +64,7 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+https://stackoverflow.com/questions/16239474/when-tracing-out-variables-in-the-console-how-to-create-a-new-line
 https://stackoverflow.com/questions/36622784/in-javascript-why-does-setting-outerhtml-on-an-element-set-its-parentnode-to-n
 "Bootstrap 4 colors"
 "Hex to RGB Color Conversion"

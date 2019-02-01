@@ -94,7 +94,7 @@
 
     WIP: rewriting onMouseClick(evt) w helper functions failed
     DISC: learned that when using Element.outerHTML,
-    " while the element will be replaced in the document,
+    "while the element will be replaced in the document,
     the variable whose outerHTML property was set will still hold
     a reference to the original element:..."
     See: https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML#Notes
@@ -104,6 +104,13 @@
     NOTE: did, however, get the right color values to match Bootstrap 4
     using Chrome Developer Tools
 
+2019-01-30--31:
+    fix wrestling with onMouseClickNEW(evt) w some success
+
+    DISC: reminded once again of need to look for simple mistakes in logic tests,
+    but did stick with it and figured out the problem.
+    EXPLR: how scopes work with event handlers
+
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
@@ -111,6 +118,8 @@
         A.  DONE: REVIEW EVENT DELEGATION
         B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
     3.  Add styling
+        -B. CHANGE ALL outerHTML to classList!!!
+        -A. TEST FOR CASE WHERE PERSON CLICKS ON THE SAME CARD TWICE
         A.  Example has
             (i) Pre-guess
                 (a) X && Y color gradients on borders
@@ -181,6 +190,33 @@ function makeCards() {
     });
     console.log(cards);
 }
+
+let board = {
+     boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
+     // messages: ["First message.", "Second message.", "Third message."],
+
+     // state information about cards being clicked and clickCount stored in board object
+     firstCardState: "notClicked", //notClicked, clicked,
+     firstCardValue: "", //empty, card Value (e.g., "4S" || "10C")
+     secondCardState: "notClicked", //notClicked, clicked,
+     secondCardValue: "", //empty, card Value (e.g., "4S" || "10C")
+     cardClickCount: 0, // 0, 1, 2
+     onMouseClickTextColorError: 0, // 0, 1
+
+     startGame: function strtGm() {
+        console.log("board.startGame() called");
+        console.log("#pre-game-button clicked!");
+     },
+
+     makeCards: function mkCrds() {
+        console.log("board.makeCards() called");
+     },
+
+     displayCards: function dsplyCrds() {
+        console.log("board.displayCards() called");
+     }
+ };
+
 
 // This function takes an array as input and then doubles it [x,y,z] -> [x,y,z,x,y,z]
 function doubleArray(x) {
@@ -295,9 +331,9 @@ function doDifferentCardsMatchQuery (vc1, vc2) {
 
 //Helper function to turn text-info to text-dark
 function textInfoToTextDark (evt) {
-    let str = "text-info";
+    let stHidden = "text-info";
     let sti = "text-dark";
-    evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
+    evt.target.outerHTML = evt.target.outerHTML.replace(stHidden, sti);
 }
 
 
@@ -318,9 +354,9 @@ function onCardMouseClick(evt) {
     //setup helper functions
 //Helper function to add .card card-background-up-color to .card
     function cardToBackgroundColor(e) {
-        let str = "card";
+        let stHidden = "card";
         let sti = "card card-background-up-color"
-        e.target.outerHTML = e.target.outerHTML.replace(str, sti);
+        e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
     }
 
     console.log("In onCardMouseClick(evt) with evt.target = " + evt.target);
@@ -334,7 +370,7 @@ function onCardMouseClick(evt) {
     if (true) {
         console.log("Before click, board.clickCount = " + board.clickCount);
         board.firstCardState = "clicked";
-        board.firstCardCardValue = evt.target.innerHTML;
+        board.firstCardValue = evt.target.innerHTML;
         board.clickCount += 1;
         console.log("After click, board.clickCount = " + board.clickCount);
 
@@ -418,97 +454,6 @@ on second click, update states, check to see if second card == first card
                     go to next page
 */
 
-
-
-//TODO: THE FOLLOWING IS A MESS; NEED TO STRAIGHTEN EVERYTHING OUT WITH HELPER FUNCTIONS
-function onMouseClickOLD(evt) {
-    // TODO: Will not need these once helper functions working
-    let str = "text-info";
-    let sti = "text-dark";
-
-
-    console.log("evt.target.nodeName is: " + evt.target.nodeName);
-    console.log("evt.target.outerHTML is: " + evt.target.outerHTML)
-    console.log("evt.target.innerHTML is: " + evt.target.innerHTML);
-    console.log("evt.target.textContent is: " + evt.target.textContent)
-
-    if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "notClicked")) {
-        evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
-        board.firstCardState = "clicked";
-        board.firstCardCardValue = evt.target.textContent;
-    }
-}
-//TRYING TO FIGURE OUT ERROR: "rules.js:308 Uncaught DOMException:
-// Failed to set the 'outerHTML' property on 'Element':
-// This element has no parent node."
-// Problem seems to be that when you set outerHTML, the variable points
-// to the old parent element
-function onMouseClickNEW(evt) {
-    // TODO: Will not need these once helper functions working
-    let str = "card text-info";
-    let sti = "card card-background-up-color text-dark";
-
-    console.log("evt.target.nodeName is: " + evt.target.nodeName);
-    console.log("evt.target.outerHTML is: " + evt.target.outerHTML)
-    console.log("evt.target.innerHTML is: " + evt.target.innerHTML);
-    console.log("evt.target.textContent is: " + evt.target.textContent)
-
-    if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "notClicked")) {
-        board.firstCardState = "clicked";
-        board.firstCardCardValue = evt.target.textContent;
-        evt.target.outerHTML = evt.target.outerHTML.replace(str, sti);
-        console.log("Has evt.target.outerHTML changed? " + evt.target.outerHTML)
-    }
-
-    //TODO: TEMPORARILY COMMENTING THE REST OUT -- JUST TO SEE WHAT WORKS AT PRESENT
-    // } else if ((evt.target.outerHTML.includes(str)) && (board.firstCardState = "clicked")) {
-
-    // else if (evt.target.outerHTML.includes(sti)) {
-    //     evt.target.outerHTML = evt.target.outerHTML.replace(sti, str);
-    // }else {
-    //     // console.log("evt.target.outerHTML.includes neither text-info nor text-dark");
-    //     board.nMouseClickTextColorError = 1;
-    //     console.log("");
-    // }
-
-    // if ()
-}
-
-// uses suits.length, because randomIntInRange ranges over first-last index of array
-// let suitsRandom = suits[randomIntInRange(0,suits.length)];
-// use ranks.length, because randomIntInRange ranges over first-last index of array
-// let ranksRandom = ranks[randomIntInRange(0,ranks.length)];
-
-// TODO: create constants --- height; width; possible (playing) cards (nested for loops)
-
-let board = {
-     boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
-     // messages: ["First message.", "Second message.", "Third message."],
-
-     // state information about cards being clicked and clickCount stored in board object
-     firstCardState: "notClicked", //notClicked, clicked,
-     firstCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
-     secondCardState: "notClicked", //notClicked, clicked,
-     secondCardCardValue: "", //empty, card Value (e.g., "4S" || "10C")
-     cardClickCount: 0, // 0, 1, 2
-     onMouseClickTextColorError: 0, // 0, 1
-
-     startGame: function strtGm() {
-        console.log("board.startGame() called");
-        console.log("#pre-game-button clicked!");
-     },
-
-     makeCards: function mkCrds() {
-        console.log("board.makeCards() called");
-     },
-
-     displayCards: function dsplyCrds() {
-        console.log("board.displayCards() called");
-     }
- };
-
-console.log("1st board.boardState is " + board.boardState);
-
 //TODO: Get this to work with 8 matching cards, instead of 16 random cards
 function startGame() {
     makeCards();
@@ -543,7 +488,7 @@ function startGame() {
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
 
-            const newCardHtml = '<div class="card text-info border border-dark text-center col-2 m-1">'+
+            const newCardHtml = '<div class="card card-background-color-down text-info border border-dark text-center col-2 m-1">'+
                                 cardSubsetRandom + '</div>';
             newDimensionsCardHtml += newCardHtml;
         }
@@ -558,6 +503,67 @@ function startGame() {
     console.log("2nd board.boardState is " + board.boardState);
  }
 
+//TRYING TO FIGURE OUT ERROR: "rules.js:308 Uncaught DOMException:
+// Failed to set the 'outerHTML' property on 'Element':
+// This element has no parent node."
+// Problem seems to be that when you set outerHTML, the variable points
+// to the old parent element
+function onMouseClickNEW(evt) {
+    // TODO: Will not need these once helper functions working
+    let clickedDivClassList = evt.target.classList;
+    // console.log(clickedDivClassList);
+
+    let hiddenText = "text-info";
+    let darkText = "text-dark";
+    let backgroundDownColor = "card-background-color-down";
+    let backgroundUpColor = "card-background-color-up";
+    let backgroundCorrectColor = "card-background-color-correct";
+    let backgroundIncorrectColor = "card-background-color-incorrect";
+    let firstClickedCardClass = "first-card-clicked";
+
+    if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
+        board.firstCardState = "clicked";
+        board.firstCardValue = evt.target.textContent;
+        clickedDivClassList.replace(hiddenText, darkText);
+        clickedDivClassList.add(firstClickedCardClass);
+        console.log("First clicked card value  = " + board.firstCardValue);
+
+    } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
+        board.secondCardState = "clicked";
+        board.secondCardValue = evt.target.textContent;
+        clickedDivClassList.replace(hiddenText, darkText);
+        let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+        if (board.firstCardValue == board.secondCardValue) {
+            // let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundCorrectColor);
+            clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
+            window.alert("Congratulations!  The first and second cards match!");
+            firstClickedCardDiv.classList.remove(firstClickedCardClass);
+        } else {
+            // let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
+            // TODO: 2019-01-31: clickedDivClassList ISN'T WORKING
+            //          WHAT IS ITS VALUE HERE?
+            clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
+            clickedDivClassList.replace(hiddenText, darkText);
+            window.alert("I'm sorry.  The first and second cards did not match.");
+            firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            firstClickedCardDiv.classList.remove(firstClickedCardClass);
+            clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            clickedDivClassList.replace(darkText, hiddenText);
+            board.firstCardState = "notClicked";
+            board.secondCardState = "notClicked";
+            clickedDivClassList.remove(firstClickedCardClass);
+        }
+    }
+}
+
+
+
+console.log("1st board.boardState is " + board.boardState);
+
+
+
 playInput.addEventListener('click', startGame);
 
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
@@ -566,199 +572,3 @@ targetDiv.addEventListener('mouseover', onMouseoverCard);
 targetDiv.addEventListener('click', onMouseClickNEW);
 
 
-// TODO: Fix error that occurs when I have the following at 197 ---
-//      Tried to move inside the startGame function didn't work either.
-//      Tried inside an IF that tests for existence of new divs, but didn't work either
-// if (board.boardState = "transBoard") {
-//     board.addEventListener('mouseover', onMouseoverCard);
-// };
-//         Thesis - look for help
-
-// ****TODO*** board.addEventListener('mouseover', onMouseoverCard);
-
-// function startGameOld() {
-//     makeCards();
-//     // using chosenCards to (a) avoid duplication and (b) create set for duplication
-//     let remainingCards = cards;
-//     let chosenCards = [];
-//     let removedCards = [];
-//     for (let i = 0; i < dimensions; i++) {
-//         let newDimensionsCardHtml = '';
-//         for (let j = 0; j < dimensions; j++) {
-//             // uses remainingCards.length, because randomIntInRange ranges over
-//             // first-last index of array
-//             console.log("remainingCards.length is  " + remainingCards.length);
-//             let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
-//             console.log("cardRandom is  " + cardRandom);
-//             console.log("remainingCards.length is  " + remainingCards.length);
-//             let cardRandomIndex = remainingCards.indexOf(cardRandom);
-//             console.log("cardRandomIndex is  " + cardRandomIndex);
-//             removedCard = remainingCards.splice(cardRandomIndex, 1);
-//             removedCards.push(removedCard);
-//             console.log("after splice, remainingCards.length is now " + remainingCards.length);
-//             console.log("remainingCards are " + remainingCards);
-//             console.log("after splice, removedCards.length is now " + removedCards.length);
-//             console.log("removedCards are " + removedCards);
-//             // let remainingCards = 1;// TODO: figure this out
-
-//             const newCardHtml = '<div class="card col-2 m-1">'+ cardRandom + '</div>';
-//             newDimensionsCardHtml += newCardHtml;
-//         }
-//         const newRowDiv = document.createElement('div');
-//         boardFragment.appendChild(newRowDiv);
-//         const newRowHtml =  '<div class="row four-cards justify-content-center">' +
-//                             newDimensionsCardHtml + '</div>';
-//         newRowDiv.innerHTML = newRowHtml;
-//     }
-//     targetDiv.appendChild(boardFragment);
-//  }
-
-
-// OLD WIP CODE BELOW
-
-// const newRowHtmlString =    '<div class="row four-cards justify-content-center">' +
-//                                 '<div class="card col-2 m-1">' +
-//                                     'w2' +
-//                                 '</div>' +
-//                                 '<div class="card col-2 m-1">' +
-//                                     'x2' +
-//                                 '</div>' +
-//                                 '<div class="card col-2 m-1">' +
-//                                     'y2' +
-//                                 '</div>' +
-//                                 '<div class="card col-2 m-1">' +
-//                                     'z2' +
-//                                 '</div>' +
-//                             '</div>'
-
-// function startGameFunction() {
-//         //
-//         console.log("board.startGame() called");
-//         targetDiv.appendChild(newRow);
-//         let targetDivLastChild = targetDiv.lastElementChild;
-//         targetDivLastChild.innerHTML = newRowHtmlString;
-//         console.log("targetDiv.innerHTML = " + targetDiv.innerHTML);
-//         console.log("targetDiv.childElementCount = " + targetDiv.childElementCount);
-//         console.log("targetDiv.lastElementChild.innerHTML = " + targetDiv.lastElementChild.innerHTML);
-//      }
-
-// OLD EXERCISE CODE BELOW
-
-// targetSubmitButton.addEventListener('click', makeGrid);
-
-// targetDiv.addEventListener('click', changeColor);
-
-// targetDiv.addEventListener('dblclick', removeColor);
-
-// targetSubmitButton.addEventListener('dblclick', removeGrid);
-
-
-// function makeGrid() {
-//     let inColor = inputForm.value;
-//     let inHt = inputForm.inputHeight.value;
-//     let inWh = inputForm.inputWidth.value;
-//     for(let i = 0; i < inHt; i++){
-//         console.log ('inHt = ' + inHt);
-//         let newRow = document.createElement('tr');
-//         targetDiv.appendChild(newRow);
-//             for(let j = 0; j < inWh; j++){
-//                 console.log ('inWh = ' + inWh);
-//                 let newCell = document.createElement('td');
-//                 newRow.appendChild(newCell);
-//                 }
-//     }
-// }
-
-// //2019-01-04: Note syntax in the following, which accesses the event.target
-// function changeColor(evt) {
-//     evt.target.style.backgroundColor = chosenColor;
-// }
-
-// // colorPicker.addEventListener('input', function () {
-// //     chosenColor = event.target.value;
-// // });
-
-// function removeColor(evt) {
-//     evt.target.style.backgroundColor = '#ffffff';
-// }
-
-// function removeGrid() {
-//     targetDiv.innerHTML = '';
-// }
-
-
-// let savingsAccount = {
-//     balance: 1000,
-//     interestRatePercent: 1,
-//     deposit: function addMoney(amount) {
-//         if (amount > 0) {
-//             savingsAccount.balance += amount;
-//         }
-//     },
-//     withdraw: function removeMoney(amount) {
-//         var verifyBalance = savingsAccount.balance - amount;
-//         if (amount > 0 && verifyBalance >= 0) {
-//             savingsAccount.balance -= amount;
-//         }
-//     },
-//     printAccountSummary: function prntAcctSum() {
-//         var out =
-//             ("Welcome!\n" +
-//             "Your balance is currently $" +
-//             savingsAccount.balance +
-//             " and your interest rate is " +
-//             savingsAccount.interestRatePercent +
-//             "%.");
-//          return out;
-
-//     }
-//     // your code goes here
-// };
-
-// console.log(savingsAccount.printAccountSummary());
-
-
-
-// var donuts = [
-//     { type: "Jelly", cost: 1.22 },
-//     { type: "Chocolate", cost: 2.45 },
-//     { type: "Cider", cost: 1.59 },
-//     { type: "Boston Cream", cost: 5.99 }
-// ];
-
-// donuts.forEach(function(donut) {
-//     console.log(donut.type + " donuts cost $" + donut.cost + " each")
-// });
-
-// let board = {
-//      state: "neutral", //initial, pre, trans, post; re state of game
-//      // friends: 10,
-//      // messages: ["First message.", "Second message.", "Third message."],
-
-//      startGame: function strtGm() {
-//         //
-//         console.log("board.startGame() called");
-//         console.log("#pre-game-button clicked!");
-//      },
-
-//      makeCards: function mkCrds() {
-//         console.log("board.makeCards() called");
-//      },
-
-//      displayCards: function dsplyCrds() {
-//         console.log("board.displayCards() called");
-//      }
-
-//      // postMessage: function postMsg(message) {
-//      //     facebookProfile.messages.push(message);
-//      // },
-//      // deleteMessage: function delMsg(index) {
-//      //     facebookProfile.messages.splice(index, 1);
-//      // },
-//      // addFriend: function addFrnd() {
-//      //     facebookProfile.friends += 1;
-//      // },
-//      // removeFriend: function rmvFrnd() {
-//      //     facebookProfile.friends -= 1;
-//      // }
-//  };
