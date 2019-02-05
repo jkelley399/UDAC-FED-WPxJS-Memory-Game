@@ -111,6 +111,16 @@
     but did stick with it and figured out the problem.
     EXPLR: how scopes work with event handlers
 
+2019-02-02--04:
+    fix continuing to wrestle with onMouseClickNEW(evt) w some success
+
+    Got the all correct branch of the logic working.
+    Appear to have gotten the incorrect branch of the logic working.
+    DISC: When in doubt, step through carefully and completely.
+    Still have problem with actually displaying the incorrect branch
+    when not in debug mode.
+    HYPO: Solve with setTimeout() method.
+
     TODO:
     0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
     1.  DONE: Check on whether really using makeCards()
@@ -510,6 +520,7 @@ function startGame() {
 // to the old parent element
 function onMouseClickNEW(evt) {
     // TODO: Will not need these once helper functions working
+    console.log("evt.target  = " + evt.target);
     let clickedDivClassList = evt.target.classList;
     // console.log(clickedDivClassList);
 
@@ -539,21 +550,24 @@ function onMouseClickNEW(evt) {
             clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
             window.alert("Congratulations!  The first and second cards match!");
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
-        } else {
-            // let firstClickedCardDiv = document.querySelector('.first-card-clicked');
-            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
-            // TODO: 2019-01-31: clickedDivClassList ISN'T WORKING
-            //          WHAT IS ITS VALUE HERE?
-            clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
-            clickedDivClassList.replace(hiddenText, darkText);
-            window.alert("I'm sorry.  The first and second cards did not match.");
-            firstClickedCardDiv.classList.replace(darkText, hiddenText);
-            firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            clickedDivClassList.replace(darkText, hiddenText);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
-            clickedDivClassList.remove(firstClickedCardClass);
+        } else {
+            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
+            clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
+            //TODO: PROBABLY NEED TO SET A TIMEOUT BEFORE THE ALERT
+            //SEE: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
+            window.alert("I'm sorry.  The first and second cards did not match.");
+            firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            clickedDivClassList.replace(darkText, hiddenText);
+            // TODO: Don't like repeating all this reset code; should add function
+            firstClickedCardDiv.classList.remove(firstClickedCardClass);
+            board.firstCardState = "notClicked";
+            board.secondCardState = "notClicked";
+
+
         }
     }
 }
@@ -567,6 +581,7 @@ console.log("1st board.boardState is " + board.boardState);
 playInput.addEventListener('click', startGame);
 
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
+// 2019-02-04: HYPO: Tried commenting this out to see how it affects onMouseClickNEW; no change
 targetDiv.addEventListener('mouseover', onMouseoverCard);
 
 targetDiv.addEventListener('click', onMouseClickNEW);
