@@ -121,49 +121,71 @@
     when not in debug mode.
     HYPO: Solve with setTimeout() method.
 
+2019-02-05--08:
+    fix: continuing wrestling with onMouseClickNEW(evt) with more success
+
+    Got animation working on both correct and incorrect branches after
+        (1) changing the eventListener to act during the capturing phase; and
+        (2) commenting out the resetting of the incorrect to down color for the incorrect branch
+    KEY RESOURCES:  (1) MDN basics re web annimations;
+                    (2) https://github.com/web-animations/web-animations-js/issues/14
+                    The latter, in particular, helped me to undertand that you need to have
+                    multi-element keyframe transformations.  This occurred after I was getting
+                    an "Failed to execute 'animate' on 'Element': Partial keyframes are not supported."
+                    error message.
+    TODO:   Still can't seem to get the incorrect branch background color and text color to persist
+            during and slightly after the animation.  Some ideas about how to proceed:
+            (1) Call a timeout before things change.
+            (2) Move the change outside the current function (e.g., on mouse move out of the card)
+            (3) Reset the color in the animation (if that's possible)
+            (4) Dig deeper, and see if I can access and use the animation timeline
+
     TODO:
-    0.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
-    1.  DONE: Check on whether really using makeCards()
+    1.  MISC
+        A.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
+        B.  DONE: Check on whether really using makeCards()
+        C.  Add functionality so that once cards have been matched, you can't click on them again.
+        D.  Add functionality so that once card is clicked on, it can't match against itself
+                Currently that yields a correct
+        E.  Add count on correctly matched cards, to determine when game is won.
+        F.  DONE:   Enhance project by choosing randomly from standard card deck
+        G.  Comment out the console.log statements when finished
     2.  Start adding play functionality
         A.  DONE: REVIEW EVENT DELEGATION
         B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
     3.  Add styling
-        -B. CHANGE ALL outerHTML to classList!!!
-        -A. TEST FOR CASE WHERE PERSON CLICKS ON THE SAME CARD TWICE
-        A.  Example has
+        A.  DONE: Change all outerHTML to classList!!!
+
+        B.  Example has
             (i) Pre-guess
-                (a) X && Y color gradients on borders
-                (b) black face down cards
+                (a) DONE: X && Y color gradients on borders
+                (b) DONE SORT OF: black face down cards
                     NOTE: Have pseudo-Bootstrap-info face down cards at present
                 (c) background color and icons on face up cards
             (ii) First click
-                (a) background color of the card changes to blue when it's been clicked
-            (iii) Correct guess
+                (a) DONE SORT OF (DIFFERENT COLOR) background color of the card changes
+                    to blue when it's been clicked
+            (iii) DONE SORT OF (DIFFERENT ANIMATION) Correct guess
                 (a) two cards expand and contract diagonally
-            (iv) Incorrect guess
+            (iv) DONE SORT OF (DIFFERENT ANIMATION) Incorrect guess
                 (a) background color of both cards changes to red
                 (b) two cards shake side to side
             (v) Winning game
                 (a) page changes, "Congratulations," etc.
         B.  DONE: REVIEW JS ANIMATION
         C.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
-        D.  WIP RE STYLING
-            (i) Pre-guess
-                (a) DONE: X && Y color gradients on borders
-                (b) DONE: black face down cards
-                    NOTE: Have white face down cards at present
-
     4.  Add "hiding" of different pages
-    5.  Figure out how to move the functions into methods
+    5.  TODO (MAYBE SAVE FOR FUTURE): Better object architecture
+        A.  Figure out how to move the functions into methods
+        B.  board object
+            (i) DONE SORT OF: Create contents of board using loops
+                Have that in a function
+        C.  Card object
     6.  DONE: Need to add constraints to the random selection, so that
         A.  Will always have two cards that will "match"
-        B.  Cannot have duplicates of the same cards
-            (i) E.g., only one AS per board
-    7.  board object
-        A.  CREATE CONTENTS OF BOARD USING LOOPS
-        B.  enhance project by choosing randomly from standard card deck
-    8.  card object
-    9.  FUTURE
+        B.  Cannot have multiple duplicates of the same cards
+            (i) E.g., only two ASs per board
+    7.  FUTURE
         A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
         B.  Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
         C.  Figure out how to use Bootstrap with Sass options --> see Medium article
@@ -199,6 +221,16 @@ function makeCards() {
         });
     });
     console.log(cards);
+}
+
+function incorrectCardAnimation(carddiv) {
+    carddiv.animate([
+            {transform: 'scale(2)'}
+        ], {
+            duration: 3000,
+            iterations: 2
+        }
+    );
 }
 
 let board = {
@@ -521,9 +553,9 @@ function startGame() {
 function onMouseClickNEW(evt) {
     // TODO: Will not need these once helper functions working
     console.log("evt.target  = " + evt.target);
-    let clickedDivClassList = evt.target.classList;
-    // console.log(clickedDivClassList);
 
+    let clickedDivClassList = evt.target.classList;
+    // TODO: Maybe get rid of most of these variables and just use strings below
     let hiddenText = "text-info";
     let darkText = "text-dark";
     let backgroundDownColor = "card-background-color-down";
@@ -548,42 +580,165 @@ function onMouseClickNEW(evt) {
             // let firstClickedCardDiv = document.querySelector('.first-card-clicked');
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundCorrectColor);
             clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
-            window.alert("Congratulations!  The first and second cards match!");
+
+            firstClickedCardDiv.animate([
+                    {transform: 'translateY(-25px)'},
+                    {transform: 'scale(2)'},
+                ], {
+                    duration: 1000,
+                    iterations: 2
+                }
+            );
+
+            evt.target.animate([
+                    {transform: 'translateY(+25px)'},
+                    {transform: 'scale(2)'},
+                ], {
+                    duration: 1000,
+                    iterations: 2
+                }
+            );
+
+
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
         } else {
+            clickedDivClassList.replace(hiddenText, darkText);
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
             clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
-            //TODO: PROBABLY NEED TO SET A TIMEOUT BEFORE THE ALERT
-            //SEE: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
-            window.alert("I'm sorry.  The first and second cards did not match.");
-            firstClickedCardDiv.classList.replace(darkText, hiddenText);
-            firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
-            clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            clickedDivClassList.replace(darkText, hiddenText);
-            // TODO: Don't like repeating all this reset code; should add function
+            clickedDivClassList.replace(hiddenText, darkText);
+            // window.alert("Sorry.  The first and second cards do not match!");
+
+            // TODO: Figure out how to delay the change from incorrect to background color
+            // TODO: Figure out how to delay an incorrect second card from black to background for incorrect card
+
+            firstClickedCardDiv.animate([
+                    {transform: 'translateX(-100px)'},
+                    {transform: 'rotate(0.5turn)'}
+                ], {
+                    duration: 1000,
+                    iterations: 2
+                }
+            );
+
+            evt.target.animate([
+                    {transform: 'translateX(+100px)'},
+                    {transform: 'rotate(0.5turn)'}
+                ], {
+                    duration: 1000,
+                    iterations: 2
+                }
+            );
+
+            // TODO 2019-02-07: MAYBE TRY (A) ADDING LIST OF DIVS TO ANIMATE TO THE OBJECT;
+            // (B) DEFINE ANIMATION FUNCTION; AND (C) ITERATE OVER THE LIST (LOOK FOR REFERENCES)
+
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
 
+            // firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
+            // clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
+
+            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            // clickedDivClassList.replace(darkText, hiddenText);
+
+            // firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            // firstClickedCardDiv.classList.remove(firstClickedCardClass);
 
         }
+    } else {
+        console.log("Error somewhere");
     }
 }
 
-
-
 console.log("1st board.boardState is " + board.boardState);
-
-
 
 playInput.addEventListener('click', startGame);
 
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
 // 2019-02-04: HYPO: Tried commenting this out to see how it affects onMouseClickNEW; no change
 targetDiv.addEventListener('mouseover', onMouseoverCard);
+// 2019-02-08:  HYPO: Maybe the animation problems are because the eventListener
+//              acts during the bubbling phase; testing setting the third parameter to "true"
+                // FALSE: The animation still fails to do anything
+                // ERROR MESSAGE: rules.js:583 Uncaught DOMException:
+                // INITALLLY: Failed to execute 'animate' on 'Element':
+                // Partial keyframes are not supported.
+                // SUBSEQUENTLY: I added a second element in the keyframe, and it worked!!
+targetDiv.addEventListener('click', onMouseClickNEW, true);
 
-targetDiv.addEventListener('click', onMouseClickNEW);
 
 
+// ANIMATION WIP
+
+            // firstClickedCardDiv.classList.add("animate hinge");
+            // clickedDivClassList.classList.add("animate hinge");
+
+            //TODO: PROBABLY NEED TO SET A TIMEOUT BEFORE THE ALERT
+            //SEE: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
+            //BUT: Maybe this won't be necessary when I add the animation.
+            // window.alert("I'm sorry.  The first and second cards did not match.");
+
+            // 2019-02-06: TRYING MOVING THESE BELOW THE ANIMATION
+                // NOTE: With this move, the first animated element kept its red color until the
+                // second animated element was activated --- why is that???
+            // firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            // clickedDivClassList.replace(darkText, hiddenText);
+            // // TODO: Don't like repeating all this reset code; should add function
+            // firstClickedCardDiv.classList.remove(firstClickedCardClass);
+            // board.firstCardState = "notClicked";
+            // board.secondCardState = "notClicked";
+            // END OF ATTEMPTED MOVE
+
+            // evt.target.animate([
+            //     // keyframes
+            //     {
+            //         opacity: 1,
+            //         color: "#d9534f"
+            //     },
+            //     {transform: 'translateY(-25px)'},
+            //     {transform: 'scale(2)'},
+            //     {transform: 'skew(30deg, 30deg)'},
+            //     {transform: 'rotate(0.5turn)'},
+
+            // ], {
+            //     //timing
+            //     delay: 200,
+            //     duration: 1500,
+            //     //repeats
+            //     iterations: 1
+            // });
+
+            // 2019-02-06: TRYING MOVING THESE BELOW THE ANIMATION
+                // NOTE: Now trying reordering and moving pieces between the animations
+                // NOTE: Even with this re-ordering, still have the same problem;
+                    // the first animated element only kept its red color until the
+                    // second animated element was activated (in the next line below)
+                    // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+                    // --- why is that???
+                    //     HYPO: MAYBE THERE'S A WAY TO SPECIFY WHEN THE ANIMATION RUNS WITHIN A FUNCTION?
+                    //     HYPO: ALTERNATIVELY, MAYBE THERE'S A WAY TO HANDLE THE COLOR AND TEXT
+                    //           FROM INSIDE THE ANIMATION
+            // firstClickedCardDiv.animate([
+            //     // keyframes
+            //     {
+            //         opacity: 1,
+            //         color: "#d9534f"
+            //     },
+            //     {transform: 'translateY(-25px)'},
+            //     {transform: 'scale(2)'},
+            //     {transform: 'skew(30deg, 30deg)'},
+            //     {transform: 'rotate(0.5turn)'},
+
+            // ], {
+            //     //timing
+            //     delay: 200,
+            //     duration: 1500,
+            //     //repeats
+            //     iterations: 1
+            // });

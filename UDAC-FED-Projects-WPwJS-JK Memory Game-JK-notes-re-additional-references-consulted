@@ -13,13 +13,16 @@ https://github.com/programmiri/brunch-setup-bootstrap4/blob/master/app/scss/boot
 
 
 MDN: CSS
-
+https://developer.mozilla.org/en-US/docs/Web/CSS/color
 https://developer.mozilla.org/en-US/docs/Web/CSS/gradient
+https://developer.mozilla.org/en-US/docs/Web/CSS/transform
+https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
 
 MDN: HTML
 
 
 MDN: JavaScript
+https://developer.mozilla.org/en-US/docs/Web/API/Animation
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
@@ -31,10 +34,15 @@ https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML
 https://developer.mozilla.org/en-US/docs/Web/API/EventListener
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
+https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect/setKeyframes
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Web_Animations_API_Concepts
 https://developer.mozilla.org/en-US/docs/Web/API/Window/alert
 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
@@ -65,6 +73,11 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+https://github.com/web-animations/web-animations-js/issues/14
+https://discussions.vtiger.com/discussion/175827/uncaught-notsupportederror-failed-to-execute-animate-on-element-vm7011-htmlmarqueeelement-js-356
+https://hacks.mozilla.org/2016/08/animating-like-you-just-dont-care-with-element-animate/
+http://webdesignerwall.com/tutorials/easy-css-animation-transition-transforms
+https://thoughtbot.com/blog/transitions-and-transforms
 https://stackoverflow.com/questions/16239474/when-tracing-out-variables-in-the-console-how-to-create-a-new-line
 https://stackoverflow.com/questions/36622784/in-javascript-why-does-setting-outerhtml-on-an-element-set-its-parentnode-to-n
 "Bootstrap 4 colors"
