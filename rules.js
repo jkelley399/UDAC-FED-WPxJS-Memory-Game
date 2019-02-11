@@ -140,7 +140,23 @@
             (3) Reset the color in the animation (if that's possible)
             (4) Dig deeper, and see if I can access and use the animation timeline
 
+2019-02-09--10:
+    feat: Added basic functions for winning game, but WIP
+
+    function makeConfetti()
+    function iterateCorrectCardCount()
+    function testMaxCorrectCardCount()
+    function iterateCardClickCount()
+    function testMaxCardClickCount()
+
+    TODO: Confetti animation
+
     TODO:
+    0.  eventHandler: Really try:
+        A.  to understand why I keep having problems when I add these to onMouseClickNEW(evt); and
+        B.  to figure out:
+            (i)     what to do to prevent that from happening in the future; and
+            (ii)    how to correct the problem when it does occur.
     1.  MISC
         A.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
         B.  DONE: Check on whether really using makeCards()
@@ -149,14 +165,20 @@
                 Currently that yields a correct
         E.  Add count on correctly matched cards, to determine when game is won.
         F.  DONE:   Enhance project by choosing randomly from standard card deck
-        G.  Comment out the console.log statements when finished
+        G.  Update Bootstrap link
+        H.  Comment out the console.log statements when finished
     2.  Start adding play functionality
         A.  DONE: REVIEW EVENT DELEGATION
         B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
+        C.  TODO: Reset incorrect matches to face down after a pause
+        C.  TODO: Add board reset functionality in testMaxCardClickCount()
+        D.  TODO: Handle and add selector for 8, 16, or 32 cards
+        E.  TODO: Prevent 2x clicks on same card
+        F.  TODO: Prevent repeated clicks on cards in a positive match
     3.  Add styling
         A.  DONE: Change all outerHTML to classList!!!
-
-        B.  Example has
+        B.  TODO: Fix the text layout on index.html
+        C.  Example has
             (i) Pre-guess
                 (a) DONE: X && Y color gradients on borders
                 (b) DONE SORT OF: black face down cards
@@ -170,10 +192,11 @@
             (iv) DONE SORT OF (DIFFERENT ANIMATION) Incorrect guess
                 (a) background color of both cards changes to red
                 (b) two cards shake side to side
-            (v) Winning game
-                (a) page changes, "Congratulations," etc.
-        B.  DONE: REVIEW JS ANIMATION
-        C.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
+            (v) WIP: Winning game
+                (a) Add test mechanism to basic logic
+                (b) If game over, page changes, "Congratulations," etc.
+        D.  DONE: REVIEW JS ANIMATION
+        E.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
     4.  Add "hiding" of different pages
     5.  TODO (MAYBE SAVE FOR FUTURE): Better object architecture
         A.  Figure out how to move the functions into methods
@@ -194,10 +217,15 @@
 // TODO: revise to add spot for changing three screens - will be container
 const playInput = document.querySelector('#pre-game-button');
 const boardFragment = document.createDocumentFragment();
+const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
+const confettiDiv = document.querySelector('#confetti');
 const numberCards = 16;
+// TODO: Handle and add selector for 8, 16, or 32 cards
+const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
+const hiddenClass = 'd-none';
 
 // function makeCardsOld() {
 //     for (let i = 0; i < 4; i++) {
@@ -244,19 +272,21 @@ let board = {
      secondCardValue: "", //empty, card Value (e.g., "4S" || "10C")
      cardClickCount: 0, // 0, 1, 2
      onMouseClickTextColorError: 0, // 0, 1
+     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
 
-     startGame: function strtGm() {
-        console.log("board.startGame() called");
-        console.log("#pre-game-button clicked!");
-     },
+     // TODO: Convert these stubs into actual methods to replace functions below
+ //     startGame: function strtGm() {
+ //        console.log("board.startGame() called");
+ //        console.log("#pre-game-button clicked!");
+ //     },
 
-     makeCards: function mkCrds() {
-        console.log("board.makeCards() called");
-     },
+ //     makeCards: function mkCrds() {
+ //        console.log("board.makeCards() called");
+ //     },
 
-     displayCards: function dsplyCrds() {
-        console.log("board.displayCards() called");
-     }
+ //     displayCards: function dsplyCrds() {
+ //        console.log("board.displayCards() called");
+ //     }
  };
 
 
@@ -358,8 +388,6 @@ function sameCardClickedTwiceQuery (ci1, ci2) {
 //     }
 // }
 
-
-
 //Parameters are two strings
 function doDifferentCardsMatchQuery (vc1, vc2) {
     let valueCard1 = vc1;
@@ -378,8 +406,6 @@ function textInfoToTextDark (evt) {
     evt.target.outerHTML = evt.target.outerHTML.replace(stHidden, sti);
 }
 
-
-
 //Helper function for cardsDoMatch alternative
 function cardsDoMatch () {console.log("");
 }
@@ -387,6 +413,8 @@ function cardsDoMatch () {console.log("");
 // Helper function for cardsDoNotMatch alternative
 function cardsDoNotMatch () {console.log("");
 }
+
+// TODO: REVIEW THIS; IT'S PROBABLY ALL DEFUNCT AT THIS POINT
 
 //MAIN FUNCTION
 //Display or hide value based on whether same card is clicked twice in a row
@@ -496,7 +524,6 @@ on second click, update states, check to see if second card == first card
                     go to next page
 */
 
-//TODO: Get this to work with 8 matching cards, instead of 16 random cards
 function startGame() {
     makeCards();
     // using chosenCards to (a) avoid duplication and (b) create set for duplication
@@ -545,6 +572,64 @@ function startGame() {
     console.log("2nd board.boardState is " + board.boardState);
  }
 
+function hideDiv(strH) {
+    let divToHide = document.querySelector(strH);
+    divToHide.classList.add(hiddenClass);
+}
+
+function makeConfetti() {
+    for (let i = 0; i < dimensions; i++) {
+        let newDimensionsConfettiHtml = '';
+        for (let j = 0; j < dimensions; j++) {
+            const newConfettiHtml = '<div class="confetti border-dark col-2 m-1">*****</div>';
+            newDimensionsConfettiHtml += newConfettiHtml;
+        }
+        const newConfettiDiv = document.createElement('div');
+        confettiFragment.appendChild(newConfettiDiv);
+        const newConfettiRowHtml =  '<div class="row four-confetti justify-content-center">' +
+                            newDimensionsConfettiHtml + '</div>';
+        newConfettiDiv.innerHTML = newConfettiRowHtml;
+    }
+    confettiDiv.appendChild(confettiFragment);
+    board.boardState = "postBoard";
+    console.log("3rd board.boardState, confetti, is " + board.boardState);
+ }
+
+function iterateCorrectCardCount() {
+    console.log("before " + board.cardMatchCount);
+    board.cardMatchCount += 2;
+    console.log("after increment " + board.cardMatchCount);
+}
+
+function testMaxCorrectCardCount() {
+    if (board.cardMatchCount  >= numberCards) {
+        window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
+        hideDiv('#pre-game');
+        hideDiv('#banner');
+        makeConfetti();
+}   else  {
+        console.log("board.cardMatchCount still less than " + numberCards);
+    }
+}
+
+// TODO: ADD THESE IN THE APPROPRIATE LOCATIONS
+function iterateCardClickCount() {
+    console.log("before " + board.cardClickCount);
+    board.cardClickCount += 1;
+    console.log("after increment " + board.cardClickCount);
+}
+
+function testMaxCardClickCount() {
+    if (board.cardClickCount  >= (numberCards * 2)) {
+        console.log(board.cardClickCount);
+        window.alert("SORRY -- TOO MANY CLICKS1! Resetting board...");
+        // TODO: Add board reset functionality in testMaxCardClickCount()
+}   else  {
+        console.log("board.cardClickCount still less than 2X numberCards");
+    }
+}
+
+
 //TRYING TO FIGURE OUT ERROR: "rules.js:308 Uncaught DOMException:
 // Failed to set the 'outerHTML' property on 'Element':
 // This element has no parent node."
@@ -564,6 +649,13 @@ function onMouseClickNEW(evt) {
     let backgroundIncorrectColor = "card-background-color-incorrect";
     let firstClickedCardClass = "first-card-clicked";
 
+    if (clickedDivClassList.contains("card")) {
+        iterateCardClickCount();
+        testMaxCardClickCount();
+    } else {
+        return;
+    }
+
     if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
         board.firstCardState = "clicked";
         board.firstCardValue = evt.target.textContent;
@@ -577,7 +669,8 @@ function onMouseClickNEW(evt) {
         clickedDivClassList.replace(hiddenText, darkText);
         let firstClickedCardDiv = document.querySelector('.first-card-clicked');
         if (board.firstCardValue == board.secondCardValue) {
-            // let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+
+            let firstClickedCardDiv = document.querySelector('.first-card-clicked');
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundCorrectColor);
             clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
 
@@ -599,10 +692,41 @@ function onMouseClickNEW(evt) {
                 }
             );
 
-
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
+
+            iterateCorrectCardCount();
+
+            testMaxCorrectCardCount();
+
+            // TODO: WHY IS THE ANIMATION SO BRITTLE IF I ADD NEW COMMANDS, EVEN A CONSOLE.LOG?
+            // TODO: WHAT HAPPENS IF I MOVE THIS OUT AS NEW FUNCTION?
+            // increment cardMatchCount
+            // console.log("before " + cardMatchCount);
+            // board.cardMatchCount += 2;
+            // console.log("after increment " + cardMatchCount);
+
+            // if (cardMatchCount  >= numberCards) {
+
+            //     // TODO: CREATE ARRAY; each
+            //     // REVIEW: https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+
+            //     evt.target.animate([ // change the target and the animation
+            //             {transform: 'translateY(+25px)'},
+            //             {transform: 'scale(2)'},
+            //         ], {
+            //             duration: 1000,
+            //             iterations: 2
+            //         }
+            //     );
+            //     // reset everything
+            //     // go to new page
+            //     // offer opportunity to play again
+
+            // } else {
+            //     console.log("cardMatchCount still below threshold: " + cardMatchCount);
+            // }
         } else {
             clickedDivClassList.replace(hiddenText, darkText);
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
