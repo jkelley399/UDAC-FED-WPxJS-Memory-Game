@@ -149,7 +149,15 @@
     function iterateCardClickCount()
     function testMaxCardClickCount()
 
+    TODO: Hide other pages to start
+    TODO: Style h1s
     TODO: Confetti animation
+
+2019-02-09--10:
+    feat: Hiding and unhiding pages
+
+    TODO: Confetti animation in makeConfetti()
+    TODO: Style h1s
 
     TODO:
     0.  eventHandler: Really try:
@@ -221,6 +229,7 @@ const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
+const confettiPieces = document.querySelectorAll('.confetti-piece');
 const numberCards = 16;
 // TODO: Handle and add selector for 8, 16, or 32 cards
 const maxCardsMultiplier = 2; // Natural number
@@ -525,6 +534,8 @@ on second click, update states, check to see if second card == first card
 */
 
 function startGame() {
+    hideDiv('#pre-game');
+    unhideDiv('#banner');
     makeCards();
     // using chosenCards to (a) avoid duplication and (b) create set for duplication
     let remainingCards = cards;
@@ -572,6 +583,11 @@ function startGame() {
     console.log("2nd board.boardState is " + board.boardState);
  }
 
+function unhideDiv(strU) {
+    let divToUnhide = document.querySelector(strU);
+    divToUnhide.classList.remove(hiddenClass);
+}
+
 function hideDiv(strH) {
     let divToHide = document.querySelector(strH);
     divToHide.classList.add(hiddenClass);
@@ -581,17 +597,33 @@ function makeConfetti() {
     for (let i = 0; i < dimensions; i++) {
         let newDimensionsConfettiHtml = '';
         for (let j = 0; j < dimensions; j++) {
-            const newConfettiHtml = '<div class="confetti border-dark col-2 m-1">*****</div>';
+            const newConfettiHtml = '<div class="confetti-piece border-dark col-2 m-1">*****</div>';
             newDimensionsConfettiHtml += newConfettiHtml;
         }
         const newConfettiDiv = document.createElement('div');
         confettiFragment.appendChild(newConfettiDiv);
-        const newConfettiRowHtml =  '<div class="row four-confetti justify-content-center">' +
+        const newConfettiRowHtml =  '<div class="row four-confetti-piece justify-content-center">' +
                             newDimensionsConfettiHtml + '</div>';
         newConfettiDiv.innerHTML = newConfettiRowHtml;
+
+        console.log("confettiPieces is: ") + confettiPieces;
+        function anmiateConfetti() {
+            confettiPieces.forEach(function(cp) {
+                cp.animate([
+                    {transform: 'translateY(+25px)'},
+                    {transform: 'scale(2)'},
+                    ], {
+                        duration: 1000,
+                        iterations: 2
+                    }
+                );
+            });
+            console.log(cards);
+        }
     }
     confettiDiv.appendChild(confettiFragment);
     board.boardState = "postBoard";
+    console.log("3rd board.boardState, confetti, is " + board.boardState);
     console.log("3rd board.boardState, confetti, is " + board.boardState);
  }
 
@@ -606,6 +638,7 @@ function testMaxCorrectCardCount() {
         window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
         hideDiv('#pre-game');
         hideDiv('#banner');
+        unhideDiv('#post-game');
         makeConfetti();
 }   else  {
         console.log("board.cardMatchCount still less than " + numberCards);
