@@ -153,13 +153,33 @@
     TODO: Style h1s
     TODO: Confetti animation
 
-2019-02-09--10:
+2019-02-11:
     feat: Hiding and unhiding pages
 
     TODO: Confetti animation in makeConfetti()
     TODO: Style h1s
 
-    TODO:
+2019-02-12--14:
+    feat: Separate animation function for makeConfetti()
+
+    function anmiateConfetti()
+    function randomSign()
+    function quoteRGBColor(x,y,z)
+    function translateXorYString(axis,sign,perCent)
+
+    2019-02-17: Added row-based randomization
+
+    TODO: continue animateConfetti() keyframe experimentation
+    TODO: Item-based randomization
+    TODO: figure out faster way to test animateConfetti() cycle
+    TODO: hideDiv('#confetti'); at end --- having difficulty with it
+    TODO: Fix the green display of the last correct pair
+    TODO: Prevent
+        (a) clicking correct cardd
+        (b) clicking same card twice
+    TODO: Change incorrect animation so the color reverts at end
+
+    GENERAL TODO:
     0.  eventHandler: Really try:
         A.  to understand why I keep having problems when I add these to onMouseClickNEW(evt); and
         B.  to figure out:
@@ -229,7 +249,6 @@ const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
-const confettiPieces = document.querySelectorAll('.confetti-piece');
 const numberCards = 16;
 // TODO: Handle and add selector for 8, 16, or 32 cards
 const maxCardsMultiplier = 2; // Natural number
@@ -257,7 +276,7 @@ function makeCards() {
             cards.push(card);
         });
     });
-    console.log(cards);
+    // console.log(cards);
 }
 
 function incorrectCardAnimation(carddiv) {
@@ -310,7 +329,7 @@ function doubleArray(x) {
 // NOTE: This function is based on getRandomInt(max) in MDN - see references for Math.random()
 // TODO: Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
 //       Add fixes (if maxInt < minInt, then switch)
-
+// TODO: Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
 function randomIntInRange(minInt, maxInt) { //input, two integers
     // If either parameter is not an integer, its floor value != origiinal parameter
     let floorMinInt = Math.floor(minInt);
@@ -319,6 +338,17 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
     // Expected output integer from minInt to (maxInt -1)
     return (floorMinInt + Math.floor(Math.random() * Math.floor(deltInt)));
     console.log(deltInt);
+}
+
+// TODO: Revise if necessary after testing randomIntInRange re the case (maxInt = (minInt + 1))
+function randomSign() {
+    // Returns a string, either "-" or ""
+    if (randomIntInRange(1,3) == 1) {
+        return "-";
+    }
+    else {
+        return "";
+    }
 }
 
 // 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
@@ -365,7 +395,7 @@ function onMouseoverCard(evt) {
         console.log("");
     } else {
         // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
-        console.log("");
+        // console.log("");
     }
 }
 
@@ -432,13 +462,13 @@ function onCardMouseClick(evt) {
 
     //setup helper functions
 //Helper function to add .card card-background-up-color to .card
-    function cardToBackgroundColor(e) {
-        let stHidden = "card";
-        let sti = "card card-background-up-color"
-        e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
-    }
+function cardToBackgroundColor(e) {
+    let stHidden = "card";
+    let sti = "card card-background-up-color"
+    e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
+}
 
-    console.log("In onCardMouseClick(evt) with evt.target = " + evt.target);
+    // console.log("In onCardMouseClick(evt) with evt.target = " + evt.target);
 
     //if error in setup, return setup error
     cardMatchSetupError(evt);
@@ -447,11 +477,11 @@ function onCardMouseClick(evt) {
     //update states:
     // if (board.clickCount == 0) {
     if (true) {
-        console.log("Before click, board.clickCount = " + board.clickCount);
+        // console.log("Before click, board.clickCount = " + board.clickCount);
         board.firstCardState = "clicked";
         board.firstCardValue = evt.target.innerHTML;
         board.clickCount += 1;
-        console.log("After click, board.clickCount = " + board.clickCount);
+        // console.log("After click, board.clickCount = " + board.clickCount);
 
         //change first card's text color and background color
         let str1 = "card";
@@ -554,7 +584,7 @@ function startGame() {
 
     let cardsSubset = doubleArray(removedCards);
 
-    console.log(cardsSubset);
+    // console.log(cardsSubset);
 
     let displayedCards = [];
 
@@ -580,7 +610,7 @@ function startGame() {
     }
     targetDiv.appendChild(boardFragment);
     board.boardState = "transBoard";
-    console.log("2nd board.boardState is " + board.boardState);
+    // console.log("2nd board.boardState is " + board.boardState);
  }
 
 function unhideDiv(strU) {
@@ -591,6 +621,64 @@ function unhideDiv(strU) {
 function hideDiv(strH) {
     let divToHide = document.querySelector(strH);
     divToHide.classList.add(hiddenClass);
+}
+
+function rgbColorString(x,y,z) {
+    // Returns a string of an RGB color, e.g., "rgb(30, 40, 50)"
+    return ('rgb(' + x.toString() + ', ' + y.toString() + ', ' + z.toString() + ')');
+}
+
+function translateXorYString(axis,sign,perCent) {
+    // All inputs must be strings
+    // Returns a string of a keyframe translateX or translateY value, e.g., "rgb(30, 40, 50)"
+    return ('translate' + axis + '(' + sign + perCent + ')');
+}
+
+function anmiateConfetti() {
+    hideDiv('#post-game-header-1');
+    hideDiv('#post-game-header-2');
+    const confettiPieces = document.querySelectorAll('.confetti-piece');
+    confettiPieces.forEach(function(cp) {
+        // NOTE: Many of base specifics based on keyframe examples in
+        // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+        // TODO: Experiment more with (a) easing, (b) rotate, (c) translate3D (esp. Z-axis)
+
+        // Random X; Random Y; Random Color
+
+        // For each piece of confetti, random translateX (+30 - +90%), translateY (-30 - +30%), color3x
+        // TODO: Revise if necessary after testing randomIntInRange re the case (maxInt = (minInt + 1))
+        let rndX = randomIntInRange(30,90);
+        let rndY = randomIntInRange(0,30);
+        let rndSgn = randomSign();
+        let rndR = randomIntInRange(0,255);
+        let rndG = randomIntInRange(0,255);
+        let rndB = randomIntInRange(0,255);
+
+        let rndTranslX = 'translateX(' + rndSgn + rndX + '%)';
+        let rndTranslY = 'translateY(' + rndSgn + rndX + '%)';
+        let rndColor1 = 'rgb(' + rndR + ', ' + rndG + ', '  + rndB  + ')' ;
+        let rndColor2 = 'rgb(' + rndG + ', ' + rndB + ', '  + rndR  + ')' ;
+        let rndColor3 = 'rgb(' + rndB + ', ' + rndR + ', '  + rndG  + ')' ;
+
+        cp.animate([
+
+            // Row-based randomization
+            // TODO: Item-based randomization
+            {transform: rndTranslX, color: rndColor1},
+            {transform: 'scale(2)', color: '#03F'},
+            {transform: 'translate3D(+75%, +75%, -150px)', color: rndColor2},
+            {transform: rndTranslY, color: '#0F0'},
+            {transform: 'scale(2)', color: '#F03'},
+            {transform: 'translate3D(+75%, +75%, +150px)', color: rndColor3},
+
+            ], {
+                duration: 1500,
+                easing: 'steps(4,end)',
+                iterations: 5
+            }
+        );
+    });
+    // console.log(cards);
 }
 
 function makeConfetti() {
@@ -605,32 +693,20 @@ function makeConfetti() {
         const newConfettiRowHtml =  '<div class="row four-confetti-piece justify-content-center">' +
                             newDimensionsConfettiHtml + '</div>';
         newConfettiDiv.innerHTML = newConfettiRowHtml;
+        // console.log("confettiPieces is: ") + confettiPieces;
 
-        console.log("confettiPieces is: ") + confettiPieces;
-        function anmiateConfetti() {
-            confettiPieces.forEach(function(cp) {
-                cp.animate([
-                    {transform: 'translateY(+25px)'},
-                    {transform: 'scale(2)'},
-                    ], {
-                        duration: 1000,
-                        iterations: 2
-                    }
-                );
-            });
-            console.log(cards);
-        }
     }
     confettiDiv.appendChild(confettiFragment);
+    anmiateConfetti();
     board.boardState = "postBoard";
-    console.log("3rd board.boardState, confetti, is " + board.boardState);
-    console.log("3rd board.boardState, confetti, is " + board.boardState);
+    // console.log("3rd board.boardState, confetti, is " + board.boardState);
+    // console.log("3rd board.boardState, confetti, is " + board.boardState);
  }
 
 function iterateCorrectCardCount() {
-    console.log("before " + board.cardMatchCount);
+    // console.log("before " + board.cardMatchCount);
     board.cardMatchCount += 2;
-    console.log("after increment " + board.cardMatchCount);
+    // console.log("after increment " + board.cardMatchCount);
 }
 
 function testMaxCorrectCardCount() {
@@ -640,25 +716,27 @@ function testMaxCorrectCardCount() {
         hideDiv('#banner');
         unhideDiv('#post-game');
         makeConfetti();
+        unhideDiv('#post-game-header-2');
 }   else  {
-        console.log("board.cardMatchCount still less than " + numberCards);
+        // console.log("board.cardMatchCount still less than " + numberCards);
     }
 }
 
 // TODO: ADD THESE IN THE APPROPRIATE LOCATIONS
 function iterateCardClickCount() {
-    console.log("before " + board.cardClickCount);
+    // console.log("before " + board.cardClickCount);
     board.cardClickCount += 1;
-    console.log("after increment " + board.cardClickCount);
+    // console.log("after increment " + board.cardClickCount);
 }
 
 function testMaxCardClickCount() {
     if (board.cardClickCount  >= (numberCards * 2)) {
-        console.log(board.cardClickCount);
+        // console.log(board.cardClickCount);
         window.alert("SORRY -- TOO MANY CLICKS1! Resetting board...");
         // TODO: Add board reset functionality in testMaxCardClickCount()
 }   else  {
-        console.log("board.cardClickCount still less than 2X numberCards");
+        console.log("");
+        // window.alert("board.cardClickCount still less than 2X numberCards");
     }
 }
 
@@ -670,7 +748,7 @@ function testMaxCardClickCount() {
 // to the old parent element
 function onMouseClickNEW(evt) {
     // TODO: Will not need these once helper functions working
-    console.log("evt.target  = " + evt.target);
+    // console.log("evt.target  = " + evt.target);
 
     let clickedDivClassList = evt.target.classList;
     // TODO: Maybe get rid of most of these variables and just use strings below
@@ -694,7 +772,7 @@ function onMouseClickNEW(evt) {
         board.firstCardValue = evt.target.textContent;
         clickedDivClassList.replace(hiddenText, darkText);
         clickedDivClassList.add(firstClickedCardClass);
-        console.log("First clicked card value  = " + board.firstCardValue);
+        // console.log("First clicked card value  = " + board.firstCardValue);
 
     } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
         board.secondCardState = "clicked";
@@ -711,8 +789,8 @@ function onMouseClickNEW(evt) {
                     {transform: 'translateY(-25px)'},
                     {transform: 'scale(2)'},
                 ], {
-                    duration: 1000,
-                    iterations: 2
+                    duration: 500,
+                    iterations: 1
                 }
             );
 
@@ -720,8 +798,8 @@ function onMouseClickNEW(evt) {
                     {transform: 'translateY(+25px)'},
                     {transform: 'scale(2)'},
                 ], {
-                    duration: 1000,
-                    iterations: 2
+                    duration: 500,
+                    iterations: 1
                 }
             );
 
@@ -811,7 +889,7 @@ function onMouseClickNEW(evt) {
     }
 }
 
-console.log("1st board.boardState is " + board.boardState);
+// console.log("1st board.boardState is " + board.boardState);
 
 playInput.addEventListener('click', startGame);
 
