@@ -39,6 +39,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
 https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
 https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect/setKeyframes
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
@@ -53,6 +54,7 @@ https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
@@ -77,6 +79,7 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+https://www.w3.org/TR/DOM-Level-3-Events/#event-flow
 https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 https://github.com/web-animations/web-animations-js/issues/14
 https://discussions.vtiger.com/discussion/175827/uncaught-notsupportederror-failed-to-execute-animate-on-element-vm7011-htmlmarqueeelement-js-356
