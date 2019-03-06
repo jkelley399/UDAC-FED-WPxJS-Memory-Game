@@ -176,12 +176,13 @@
 2019-02-18--03-04:
     WIP: Item-based randomization for confetti
 
-    function translateXorYString(axis,sign,perCent)
-    function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
-    function makeRndSignsArray()
-    function makeRndXYZArrays()
-    function makeRndColorComponentArray()
-    function makeRndColorArray()
+    2019-02-18--03-04:
+        function translateXorYString(axis,sign,perCent)
+        function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
+        function makeRndSignsArray()
+        function makeRndXYZArrays()
+        function makeRndColorComponentArray()
+        function makeRndColorArray()
 
     WH: Item-based randomization not working because of improper forEach syntax
          See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
@@ -191,6 +192,27 @@
     WH 2019-03-04: Item-based randomization not working because of improper forEach and not a for loop
                     See: https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
                     RESULT: Tried with a for loop, and no change
+
+2019-03-04--05 (cont'd):
+    Feat: Item-based randomization for confetti
+
+    LEARN: Have spent a long time working on this to no avail.  It wasn't until I read
+           "Animating Many Elements and the Animate Method" by kirupa
+           (https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm)
+           that I found this, which seems to be key:
+
+           "They are separated out into their own properties that live directly on each of the
+           circle elements we are animating. This makes working with them much easier – both aesthetically
+           and, as you will see in a little bit, functionally. The thing to note is that the end
+           result is still the same as what you've seen before: the animate object gets called
+           on an element with the keyframes and animation properties specified as arguments:"
+
+
+    TODO:   Revise new animateConfetti() to incorporate random elements from prior version
+    TODO:   Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
+            Random Y +/- beginning 2nd phase
+            Random X +/- beginning 2nd phase
+            Random scale beginning 2nd phase
 
     TODO: Expand makeRndSignsArray() to replace variable declarations for sign1, sign2, etc.
     TODO: Expand pattern to replace other variable declarations
@@ -265,6 +287,7 @@
         A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
         B.  Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
         C.  Figure out how to use Bootstrap with Sass options --> see Medium article
+        D.  Could increase the confetti resolution dramatically and them into "YOU WON" (2019-03-05)
 */
 
 // TODO: revise to add spot for changing three screens - will be container
@@ -673,14 +696,15 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-// let rndSignsArray = [];
-// function makeRndSignsArray() {
-//     for (let i = 0; i < 8; i++) {
-//         let rndSgn = randomSign();
-//         rndSignsArray.push(rndSgn);
-//         };
-//     // console.log(rndSignsArray);
-// }
+let rndSignsArray = [];
+function makeRndSignsArray() {
+    for (let i = 0; i < 8; i++) {
+        let rndSgn = randomSign();
+        rndSignsArray.push(rndSgn);
+    }
+    // console.log(rndSignsArray);
+    return rndSignsArray;
+}
 
 // Generates 3 random perCentX, perCentY, and pixelValueZ values for animateConfetti()
 // TODO: Better way to set end values in for loops; right now, by hand
@@ -689,22 +713,24 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-// let rndPerCentXArray = [];
-// let rndPerCentYArray = [];
-// let rndPixelValueZArray = [];
-// function makeRndXYZArrays() {
-//     for (let i = 0; i < 3; i++) {
-//         let rndX = randomIntInRange(30,90);
-//         rndPerCentXArray.push(rndX);
-//         let rndY = randomIntInRange(0,30);
-//         rndPerCentYArray.push(rndY);
-//         let rndZ = randomIntInRange(0,100);
-//         rndPixelValueZArray.push(rndZ);
-//         };
-//     // console.log(rndPerCentXArray);
-//     // console.log(rndPerCentYArray);
-//     // console.log(rndpixelValueZArray);
-// }
+let rndPerCentXArray = [];
+let rndPerCentYArray = [];
+let rndPixelValueZArray = [];
+function makeRndXYZArrays() {
+    for (let i = 0; i < 3; i++) {
+        let rndX = randomIntInRange(30,90);
+        rndPerCentXArray.push(rndX);
+        let rndY = randomIntInRange(0,30);
+        rndPerCentYArray.push(rndY);
+        let rndZ = randomIntInRange(0,100);
+        rndPixelValueZArray.push(rndZ);
+    }
+    // console.log(rndPerCentXArray);
+    // console.log(rndPerCentYArray);
+    // console.log(rndpixelValueZArray);
+    // TODO: break apart function or figure out how to return multple values
+    return rndpixelValueZArray;
+}
 
 // Generates 18 random color components (0-255)for animateConfetti()
 // TODO: Better way to set end values in for loops; right now, fixed integers
@@ -712,14 +738,15 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-// let rndColorComponentArray = [];
-// function makeRndColorComponentArray() {
-//     for (let i = 0; i < 18; i++) {
-//         let rndColorComponent = randomIntInRange(0,255);
-//         rndColorComponentArray.push(rndColorComponent);
-//         };
-//     // console.log(rndColorComponentArray);
-// }
+let rndColorComponentArray = [];
+function makeRndColorComponentArray() {
+    for (let i = 0; i < (dimensions * 2 * 3 * 4); i++) { // dimensions * confmultiplr * 3 rgb * 4 uses
+        let rndColorComponent = randomIntInRange(0,255);
+        rndColorComponentArray.push(rndColorComponent);
+    }
+    // console.log(rndColorComponentArray);
+    return rndColorComponentArray;
+}
 
 // Generates 6 random colors in *****FORMAT*** for animateConfetti()
 // TODO: Better way to set end values in for loops; right now, fixed integers
@@ -727,15 +754,17 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-// let rndColorArray = [];
-// function makeRndColorArray() {
-//     for (let i = 0; i < 18; i += 3) {
-//         let rndColor = rgbColorString(rndColorComponentArray[i], rndColorComponentArray[i + 1],
-//             rndColorComponentArray[i + 2]);
-//         rndColorArray.push(rndColor);
-//         };
-//     // console.log(rndColorArray);
-// }
+let rndColorArray = [];
+function makeRndColorArray() {
+    for (let i = 0; i < (dimensions * 2 * 3 * 4); i += 3) { // same multiple of dimensions as in
+        // makeRndColorComponentArray()
+        let rndColor = rgbColorString(rndColorComponentArray[i], rndColorComponentArray[i + 1],
+            rndColorComponentArray[i + 2]);
+        rndColorArray.push(rndColor);
+    }
+    // console.log(rndColorArray);
+    return rndColorArray;
+}
 
 // Generates array of two random integers, first in range (4,10), second in range (0,5)
 // for animateConfetti()
@@ -744,23 +773,28 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-// let rndScaleArray = [];
-// function makeRndScaleArray() {
-//         let scl1 = randomIntInRange(4,11);
-//         let scl2 = randomIntInRange(0,6);
-//         let rndScl1 = 'scale(' + scl1 + ')';
-//         let rndScl2 = 'scale(' + scl2 + ')';
-//         rndScaleArray.push(rndScl1);
-//         rndScaleArray.push(rndScl2);
-//     // console.log(rndScaleArray);
-// }
+let rndScaleArray = [];
+function makeRndScaleArray() {
+    let scl1 = randomIntInRange(4,11);
+    let scl2 = randomIntInRange(0,6);
+    let rndScl1 = 'scale(' + scl1 + ')';
+    let rndScl2 = 'scale(' + scl2 + ')';
+    rndScaleArray.push(rndScl1);
+    rndScaleArray.push(rndScl2);
+    // console.log(rndScaleArray);
+    return rndScaleArray;
+}
 
 
 
 // TODO: MAYBE NEED TO MOVE THE ARRAY-GENERATING FUNCTIONS INTO THE forEach loop to really randomize
-function animateConfetti() {
-    hideDiv('#post-game-header-1');
-    hideDiv('#post-game-header-2');
+// CH 2019-03-04: Tryiing splitting out the animation
+// function animateConfetti() {
+    //
+// function makeRandomArrays() {
+    // CH 2019-03-04: Tryiing splitting out the animation
+    // hideDiv('#post-game-header-1');
+    // hideDiv('#post-game-header-2');
 
 
     // For each piece of confetti, random translateX (+30 - +90%), translateY (-30 - +30%), color3x
@@ -778,7 +812,9 @@ function animateConfetti() {
     // WH 2019-03-04: Item-based randomization not working because of improper forEach and not a for loop
                     // See: https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
                     // RESULT: Tried with a for loop, and no change
-    const confettiPieces = document.querySelectorAll('.confetti-piece');
+
+    // CH 2019-03-04: Tryiing splitting out the animation
+    // const confettiPieces = document.querySelectorAll('.confetti-piece');
     // CWH 2019-03-04: OLD, forEach CODE FOLLOW; TODO: ELIMINATE IF for APPROACH WORKS
         // RESULT: CHANGING FROM forEach to for loop had no effect; still doing group animation
     // confettiPieces.forEach(function(cp, indx, arry) {
@@ -787,23 +823,24 @@ function animateConfetti() {
         // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
         // Random X; Random Y; Random Color
 
-    for (let c = 0; c < 64; c++) {
-        let confettiPiece = confettiPieces[c];
+    // CH 2019-03-04: Tryiing splitting out the animation
+    // for (let c = 0; c < 2; c++) {
+    //     let confettiPiece = confettiPieces[c];
 
     // TODO:   trying moving arrays into forEach loop to get item-based randomization and movement
     //         should also try resetting original arrays at end of each loop
 
     // Generates 8 random signs for animateConfetti()
     // TODO: Better way to set end values in for loops; right now, fixed integers
-        let rndSignsArray = [];
-        function makeRndSignsArray() {
-            for (let i = 0; i < 8; i++) {
-                let rndSgn = randomSign();
-                rndSignsArray.push(rndSgn);
-                };
-            // console.log(rndSignsArray);
-        }
-        makeRndSignsArray();
+        // let rndSignsArray = [];
+        // function makeRndSignsArray() {
+        //     for (let i = 0; i < 8; i++) {
+        //         let rndSgn = randomSign();
+        //         rndSignsArray.push(rndSgn);
+        //     }
+        //     // console.log(rndSignsArray);
+        // }
+        // makeRndSignsArray();
 
     // Generates 3 random perCentX, perCentY, and pixelValueZ values for animateConfetti()
     // TODO: Better way to set end values in for loops; right now, by hand
@@ -812,39 +849,40 @@ function animateConfetti() {
     // initial variable declarations are outside of the helper functions, which means that the
     // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-        let rndPerCentXArray = [];
-        let rndPerCentYArray = [];
-        let rndPixelValueZArray = [];
-        // console.log("rndPixelValueZArray is: " + rndPixelValueZArray);
-        function makeRndXYZArrays() {
-            for (let i = 0; i < 3; i++) {
-                let rndX = randomIntInRange(30,90);
-                rndPerCentXArray.push(rndX);
-                let rndY = randomIntInRange(0,30);
-                rndPerCentYArray.push(rndY);
-                let rndZ = randomIntInRange(0,100);
-                rndPixelValueZArray.push(rndZ);
-                };
-            // console.log(rndPerCentXArray);
-            // console.log(rndPerCentYArray);
-            // console.log(rndPixelValueZArray);
-        }
-        makeRndXYZArrays();
+        // let rndPerCentXArray = [];
+        // let rndPerCentYArray = [];
+        // let rndPixelValueZArray = [];
+        // // console.log("rndPixelValueZArray is: " + rndPixelValueZArray);
+        // function makeRndXYZArrays() {
+        //     for (let i = 0; i < 3; i++) {
+        //         let rndX = randomIntInRange(30,90);
+        //         rndPerCentXArray.push(rndX);
+        //         let rndY = randomIntInRange(0,30);
+        //         rndPerCentYArray.push(rndY);
+        //         let rndZ = randomIntInRange(0,100);
+        //         rndPixelValueZArray.push(rndZ);
+        //     }
+        //     // console.log(rndPerCentXArray);
+        //     // console.log(rndPerCentYArray);
+        //     // console.log(rndPixelValueZArray);
+        // }
+        // makeRndXYZArrays();
 
         // Generates 18 random color components (0-255)for animateConfetti()
         // TODO: Better way to set end values in for loops; right now, fixed integers
         // TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
         // initial variable declarations are outside of the helper functions, which means that the
         // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-        let rndColorComponentArray = [];
-        function makeRndColorComponentArray() {
-            for (let i = 0; i < 18; i++) {
-                let rndColorComponent = randomIntInRange(0,255);
-                rndColorComponentArray.push(rndColorComponent);
-                };
-            // console.log(rndColorComponentArray);
-        }
-        makeRndColorComponentArray();
+        // let rndColorComponentArray = [];
+        // function makeRndColorComponentArray() {
+        //     for (let i = 0; i < (dimensions * 2 * 3 * 4); i++) { // dimensions * confmultiplr * 3 rgb * 4 uses
+        //         let rndColorComponent = randomIntInRange(0,255);
+        //         rndColorComponentArray.push(rndColorComponent);
+        //     }
+        //     // console.log(rndColorComponentArray);
+        //     return rndColorComponentArray;
+        // }
+        // makeRndColorComponentArray();
 
         // Generates 6 random colors in *****FORMAT*** for animateConfetti()
         // TODO: Better way to set end values in for loops; right now, fixed integers
@@ -852,16 +890,18 @@ function animateConfetti() {
         // initial variable declarations are outside of the helper functions, which means that the
         // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-        let rndColorArray = [];
-        function makeRndColorArray() {
-            for (let i = 0; i < 18; i += 3) {
-                let rndColor = rgbColorString(rndColorComponentArray[i], rndColorComponentArray[i + 1],
-                    rndColorComponentArray[i + 2]);
-                rndColorArray.push(rndColor);
-                };
-            console.log(rndColorArray);
-        }
-        makeRndColorArray();
+        // let rndColorArray = [];
+        // function makeRndColorArray() {
+        //     for (let i = 0; i < (dimensions * 2 * 3 * 4); i += 3) { // same multiple of dimensions as in
+        //         // makeRndColorComponentArray()
+        //         let rndColor = rgbColorString(rndColorComponentArray[i], rndColorComponentArray[i + 1],
+        //             rndColorComponentArray[i + 2]);
+        //         rndColorArray.push(rndColor);
+        //     }
+        //     // console.log(rndColorArray);
+        //     return rndColorArray;
+        // }
+        // makeRndColorArray();
 
         // Generates array of two random integers, first in range (4,10), second in range (0,5)
         // for animateConfetti()
@@ -870,43 +910,47 @@ function animateConfetti() {
         // initial variable declarations are outside of the helper functions, which means that the
         // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
-        let rndScaleArray = [];
-        function makeRndScaleArray() {
-                let scl1 = randomIntInRange(4,11);
-                let scl2 = randomIntInRange(0,6);
-                let rndScl1 = 'scale(' + scl1 + ')';
-                let rndScl2 = 'scale(' + scl2 + ')';
-                rndScaleArray.push(rndScl1);
-                rndScaleArray.push(rndScl2);
-            // console.log(rndScaleArray);
-        }
-        makeRndScaleArray();
+        // let rndScaleArray = [];
+        // function makeRndScaleArray() {
+        //         let scl1 = randomIntInRange(4,11);
+        //         let scl2 = randomIntInRange(0,6);
+        //         let rndScl1 = 'scale(' + scl1 + ')';
+        //         let rndScl2 = 'scale(' + scl2 + ')';
+        //         rndScaleArray.push(rndScl1);
+        //         rndScaleArray.push(rndScl2);
+        //     // console.log(rndScaleArray);
+        // }
+        // makeRndScaleArray();
 
-        let rndTranslX = translateXorYString('X', rndSignsArray[0], rndPerCentXArray[0]);
-        let rndTranslY = translateXorYString('Y', rndSignsArray[1], rndPerCentYArray[0]);
-        let rndTransl3D1 = translate3DString(rndSignsArray[2], rndSignsArray[3], rndSignsArray[4],
-            rndPerCentXArray[1], rndPerCentYArray[1], rndPixelValueZArray[0]);
-        let rndTransl3D2 = translate3DString(rndSignsArray[5], rndSignsArray[6], rndSignsArray[7],
-            rndPerCentXArray[2], rndPerCentYArray[2], rndPixelValueZArray[1]);
+
+        // CH 2019-03-04: Tryiing splitting out the animation
+        // let rndTranslX = translateXorYString('X', rndSignsArray[0], rndPerCentXArray[0]);
+        // let rndTranslY = translateXorYString('Y', rndSignsArray[1], rndPerCentYArray[0]);
+        // let rndTransl3D1 = translate3DString(rndSignsArray[2], rndSignsArray[3], rndSignsArray[4],
+        //     rndPerCentXArray[1], rndPerCentYArray[1], rndPixelValueZArray[0]);
+        // let rndTransl3D2 = translate3DString(rndSignsArray[5], rndSignsArray[6], rndSignsArray[7],
+        //     rndPerCentXArray[2], rndPerCentYArray[2], rndPixelValueZArray[1]);
 
         // // TODO: Item-based randomization
         // CWH 2019-03-02: Item-based randomization not working because of improper forEach syntax
         //         See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-        confettiPiece.animate([
 
-            {transform: rndTranslX, color: rndColorArray[0]},
-            {transform: rndScaleArray[0], color: rndColorArray[1]},
-            {transform: rndTransl3D1, color: rndColorArray[2]},
-            {transform: rndTranslY, color: rndColorArray[3]},
-            {transform: rndScaleArray[1], color: rndColorArray[4]},
-            {transform: rndTransl3D2, color: rndColorArray[5]},
+        // CH 2019-03-04: Tryiing splitting out the animation
+        // confettiPiece.animate([
 
-            ], {
-                duration: 3000,
-                easing: 'steps(4,end)',
-                iterations: 3
-            }
-        );
+        //     {transform: rndTranslX, color: rndColorArray[0]},
+        //     {transform: rndScaleArray[0], color: rndColorArray[1]},
+        //     {transform: rndTransl3D1, color: rndColorArray[2]},
+        //     {transform: rndTranslY, color: rndColorArray[3]},
+        //     {transform: rndScaleArray[1], color: rndColorArray[4]},
+        //     {transform: rndTransl3D2, color: rndColorArray[5]},
+
+        //     ], {
+        //         duration: 3000,
+        //         easing: 'steps(4,end)',
+        //         iterations: 3
+        //     }
+        // );
         // console.log("rndScaleArray.length is :" + rndScaleArray.length);
         // indx, arry
         // console.log("element is :" + cp);
@@ -916,11 +960,154 @@ function animateConfetti() {
                 // Does it look like (a) forEach is really closed (b) the main function is closed?
 
 
-    // CWH 2019-03-04: OLD CLOSING forEach CODE FOLLOWS; ADJUSTING
-    // });
-    };
+    // CH 2019-03-04: Tryiing splitting out the animation
+    // };
+
     // console.log(cards);
+// }
+
+function animateConfetti() {
+    hideDiv('#post-game-header-1');
+    hideDiv('#post-game-header-2');
+// WH 2019-03-05: PROBABLY NEED TO ADD RETURN VALUES
+    // makeRandomArrays();
+
+// WH 2019-03-05: I'm doing something wrong with loop; saving old code to experiment here
+// NOTE: This approach to animating multiple elements using the animate method is based upon this:
+//     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+//     TODO: Implement eventHandler discussed in last part of article (not presently necessary)
+
+    const confettiPieces = document.querySelectorAll('.confetti-piece');
+
+    for (let i = 0; i < 64; i++) {
+        let confettiPiece = confettiPieces[i];
+        confettiAnimator(confettiPiece);
+    }
+
+     function confettiAnimator(confettiPiece) {
+        let xMax = 40;
+        let yMax = 300;
+        let sMax = 10;
+        let tSuppBase = 10;
+        let tSuppMult = 10;
+        let tMax = 10;
+
+        let rndColorComponentArray = makeRndColorComponentArray();
+        console.log(rndColorComponentArray);
+        let rndColorArray = makeRndColorArray();
+        console.log(rndColorArray);
+
+// TODO: Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
+//       Random Y +/- beginning 2nd phase
+//       Random X +/- beginning 2nd phase
+//       Random scale beginning 2nd phase
+
+        confettiPiece.keyframes = [{
+            opacity: (Math.random() * 0.6),
+            color: '#F00',
+            transform: 'translate3d(0, -1000%, 0) scale(10.0)'
+        }, {
+            opacity: Math.random(),
+            color: '#00F',
+            transform: 'translate3d(0, -1000%, 0) scale(10.0)',
+            transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + 0 + 'px, 0px)'
+       }, {
+            opacity: 1,
+            color: '#0F0',
+            transform: 'translate3d(' + (Math.random() * xMax * -1) + 'px, ' + 0 + 'px, 0px)'
+       }, {
+            opacity: (Math.random() * 2),
+            color: '#F0F',
+            transform: 'translate3d(' + (Math.random() * xMax * -1) + 'px, ' + 0 + 'px, 0px)'
+        // }, {
+        //     opacity: 0.7,
+        //     color: '#F0F',
+        //     transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + (Math.random() * yMax) + 'px, 0px)'
+        }];
+
+        confettiPiece.animProps = {
+            duration: 2000 + (tSuppBase * (Math.random() * tSuppMult)),
+            easing: 'ease-out',
+            iterations: 2
+        }
+
+        // function addConfettiFinishHandler(anim, el) {
+        //     anim.addEventListener('finish', function(e) {
+        //         confettiAnimator(el);
+        //     }, false);
+        // }
+
+        let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
+        // addConfettiFinishHandler(confettiPlayer, confettiPiece);
+    }
+
+// WH 2019-03-05: Initial morning version follows
+    // function confettiAnimator(confettiPiece) {
+    //     let xMax = 500;
+    //     let yMax = 300;
+    //     let tMax = 10;
+
+    //     confettiPiece.keyframes = [{
+    //         opacity: 0.7,
+    //         color: '#FF0',
+    //         transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + (Math.random() * yMax) + 'px, 0px)'
+    //     }, {
+    //         opacity: 1,
+    //         color: '#0FF',
+    //         transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + (Math.random() * yMax) + 'px, 0px)'
+    //     }, {
+    //         opacity: 0.7,
+    //         color: '#F0F',
+    //         transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + (Math.random() * yMax) + 'px, 0px)'
+    //     }];
+
+    //     confettiPiece.animProps = {
+    //         duration: 1000 + (300 * (Math.random() * tMax)),
+    //         easing: 'ease-out',
+    //         iterations: 2
+    //     }
+
+    //     // function addConfettiFinishHandler(anim, el) {
+    //     //     anim.addEventListener('finish', function(e) {
+    //     //         confettiAnimator(el);
+    //     //     }, false);
+    //     // }
+
+    //     let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
+    //     // addConfettiFinishHandler(confettiPlayer, confettiPiece);
+    // }
 }
+
+
+// WH 2019-03-05: I'm doing something wrong with loop; saving old code to experiment here
+    // for (let c = 0; c < 2; c++) {
+
+    //     let confettiPiece = confettiPieces[c];
+
+    //     let rndTranslX = translateXorYString('X', rndSignsArray[0], rndPerCentXArray[0]);
+    //     let rndTranslY = translateXorYString('Y', rndSignsArray[1], rndPerCentYArray[0]);
+    //     let rndTransl3D1 = translate3DString(rndSignsArray[2], rndSignsArray[3], rndSignsArray[4],
+    //         rndPerCentXArray[1], rndPerCentYArray[1], rndPixelValueZArray[0]);
+    //     let rndTransl3D2 = translate3DString(rndSignsArray[5], rndSignsArray[6], rndSignsArray[7],
+    //         rndPerCentXArray[2], rndPerCentYArray[2], rndPixelValueZArray[1]);
+
+    //     confettiPiece.animate([
+
+    //         {transform: rndTranslX, color: rndColorArray[0]},
+    //         {transform: rndScaleArray[0], color: rndColorArray[1]},
+    //         {transform: rndTransl3D1, color: rndColorArray[2]},
+    //         {transform: rndTranslY, color: rndColorArray[3]},
+    //         {transform: rndScaleArray[1], color: rndColorArray[4]},
+    //         {transform: rndTransl3D2, color: rndColorArray[5]},
+
+    //         ], {
+    //             duration: 3000,
+    //             easing: 'steps(4,end)',
+    //             iterations: 3
+    //             }
+    //     );
+    // };
+// }
 
 function makeConfetti() {
     for (let i = 0; i < (dimensions * 2); i++) {
@@ -955,6 +1142,7 @@ function iterateCorrectCardCount() {
     // console.log("after increment " + board.cardMatchCount);
 }
 
+// TODO: Deal with case in which same pair of cards is clicked repeatedly
 function testMaxCorrectCardCount() {
     if (board.cardMatchCount  >= numberCards) {
         window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
