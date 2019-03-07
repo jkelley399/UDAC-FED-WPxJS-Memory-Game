@@ -207,19 +207,20 @@
            result is still the same as what you've seen before: the animate object gets called
            on an element with the keyframes and animation properties specified as arguments:"
 
+2019-03-06:
+    Feat:   Fine-tuned animateConfetti(), with cubic Bézier timing
 
-    TODO:   Revise new animateConfetti() to incorporate random elements from prior version
-    TODO:   Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
-            Random Y +/- beginning 2nd phase
-            Random X +/- beginning 2nd phase
-            Random scale beginning 2nd phase
+            Added return values to more helper functions, making them more useful
+            Fixed random color to use rgb and utilize helper functions
+            Fixed random X, random Y, and random scale, beginning in 2nd phase
+            Fixed makeRndSignsArray() to replace variable declarations for sign1, sign2, etc.
 
-    TODO: Expand makeRndSignsArray() to replace variable declarations for sign1, sign2, etc.
-    TODO: Expand pattern to replace other variable declarations
-
+    TODO: hideDiv('#confetti'); at end --- having difficulty with it
+    TODO: In animateConfetti(), localize variable names, so they're not the same as in helper functions
+    TODO: Consider adding exploding and changing color "CONGRATULAITONS" before confetti
     DONE: figure out faster way to test animateConfetti() cycle
             feat (minor): call animateConfetti() in the console
-    TODO: hideDiv('#confetti'); at end --- having difficulty with it
+
     TODO: Fix the green display of the last correct pair
     TODO: Prevent
         (a) clicking correct cardd
@@ -698,7 +699,9 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 
 let rndSignsArray = [];
 function makeRndSignsArray() {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < (dimensions * 2 * 3 * 3); i += 3) { // almost same multiple of dimensions as in
+        // makeRndColorComponentArray() --- multiplied by 3 at end: only 3 uses in
+        // confettiAnimator(confettiPiece, x)
         let rndSgn = randomSign();
         rndSignsArray.push(rndSgn);
     }
@@ -773,19 +776,32 @@ function makeRndColorArray() {
 // initial variable declarations are outside of the helper functions, which means that the
 // arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
 
+// let rndScaleArray = [];
+// function makeRndScaleArray() {
+//     let scl1 = randomIntInRange(4,11);
+//     let scl2 = randomIntInRange(0,6);
+//     let rndScl1 = 'scale(' + scl1 + ')';
+//     let rndScl2 = 'scale(' + scl2 + ')';
+//     rndScaleArray.push(rndScl1);
+//     rndScaleArray.push(rndScl2);
+//     // console.log(rndScaleArray);
+//     return rndScaleArray;
+// }
+
+// Generates array of random integers, first in range (0,10)
+// for animateConfetti()
+// TODO: Change max values for randomIntInRange if I fix randomIntInRange()
 let rndScaleArray = [];
 function makeRndScaleArray() {
-    let scl1 = randomIntInRange(4,11);
-    let scl2 = randomIntInRange(0,6);
-    let rndScl1 = 'scale(' + scl1 + ')';
-    let rndScl2 = 'scale(' + scl2 + ')';
-    rndScaleArray.push(rndScl1);
-    rndScaleArray.push(rndScl2);
+    for (let i = 0; i < (dimensions * 2 * 3 * 3); i += 3) { // almost same multiple of dimensions as in
+        // makeRndColorComponentArray() --- multiplied by 3 at end: only 3 uses in
+        // confettiAnimator(confettiPiece, x)
+        let rndScl = randomIntInRange(0,11);
+        rndScaleArray.push(rndScl);
+    }
     // console.log(rndScaleArray);
     return rndScaleArray;
 }
-
-
 
 // TODO: MAYBE NEED TO MOVE THE ARRAY-GENERATING FUNCTIONS INTO THE forEach loop to really randomize
 // CH 2019-03-04: Tryiing splitting out the animation
@@ -969,10 +985,7 @@ function makeRndScaleArray() {
 function animateConfetti() {
     hideDiv('#post-game-header-1');
     hideDiv('#post-game-header-2');
-// WH 2019-03-05: PROBABLY NEED TO ADD RETURN VALUES
-    // makeRandomArrays();
 
-// WH 2019-03-05: I'm doing something wrong with loop; saving old code to experiment here
 // NOTE: This approach to animating multiple elements using the animate method is based upon this:
 //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 //     TODO: Implement eventHandler discussed in last part of article (not presently necessary)
@@ -981,56 +994,74 @@ function animateConfetti() {
 
     for (let i = 0; i < 64; i++) {
         let confettiPiece = confettiPieces[i];
-        confettiAnimator(confettiPiece);
+        confettiAnimator(confettiPiece, i);
     }
 
-     function confettiAnimator(confettiPiece) {
-        let xMax = 40;
-        let yMax = 300;
+     function confettiAnimator(confettiPiece, x) {
+        let xMax = 20;
+        let yMax = 20;
         let sMax = 10;
         let tSuppBase = 10;
         let tSuppMult = 10;
         let tMax = 10;
-
+// TODO: localize the following variable names, so they're not the same as in helper functions
         let rndColorComponentArray = makeRndColorComponentArray();
-        console.log(rndColorComponentArray);
         let rndColorArray = makeRndColorArray();
-        console.log(rndColorArray);
+        let rndSignsArrayX = makeRndSignsArray();
+        let rndSignsArrayY = makeRndSignsArray();
+        let rndScaleArray = makeRndScaleArray();
 
-// TODO: Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
+// DONE: Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
 //       Random Y +/- beginning 2nd phase
 //       Random X +/- beginning 2nd phase
 //       Random scale beginning 2nd phase
 
         confettiPiece.keyframes = [{
-            opacity: (Math.random() * 0.6),
-            color: '#F00',
-            transform: 'translate3d(0, -1000%, 0) scale(10.0)'
+            opacity: (Math.random() * 0.3),
+            color: rndColorArray[x],
+            transform: 'translate3d(0, -1000%, 0) scale(15.0)'
         }, {
             opacity: Math.random(),
-            color: '#00F',
-            transform: 'translate3d(0, -1000%, 0) scale(10.0)',
-            transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + 0 + 'px, 0px)'
+            color: rndColorArray[x + 1],
+            // transform: 'translate3d(0, -1000%, 0) scale(10.0)',
+            transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
+                rndSignsArrayY[x] + (Math.random() * yMax) + 'px, 0px) scale(' +
+                rndScaleArray[x] + ')'
        }, {
-            opacity: 1,
-            color: '#0F0',
-            transform: 'translate3d(' + (Math.random() * xMax * -1) + 'px, ' + 0 + 'px, 0px)'
-       }, {
-            opacity: (Math.random() * 2),
-            color: '#F0F',
-            transform: 'translate3d(' + (Math.random() * xMax * -1) + 'px, ' + 0 + 'px, 0px)'
+        //     opacity: (Math.random() * 0.6),
+        //     color: rndColorArray[x],
+        //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
         // }, {
-        //     opacity: 0.7,
-        //     color: '#F0F',
-        //     transform: 'translate3d(' + (Math.random() * xMax) + 'px, ' + (Math.random() * yMax) + 'px, 0px)'
+            opacity: 1,
+            color: rndColorArray[x + 2],
+            transform: 'translate3d(' + rndSignsArrayX[x + 1] + (Math.random() * xMax) + 'px, ' +
+                rndSignsArrayY[x + 1] + (Math.random() * yMax) + 'px, 0px) scale(' +
+                rndScaleArray[x + 1] + ')'
+       }, {
+        //     opacity: (Math.random() * 0.6),
+        //     color: rndColorArray[x],
+        //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
+        // }, {
+            opacity: (Math.random() * 2),
+            color: rndColorArray[x + 3],
+            transform: 'translate3d(' + rndSignsArrayX[x + 2] + (Math.random() * xMax) + 'px, ' +
+                rndSignsArrayY[x + 2] + (Math.random() * yMax) + 'px, 0px) scale(' +
+                rndScaleArray[x + 2] + ')'
         }];
 
         confettiPiece.animProps = {
-            duration: 2000 + (tSuppBase * (Math.random() * tSuppMult)),
-            easing: 'ease-out',
-            iterations: 2
+            duration: 6000 + (tSuppBase * (Math.random() * tSuppMult)),
+            easing: 'cubic-bezier(1, 0.25, 0.90, 1)',
+            // easing: 'steps(4,end)',
+            // easing: 'ease-out',
+            iterations: 1
         }
 
+// NOTE: The following, which I've commented out, is from
+//      https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+//      I didn't really understand it, and I didn't find it necessary for this project
+//      but it's something to study further after re-reading the article
+//
         // function addConfettiFinishHandler(anim, el) {
         //     anim.addEventListener('finish', function(e) {
         //         confettiAnimator(el);
