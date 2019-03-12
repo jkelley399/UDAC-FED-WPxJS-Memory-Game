@@ -251,22 +251,35 @@
             Added multiple prompts as cards are matched
             Started work on startNewGame()
 
-    TODO: GET <a class="nav-link" href="#banner">Return to Top</a> TO WORK PROPERLY
-    TODO: In animateConfetti(), localize variable names, so they're not the same as in helper functions
-    TODO: Consider adding exploding and changing color "CONGRATULAITONS" before confetti
+2019-03-12:
+    Feat:   Repeated play working.  Refined animateConfetti(); multiple devices & prompts
+
+            Created boardInitial object to facilitate re-initializing board object
+            Added:  initializeBoardObject(), initializeBoardHTML(),
+                    initializeConfettiHTML(), refresh()
+            Localized variable names in animateConfetti() to distinguish from helper functions
+            Cleaned up old comments
+
     TODO: Add comments for each function
+    TODO: Add comments to describe overall structure of program
     TODO: Fix this error
             index.html#banner:1
             Unchecked runtime.lastError: Could not establish connection.
             Receiving end does not exist.
-    DONE: figure out faster way to test animateConfetti() cycle
-            feat (minor): call animateConfetti() in the console
+    TODO: In onMouseoverCard(evt), add a color transformation on evt.target, preferably with bootstrap
 
     TODO: Fix the green display of the last correct pair
     TODO: Prevent
         (a) clicking correct cardd
         (b) clicking same card twice
     TODO: Change incorrect animation so the color reverts at end
+
+    FUTURE:     ADD exploding and changing color "CONGRATULAITONS" before confetti
+    FUTURE:     Change animation for repeated plays.  (Sort of like higher levels in video game.)
+                E.g., simple change would be rotating colors at beginning and ending phases
+    FUTURE:     Variable size boards (4x4, 8x8, 16x16 (with multiple decks))
+    FUTURE:     Refactor with object-oriented architecture.
+                E.g. adding methods in boardInitial object
 
     GENERAL TODO:
     0.  eventHandler: Really try:
@@ -346,23 +359,13 @@ const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
 const hiddenClass = 'd-none';
 const screenWidth = window.screen.width;
-
-
-
-// function makeCardsOld() {
-//     for (let i = 0; i < 4; i++) {
-//         for (let j = 0; j < 13; i++) {
-//         cards.push(suits[i]+ranks[j]);
-//         }
-//     }
-// }
-
 const suits = ['C', 'D', 'H', 'S'];
 const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2']
 let cards = [];
+let board = {};
 
 
-// This function generates cards by iterating over suit and rank
+// Generates cards by iterating over suit and rank
 function makeCards() {
     suits.forEach(function(suit) {
         ranks.forEach(function(rank) {
@@ -370,7 +373,6 @@ function makeCards() {
             cards.push(card);
         });
     });
-    // console.log(cards);
 }
 
 function incorrectCardAnimation(carddiv) {
@@ -383,12 +385,12 @@ function incorrectCardAnimation(carddiv) {
     );
 }
 
-let board = {
-//  Test mode for makeConfetti() and animateConfetti()
+let boardInitial = {
+//  TEST MODE PROPERTY: for makeConfetti() and animateConfetti()
 //  TODO: Comment out when finished with testing
     animationState: false,// true, false; use true to test animateConfetti();
 
-//  Non-test mode part of object begins here
+//  PRINCIPAL PROPERTIES BEGIN HERE
     boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
     // messages: ["First message.", "Second message.", "Third message."],
 
@@ -405,7 +407,8 @@ let board = {
     onMouseClickTextColorError: 0, // 0, 1
     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
 
-     // TODO: Convert these stubs into actual methods to replace functions below
+ // TODO:   Convert these stubs into actual methods to replace functions below
+            // NOTE: Would probably have to rework initializeBoardObject() if methods added
  //     startGame: function strtGm() {
  //        console.log("board.startGame() called");
  //        console.log("#pre-game-button clicked!");
@@ -420,6 +423,29 @@ let board = {
  //     }
  };
 
+// For play again functionality
+// NOTE: Would probably have to rework this if methods added to boardInitial object
+function initializeBoardObject() {
+    board = Object.assign({}, boardInitial);
+}
+// For play again functionality
+// NOTE: Based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+function initializeBoardHTML() {
+    if (targetDiv.hasChildNodes()) {
+        while (targetDiv.firstChild) {
+            targetDiv.removeChild(targetDiv.firstChild);
+        }
+    }
+}
+// For play again functionality
+// NOTE: Based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+function initializeConfettiHTML() {
+    if (confettiDiv.hasChildNodes()) {
+        while (confettiDiv.firstChild) {
+            confettiDiv.removeChild(confettiDiv.firstChild);
+        }
+    }
+}
 
 // This function takes an array as input and then doubles it [x,y,z] -> [x,y,z,x,y,z]
 function doubleArray(x) {
@@ -429,7 +455,7 @@ function doubleArray(x) {
     return x;
 }
 
-// NOTE: This function is based on getRandomInt(max) in MDN - see references for Math.random()
+// NOTE: Based on getRandomInt(max) in MDN - see references for Math.random()
 // TODO: Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
 //       Add fixes (if maxInt < minInt, then switch)
 // TODO: Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
@@ -455,7 +481,7 @@ function randomSign() {
     }
 }
 
-// 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
+// FUTURE: Fix this so it works only on individual cards, not rows
 // To do this, can experiment with an if/else statement for different responses
 // depending on the characteristics of the div
 // But remember to look at the lesson about capitalization
@@ -466,8 +492,7 @@ function onMouseoverCard(evt) {
     //          (a) textContent has acceptable syntax, using regex
     //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        // console.log("mouseOver a card div");
-        console.log("");
+        console.log("mouseOver a card div in onMouseoverCard");
         //TODO: Add a color transformation on evt.target, preferably with bootstrap
 
         // 2019-01-27: For time being, commenting out animation
@@ -513,17 +538,6 @@ function sameCardClickedTwiceQuery (ci1, ci2) {
     }
 }
 
-//NOTE: PROBABLY DON'T NEED THIS, BECAUSE THAT'S WHAT'S IN OBJECT
-//Helper function for number cards clicked
-//TODO: How to get card IDs?
-// function numberCardsClicked() {
-//     if (board.cardClickCount === cardId2) {
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
-
 //Parameters are two strings
 function doDifferentCardsMatchQuery (vc1, vc2) {
     let valueCard1 = vc1;
@@ -542,22 +556,15 @@ function textInfoToTextDark (evt) {
     evt.target.outerHTML = evt.target.outerHTML.replace(stHidden, sti);
 }
 
-//Helper function for cardsDoMatch alternative
+//FUTURE: Helper function for cardsDoMatch alternative
 function cardsDoMatch () {console.log("");
 }
 
-// Helper function for cardsDoNotMatch alternative
+//FUTURE: Helper function for cardsDoNotMatch alternative
 function cardsDoNotMatch () {console.log("");
 }
 
-// TODO: REVIEW THIS; IT'S PROBABLY ALL DEFUNCT AT THIS POINT
-
-//MAIN FUNCTION
-//Display or hide value based on whether same card is clicked twice in a row
-function onCardMouseClick(evt) {
-    //setup global strings
-
-    //setup helper functions
+// TODO: REVIEW THIS;
 //Helper function to add .card card-background-up-color to .card
 function cardToBackgroundColor(e) {
     let stHidden = "card";
@@ -565,126 +572,40 @@ function cardToBackgroundColor(e) {
     e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
 }
 
-    // console.log("In onCardMouseClick(evt) with evt.target = " + evt.target);
-
-    //if error in setup, return setup error
-    cardMatchSetupError(evt);
-
-    //wait for first click; on first click:
-    //update states:
-    // if (board.clickCount == 0) {
-    if (true) {
-        // console.log("Before click, board.clickCount = " + board.clickCount);
-        board.firstCardState = "clicked";
-        board.firstCardValue = evt.target.innerHTML;
-        board.clickCount += 1;
-        // console.log("After click, board.clickCount = " + board.clickCount);
-
-        //change first card's text color and background color
-        let str1 = "card";
-        let sti1 = "card card-background-up-color";
-        let str2 = "text-info";
-        let sti2 = "text-dark";
-
-        if ((evt.target.outerHTML.includes("card")) && (board.firstCardState = "clicked")) {
-            textInfoToTextDark (evt);
-            cardToBackgroundColor (evt);
-        }
-    }
-}
-
-/*wait for second click
-on second click, update states, check to see if second card == first card
-    if second card == first card,
-        update states,
-        change first card's text color back, and
-        change first card's background color back
-    if second card != first card
-        update states,
-        change second card's text color, and
-        change second card's background color
-        test whether second card's value == first card's value
-            if second card's value != first card's value
-                    run mismatch animation
-                    update states
-                    change first card's text color back, and
-                    change first card's background color back
-            if second car's value == first card's value
-                    run match animation
-                    change states
-            test whether sum of cards matched == maximum number matches
-                if sum of cards matched != maximum number matches
-                    wait for first click
-                if sum of cards matched == maximum number matches
-                    update states
-                    run completion animation
-                    go to next page
-*/
-
-
-/*
-CURRENT WORKING HYPOTHESIS: NL sketch of onCardMouseClick(evt)
-
-setup global strings
-if error in setup, return setup error
-wait for first click
-on first click,
-    update states,
-    change first card's text color, and
-    change first card's background color
-wait for second click
-on second click, update states, check to see if second card == first card
-    if second card == first card,
-        update states,
-        change first card's text color back, and
-        change first card's background color back
-    if second card != first card
-        update states,
-        change second card's text color, and
-        change second card's background color
-        test whether second card's value == first card's value
-            if second card's value != first card's value
-                    run mismatch animation
-                    update states
-                    change first card's text color back, and
-                    change first card's background color back
-            if second car's value == first card's value
-                    run match animation
-                    change states
-            test whether sum of cards matched == maximum number matches
-                if sum of cards matched != maximum number matches
-                    wait for first click
-                if sum of cards matched == maximum number matches
-                    update states
-                    run completion animation
-                    go to next page
-*/
 function startNewGame() {
     hideDiv('#post-game');
+    hideDiv('#banner-8');
     unhideDiv('#banner');
+    unhideDiv('#confetti');
     refresh();
     startGame();
 }
 
-// TODO flush out refresh() (@668) and fix playAgainInput.addEventListener('click', startNewGame);
-// Probable course of action
-//     @356, move let cards into makeCards()
-//     @380, move let board into new function, makeBoard()
-//     @664, move makeCards() and makeBoard() into refresh()
 function refresh() {
-    console.log("Working on refresh function")
+    //reset cards to initial state
+    cards = [];
 }
 
 function startGame() {
+
+    // INITIALIZATION
     // Test windows.screen.width to adjust confetti constants if necessary
     if (screenWidth < 768) {
         board.confettiRowLength = 8;
         board.confettiMultiplier= 2;
     }
+    //initialize board object
+    initializeBoardObject();
+    //initialize board section in index.html
+    initializeBoardHTML();
+    //initialize confetti section in index.html
+    initializeConfettiHTML()
     // Hide and display relevant parts of index.html
     hideDiv('#pre-game');
     unhideDiv('#banner-1');
     makeCards();
+
+    // CORE FUNCTION
     // using chosenCards to (a) avoid duplication and (b) create set for duplication
     let remainingCards = cards;
     let chosenCards = [];
@@ -760,16 +681,11 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 }
 
 // Generates random signs for animateConfetti()
-// TODO: Better way to set end values in for loops; right now, fixed integers
-// TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
-// initial variable declarations are outside of the helper functions, which means that the
-// arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-
+// FUTURE: Better way to set end values in for loops; right now, fixed integers
+// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndSignsArray = [];
 function makeRndSignsArray() {
-    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) { // almost same multiple of dimensions as in
-        // makeRndColorComponentArray() --- multiplied by 3 at end: only 3 uses in
-        // confettiAnimator(confettiPiece, x)
+    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) {
         let rndSgn = randomSign();
         rndSignsArray.push(rndSgn);
     }
@@ -777,41 +693,12 @@ function makeRndSignsArray() {
     return rndSignsArray;
 }
 
-// Returns only Generates 3 random perCentX, perCentY, and pixelValueZ values for animateConfetti()
-// TODO: Better way to set end values in for loops; right now, by hand
-// TODO: Way to set different end values in for loops for Z; right now, Z same as X & Y
-// TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
-// initial variable declarations are outside of the helper functions, which means that the
-// arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-
-let rndPerCentXArray = [];
-let rndPerCentYArray = [];
-let rndPixelValueZArray = [];
-function makeRndXYZArrays() {
-    for (let i = 0; i < 3; i++) {
-        let rndX = randomIntInRange(30,90);
-        rndPerCentXArray.push(rndX);
-        let rndY = randomIntInRange(0,30);
-        rndPerCentYArray.push(rndY);
-        let rndZ = randomIntInRange(0,100);
-        rndPixelValueZArray.push(rndZ);
-    }
-    // console.log(rndPerCentXArray);
-    // console.log(rndPerCentYArray);
-    // console.log(rndpixelValueZArray);
-    // TODO: break apart function or figure out how to return multple values
-    return rndPixelValueZArray;
-}
-
 // Generates random color components (0-255)for animateConfetti()
-// TODO: Better way to set end values in for loops; right now, fixed integers
-// TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
-// initial variable declarations are outside of the helper functions, which means that the
-// arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-
+// FUTURE: Better way to set end values in for loops; right now, fixed integers
+// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndColorComponentArray = [];
 function makeRndColorComponentArray() {
-    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 4); i++) { // dimensions * confmultiplr * 3 rgb * 4 uses
+    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 4); i++) {
         let rndColorComponent = randomIntInRange(0,255);
         rndColorComponentArray.push(rndColorComponent);
     }
@@ -820,15 +707,11 @@ function makeRndColorComponentArray() {
 }
 
 // Generates 6 random colors in *****FORMAT*** for animateConfetti()
-// TODO: Better way to set end values in for loops; right now, fixed integers
-// TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
-// initial variable declarations are outside of the helper functions, which means that the
-// arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-
+// FUTURE: Better way to set end values in for loops; right now, fixed integers
+// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndColorArray = [];
 function makeRndColorArray() {
-    for (let i = 0; i < (dimensions * 2 * 3 * 4); i += 3) { // same multiple of dimensions as in
-        // makeRndColorComponentArray()
+    for (let i = 0; i < (dimensions * 2 * 3 * 4); i += 3) {
         let rndColor = rgbColorString(rndColorComponentArray[i], rndColorComponentArray[i + 1],
             rndColorComponentArray[i + 2]);
         rndColorArray.push(rndColor);
@@ -837,28 +720,9 @@ function makeRndColorArray() {
     return rndColorArray;
 }
 
-// Generates array of two random integers, first in range (4,10), second in range (0,5)
-// for animateConfetti()
-// TODO: Change max values for randomIntInRange if I fix randomIntInRange()
-// TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
-// initial variable declarations are outside of the helper functions, which means that the
-// arrays are simply be getting longer each time through; TRYING PUTTING HELPERS INSIDE MAIN FUNCTION
-
-// let rndScaleArray = [];
-// function makeRndScaleArray() {
-//     let scl1 = randomIntInRange(4,11);
-//     let scl2 = randomIntInRange(0,6);
-//     let rndScl1 = 'scale(' + scl1 + ')';
-//     let rndScl2 = 'scale(' + scl2 + ')';
-//     rndScaleArray.push(rndScl1);
-//     rndScaleArray.push(rndScl2);
-//     // console.log(rndScaleArray);
-//     return rndScaleArray;
-// }
-
 // Generates array of random integers, first in range (0,10)
-// for animateConfetti()
-// TODO: Change max values for randomIntInRange if I fix randomIntInRange()
+// FUTURE: Change max values for randomIntInRange if I fix randomIntInRange()
+// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndScaleArray = [];
 function makeRndScaleArray() {
     for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) { // almost same multiple of dimensions as in
@@ -878,22 +742,18 @@ function animateConfetti() {
     hideDiv('#post-game-header-2');
     hideDiv('#contact-information');
 
-// NOTE: This approach to animating multiple elements using the animate method is based upon this:
+// NOTE: This approach to animating multiple elements uses the animate method based upon this:
 //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-//     TODO: Implement eventHandler discussed in last part of article (not presently necessary)
+//     a.  An animation is created for each confettiPiece, which enables one to
+//     b.  Use the animation object properties of that animation, e.g., onfinish
+//     c.  See:    https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
+//                 https://developer.mozilla.org/en-US/docs/Web/API/Animation
+//                 https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+//                 http://danielcwilson.com/blog/2015/07/animations-part-1/
+//                 https://css-tricks.com/css-animations-vs-web-animations-api/
+//                 https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 
     const confettiPieces = document.querySelectorAll('.confetti-piece');
-
-    // TODO 2019-03-10: New goal --- transform for loop in animateConfetti(), so that:
-    //     a.  We create an animation for each confettiPiece, which enables us to
-    //     b.  Use the animation object properties of that animation, e.g., onfinish
-    //         See:    https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
-    //                 https://developer.mozilla.org/en-US/docs/Web/API/Animation
-    //                 https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
-    //                 http://danielcwilson.com/blog/2015/07/animations-part-1/
-    //                 https://css-tricks.com/css-animations-vs-web-animations-api/
-    //                 https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-
 
     for (let i = 0; i < (board.confettiRowLength ** 2); i++) {
         let confettiPiece = confettiPieces[i];
@@ -902,26 +762,24 @@ function animateConfetti() {
     }
 
      function confettiAnimator(confettiPiece) {
+// Configuration variables for fine-tuning animation
         let xMax = 20;
         let yMax = 20;
         let sMax = 10;
         let tSuppBase = 10;
         let tSuppMult = 10;
         let tMax = 10;
-// TODO: localize the following variable names, so they're not the same as in helper functions
-        let rndColorComponentArray = makeRndColorComponentArray();
-        let rndColorArray = makeRndColorArray();
+// Localizing variable names to distinguish from helper functions
+        let rndColorComponentArrayLocal = makeRndColorComponentArray();
+        let rndColorArrayLocal = makeRndColorArray();
         let rndSignsArrayX = makeRndSignsArray();
         let rndSignsArrayY = makeRndSignsArray();
-        let rndScaleArray = makeRndScaleArray();
+        let rndScaleArrayLocal = makeRndScaleArray();
 
         let x = board.confettiCount;
 
-// DONE: Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
-//       Random Y +/- beginning 2nd phase
-//       Random X +/- beginning 2nd phase
-//       Random scale beginning 2nd phase
-
+// Keyframes
+// NOTE: Long animation, with beginning, middle, and end phases
         confettiPiece.keyframes = [{
             opacity: 0.1,
             color: '#F00',
@@ -956,11 +814,11 @@ function animateConfetti() {
             transform: 'translate3d(-20px, 100px, 0px) rotate(-1.0turn) scale(9.5)'
         }, {
             opacity: (Math.random() * 0.25),
-            color: rndColorArray[x],
+            color: rndColorArrayLocal[x],
             transform: 'translate3d(-10%, -50%, 0) scale(5.0)'
         }, {
             opacity: Math.random(),
-            color: rndColorArray[x + 1],
+            color: rndColorArrayLocal[x + 1],
             transform: 'translate3d(-20px, 100px, 5px) scale(10.0)',
             // Old code follows:
             // transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
@@ -968,59 +826,59 @@ function animateConfetti() {
             //     rndScaleArray[x] + ')'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 2],
+            color: rndColorArrayLocal[x + 2],
             transform: 'translate3d(' + rndSignsArrayX[x + 1] + (Math.random() * xMax) + 'px, ' +
-                '100px, 0px) scale(' + rndScaleArray[x + 1] + ')'
+                '100px, 0px) scale(' + rndScaleArrayLocal[x + 1] + ')'
        }, {
             opacity: .7,
-            color: rndColorArray[x + 3],
+            color: rndColorArrayLocal[x + 3],
             transform: 'translate3d(-5px, 100px, 0px) rotate(2.0turn) scale(3.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 4],
-            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(10.0)'
+            color: rndColorArrayLocal[x + 4],
+            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(7.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 5],
+            color: rndColorArrayLocal[x + 5],
+            transform: 'translate3d(-20px, 100px, 0px) rotate(.75turn) scale(10.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArrayLocal[x + 6],
+            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(15.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArrayLocal[x + 7],
             transform: 'translate3d(-20px, 100px, 0px) rotate(.75turn) scale(15.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 6],
-            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(20.0)'
-       }, {
-            opacity: 1,
-            color: rndColorArray[x + 7],
-            transform: 'translate3d(-20px, 100px, 0px) rotate(.75turn) scale(20.0)'
-       }, {
-            opacity: 1,
-            color: rndColorArray[x + 8],
+            color: rndColorArrayLocal[x + 8],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 9],
+            color: rndColorArrayLocal[x + 9],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 10],
+            color: rndColorArrayLocal[x + 10],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 11],
+            color: rndColorArrayLocal[x + 11],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 12],
+            color: rndColorArrayLocal[x + 12],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: 1,
-            color: rndColorArray[x + 13],
+            color: rndColorArrayLocal[x + 13],
             transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
        }, {
             opacity: (Math.random() * 2),
-            color: rndColorArray[x + 10],
+            color: rndColorArrayLocal[x + 10],
             transform: 'translate3d(' + rndSignsArrayX[x + 2] + (Math.random() * xMax) + 'px, ' +
                 ((rndSignsArrayY[x + 2] + (Math.random() * yMax)) + 100) + 'px, 0px) scale(' +
-                (rndScaleArray[x + 2] + 5.0) + ')'
+                (rndScaleArrayLocal[x + 2] + 5.0) + ')'
         }, {
             opacity: .1,
             color: '#F00',
@@ -1063,16 +921,8 @@ function animateConfetti() {
             iterations: 1
         }
 
-// NOTE: The following, which I've commented out, is from
+// NOTE: The following is based on:
 //      https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-//      I didn't really understand it, and I didn't find it necessary for this project
-//      but it's something to study further after re-reading the article
-//
-        // function addConfettiFinishHandler(anim, el) {
-        //     anim.addEventListener('finish', function(e) {
-        //         confettiAnimator(el);
-        //     }, false);
-        // }
 
         let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
         animationFinishHandler(confettiPlayer, confettiPiece);
@@ -1084,11 +934,6 @@ function animateConfetti() {
                 unhideDiv('#contact-information');
             }, false);
         }
-
-        // addConfettiFinishHandler(confettiPlayer, confettiPiece);
-
-// TODO 2019-03-09: Need to figure out how to use the addConfettiFinishHandler and invoke testConfettiState();
-
     }
     board.confettiState = "postConfetti";
 }
@@ -1173,8 +1018,7 @@ function testMaxCardClickCount() {
         window.alert("SORRY -- TOO MANY CLICKS1! Resetting board...");
         // TODO: Add board reset functionality in testMaxCardClickCount()
 }   else  {
-        console.log("");
-        // window.alert("board.cardClickCount still less than 2X numberCards");
+        console.log("board.cardClickCount still less than 2X numberCards");
     }
 }
 
@@ -1327,33 +1171,6 @@ function onMouseClickNEW(evt) {
 
             testMaxCorrectCardCount();
 
-            // TODO: WHY IS THE ANIMATION SO BRITTLE IF I ADD NEW COMMANDS, EVEN A CONSOLE.LOG?
-            // TODO: WHAT HAPPENS IF I MOVE THIS OUT AS NEW FUNCTION?
-            // increment cardMatchCount
-            // console.log("before " + cardMatchCount);
-            // board.cardMatchCount += 2;
-            // console.log("after increment " + cardMatchCount);
-
-            // if (cardMatchCount  >= numberCards) {
-
-            //     // TODO: CREATE ARRAY; each
-            //     // REVIEW: https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-
-            //     evt.target.animate([ // change the target and the animation
-            //             {transform: 'translateY(+25px)'},
-            //             {transform: 'scale(2)'},
-            //         ], {
-            //             duration: 1000,
-            //             iterations: 2
-            //         }
-            //     );
-            //     // reset everything
-            //     // go to new page
-            //     // offer opportunity to play again
-
-            // } else {
-            //     console.log("cardMatchCount still below threshold: " + cardMatchCount);
-            // }
         } else {
             clickedDivClassList.replace(hiddenText, darkText);
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
@@ -1382,22 +1199,9 @@ function onMouseClickNEW(evt) {
                 }
             );
 
-            // TODO 2019-02-07: MAYBE TRY (A) ADDING LIST OF DIVS TO ANIMATE TO THE OBJECT;
-            // (B) DEFINE ANIMATION FUNCTION; AND (C) ITERATE OVER THE LIST (LOOK FOR REFERENCES)
-
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
-
-            // firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
-            // clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
-
-            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            // clickedDivClassList.replace(darkText, hiddenText);
-
-            // firstClickedCardDiv.classList.replace(darkText, hiddenText);
-            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
-            // firstClickedCardDiv.classList.remove(firstClickedCardClass);
 
         }
     } else {
@@ -1415,175 +1219,4 @@ targetDiv.addEventListener('click', onMouseClickNEW, true);
 
 playAgainInput.addEventListener('click', startNewGame);
 
-
-// ANIMATION WIP
-
-            // firstClickedCardDiv.classList.add("animate hinge");
-            // clickedDivClassList.classList.add("animate hinge");
-
-            //TODO: PROBABLY NEED TO SET A TIMEOUT BEFORE THE ALERT
-            //SEE: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
-            //BUT: Maybe this won't be necessary when I add the animation.
-            // window.alert("I'm sorry.  The first and second cards did not match.");
-
-            // 2019-02-06: TRYING MOVING THESE BELOW THE ANIMATION
-                // NOTE: With this move, the first animated element kept its red color until the
-                // second animated element was activated --- why is that???
-            // firstClickedCardDiv.classList.replace(darkText, hiddenText);
-            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
-            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            // clickedDivClassList.replace(darkText, hiddenText);
-            // // TODO: Don't like repeating all this reset code; should add function
-            // firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            // board.firstCardState = "notClicked";
-            // board.secondCardState = "notClicked";
-            // END OF ATTEMPTED MOVE
-
-            // evt.target.animate([
-            //     // keyframes
-            //     {
-            //         opacity: 1,
-            //         color: "#d9534f"
-            //     },
-            //     {transform: 'translateY(-25px)'},
-            //     {transform: 'scale(2)'},
-            //     {transform: 'skew(30deg, 30deg)'},
-            //     {transform: 'rotate(0.5turn)'},
-
-            // ], {
-            //     //timing
-            //     delay: 200,
-            //     duration: 1500,
-            //     //repeats
-            //     iterations: 1
-            // });
-
-            // 2019-02-06: TRYING MOVING THESE BELOW THE ANIMATION
-                // NOTE: Now trying reordering and moving pieces between the animations
-                // NOTE: Even with this re-ordering, still have the same problem;
-                    // the first animated element only kept its red color until the
-                    // second animated element was activated (in the next line below)
-                    // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-                    // --- why is that???
-                    //     HYPO: MAYBE THERE'S A WAY TO SPECIFY WHEN THE ANIMATION RUNS WITHIN A FUNCTION?
-                    //     HYPO: ALTERNATIVELY, MAYBE THERE'S A WAY TO HANDLE THE COLOR AND TEXT
-                    //           FROM INSIDE THE ANIMATION
-            // firstClickedCardDiv.animate([
-            //     // keyframes
-            //     {
-            //         opacity: 1,
-            //         color: "#d9534f"
-            //     },
-            //     {transform: 'translateY(-25px)'},
-            //     {transform: 'scale(2)'},
-            //     {transform: 'skew(30deg, 30deg)'},
-            //     {transform: 'rotate(0.5turn)'},
-
-            // ], {
-            //     //timing
-            //     delay: 200,
-            //     duration: 1500,
-            //     //repeats
-            //     iterations: 1
-            // });
-
-
-
-// SAVED 2019-03-10: OLD VERSION OF function animateConfetti()
-
-// function animateConfetti() {
-//     hideDiv('#post-game-header-1');
-//     hideDiv('#post-game-header-2');
-
-// // NOTE: This approach to animating multiple elements using the animate method is based upon this:
-// //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-// //     TODO: Implement eventHandler discussed in last part of article (not presently necessary)
-
-//     const confettiPieces = document.querySelectorAll('.confetti-piece');
-
-//     for (let i = 0; i < 64; i++) {
-//         let confettiPiece = confettiPieces[i];
-//         confettiAnimator(confettiPiece, i);
-//     }
-
-//      function confettiAnimator(confettiPiece, x) {
-//         let xMax = 20;
-//         let yMax = 20;
-//         let sMax = 10;
-//         let tSuppBase = 10;
-//         let tSuppMult = 10;
-//         let tMax = 10;
-// // TODO: localize the following variable names, so they're not the same as in helper functions
-//         let rndColorComponentArray = makeRndColorComponentArray();
-//         let rndColorArray = makeRndColorArray();
-//         let rndSignsArrayX = makeRndSignsArray();
-//         let rndSignsArrayY = makeRndSignsArray();
-//         let rndScaleArray = makeRndScaleArray();
-
-// // DONE: Random color --- need to modify format (not hex, but rgb, and need to refer to arrays above)
-// //       Random Y +/- beginning 2nd phase
-// //       Random X +/- beginning 2nd phase
-// //       Random scale beginning 2nd phase
-
-//         confettiPiece.keyframes = [{
-//             opacity: (Math.random() * 0.3),
-//             color: rndColorArray[x],
-//             transform: 'translate3d(0, -1000%, 0) scale(15.0)'
-//         }, {
-//             opacity: Math.random(),
-//             color: rndColorArray[x + 1],
-//             // transform: 'translate3d(0, -1000%, 0) scale(10.0)',
-//             transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
-//                 rndSignsArrayY[x] + (Math.random() * yMax) + 'px, 0px) scale(' +
-//                 rndScaleArray[x] + ')'
-//        }, {
-//         //     opacity: (Math.random() * 0.6),
-//         //     color: rndColorArray[x],
-//         //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
-//         // }, {
-//             opacity: 1,
-//             color: rndColorArray[x + 2],
-//             transform: 'translate3d(' + rndSignsArrayX[x + 1] + (Math.random() * xMax) + 'px, ' +
-//                 rndSignsArrayY[x + 1] + (Math.random() * yMax) + 'px, 0px) scale(' +
-//                 rndScaleArray[x + 1] + ')'
-//        }, {
-//         //     opacity: (Math.random() * 0.6),
-//         //     color: rndColorArray[x],
-//         //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
-//         // }, {
-//             opacity: (Math.random() * 2),
-//             color: rndColorArray[x + 3],
-//             transform: 'translate3d(' + rndSignsArrayX[x + 2] + (Math.random() * xMax) + 'px, ' +
-//                 rndSignsArrayY[x + 2] + (Math.random() * yMax) + 'px, 0px) scale(' +
-//                 rndScaleArray[x + 2] + ')'
-//         }];
-
-
-//         confettiPiece.animProps = {
-//             duration: 6000 + (tSuppBase * (Math.random() * tSuppMult)),
-//             easing: 'cubic-bezier(1, 0.25, 0.90, 1)',
-//             // easing: 'steps(4,end)',
-//             // easing: 'ease-out',
-//             iterations: 1
-//         }
-
-// // NOTE: The following, which I've commented out, is from
-// //      https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-// //      I didn't really understand it, and I didn't find it necessary for this project
-// //      but it's something to study further after re-reading the article
-// //
-//         // function addConfettiFinishHandler(anim, el) {
-//         //     anim.addEventListener('finish', function(e) {
-//         //         confettiAnimator(el);
-//         //     }, false);
-//         // }
-
-//         let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
-//         // addConfettiFinishHandler(confettiPlayer, confettiPiece);
-
-// // TODO 2019-03-09: Need to figure out how to use the addConfettiFinishHandler and invoke testConfettiState();
-
-//     }
-//     board.confettiState = "postConfetti";
-// }
 

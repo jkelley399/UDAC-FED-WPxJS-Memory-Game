@@ -46,6 +46,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect/setKeyframes
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
+https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
 https://developer.mozilla.org/en-US/docs/Web/API/Screen/width
@@ -58,6 +59,7 @@ https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
