@@ -4,6 +4,7 @@ Besides reviewing FED lessons, my answers to FED exercises, and my previous proj
 
 Bootstrap
 https://getbootstrap.com/
+https://getbootstrap.com/docs/4.0/layout/grid/
 https://getbootstrap.com/docs/4.0/utilities/borders/
 https://getbootstrap.com/docs/4.0/utilities/colors/
 https://getbootstrap.com/docs/4.1/utilities/display/
@@ -47,6 +48,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
+https://developer.mozilla.org/en-US/docs/Web/API/Screen/width
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Web_Animations_API_Concepts
@@ -65,6 +67,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch
 https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events
 
 Font Awesome

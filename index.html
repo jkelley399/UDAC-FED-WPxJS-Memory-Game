@@ -20,33 +20,61 @@
     <div class="container">
         <section id="pre-game" class="">
             <div class="row pre-game-header col-12 m-2 justify-content-center">
-                <h1 class="row col-12 m-2 justify-content-center">Welcome To</h1>
-                <h1 class="row col-12 m-2 justify-content-center">The Memory Game</h1>
+<!--                 <h1 class="row col-12 m-2 justify-content-center">Welcome To</h1>
+                <h1 class="row col-12 m-2 justify-content-center">The Memory Game</h1> -->
+                <h1 class="row col-12 m-2 justify-content-center">Welcome to the Memory Game</h1>
                 <h2 class="row col-12 m-2 justify-content-center">Would you like to play?</h2>
             </div>
             <div class="row col-12 m-2 justify-content-center">
-                <button id="pre-game-button" class="btn-outline-primary" type="submit">Click here to play.</button>
+                <button id="pre-game-button" class="btn-outline-primary" type="submit">Click here to play</button>
             </div>
         </section>
-        <section id="banner" class="d-none">
-            <div class="row banner-header col-12 m-2 justify-content-center">
-                <h1>Memory Game</h1>
-                <h2>(Pick two different cards.)</h2>
+        <section id="banner">
+            <div id="banner-1" class="d-none row banner-header-1 col-12 m-2 justify-content-center">
+                <h2>Pick two cards</h2>
+            </div>
+            <div id="banner-2" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>Pick two more cards</h2>
+            </div>
+            <div id="banner-3" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>Now two more cards</h2>
+            </div>
+            <div id="banner-4" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>Keep going</h2>
+            </div>
+            <div id="banner-5" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>You're on a roll</h2>
+            </div>
+            <div id="banner-6" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>You're almost there...</h2>
+            </div>
+            <div id="banner-7" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>So close...</h2>
+            </div>
+            <div id="banner-8" class="d-none row banner-header-2 col-12 m-2 justify-content-center">
+                <h2>Home stretch now!</h2>
             </div>
             <section id="board">
             </section>
         </section>
         <section id="post-game" class="d-none">
-            <div id="post-game-header-1" class="row col-12 m-2 justify-content-center">
+<!--             <div id="post-game-header-1" class="row col-12 m-2 justify-content-center">
                 <h1>YOU'VE WON!</h1>
                 <h1>Thanks for playing </h1>
                 <h1>the Memory Game.</h1>
-            </div>
+            </div> -->
             <div id="confetti" class="row col-12 m-2 justify-content-center">
-                <h1>CONGRATULATIONS!</h1>
             </div>
             <div id="post-game-header-2" class="row col-12 m-2 justify-content-center">
-                <h2>Hope you had fun!</h2>
+                <div class="row col-12 m-2 justify-content-center">
+                    <h2>CONGRATULATIONS!</h2>
+                </div>
+                <div class="row col-12 m-2 justify-content-center">
+                    <h2>Hope you had fun!</h2>
+                </div>
+                <div class="row col-12 m-2 justify-content-center play-again">
+                    <button id="play-again-button" class="btn-outline-primary" type="submit">Click here to play again</button>
+                </div>
             </div>
         </section>
         <section id="contact-information" class="col-12 m-2 p-2">
@@ -66,9 +94,6 @@
                         </a>
                 </div>
                 <div class="row mr-2 justify-content-end" id=copyright-notice>© 2019 John Kelley</div>
-                <div class="row ml-1 return-to-top">
-                    <a class="nav-link" href="#banner">Return to Top</a>
-                </div>
             </footer>
         </section>
     </div>

@@ -237,6 +237,19 @@
                     http://danielcwilson.com/blog/2015/07/animations-part-1/
                     https://css-tricks.com/css-animations-vs-web-animations-api/
                     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+2019-03-11:
+    Feat:   Refined animateConfetti(); multiple devices & prompts
+
+            Created faster test cycle for animateConfetti()
+                Added animationState property to board object
+                Modified onMouseClickNEW(evt) and testMaxCorrectCardCount() to
+                    look for board.animatonState
+            Created long (1500 ms animation) with three principal phases
+            Added support for multiple devices, based on screen width test in startGame()
+                See:    https://developer.mozilla.org/en-US/docs/Web/API/Screen/width
+            Tested on multiple devices in Chrome dev tools
+            Added multiple prompts as cards are matched
+            Started work on startNewGame()
 
     TODO: GET <a class="nav-link" href="#banner">Return to Top</a> TO WORK PROPERLY
     TODO: In animateConfetti(), localize variable names, so they're not the same as in helper functions
@@ -321,6 +334,7 @@
 
 // TODO: revise to add spot for changing three screens - will be container
 const playInput = document.querySelector('#pre-game-button');
+const playAgainInput = document.querySelector('#play-again-button');
 const boardFragment = document.createDocumentFragment();
 const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
@@ -331,6 +345,9 @@ const numberCards = 16;
 const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
 const hiddenClass = 'd-none';
+const screenWidth = window.screen.width;
+
+
 
 // function makeCardsOld() {
 //     for (let i = 0; i < 4; i++) {
@@ -367,12 +384,19 @@ function incorrectCardAnimation(carddiv) {
 }
 
 let board = {
+//  Test mode for makeConfetti() and animateConfetti()
+//  TODO: Comment out when finished with testing
+    animationState: false,// true, false; use true to test animateConfetti();
+
+//  Non-test mode part of object begins here
     boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
     // messages: ["First message.", "Second message.", "Third message."],
 
     // state information about cards being clicked and clickCount stored in board object
     confettiState: "preConfetti", //preConfetti, transConfetti, postConfetti; re state of confetti
     confettiCount: 0, //
+    confettiRowLength: 12,
+    confettiMultiplier: 3,
     firstCardState: "notClicked", //notClicked, clicked,
     firstCardValue: "", //empty, card Value (e.g., "4S" || "10C")
     secondCardState: "notClicked", //notClicked, clicked,
@@ -438,14 +462,7 @@ function randomSign() {
 // See: "The nodeName's Capitalization" in
 // https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/85463be2-3206-434e-aa39-4604965daa29
 function onMouseoverCard(evt) {
-    // console.log("The textContent of evt.target is: " + evt.target.textContent);
-    // console.log("The textContent.length of evt.target is: "
-    //     + evt.target.textContent.length);
-    // console.log("The nodeName of evt.target is: " + evt.target.nodeName);
-    // console.log("The Node.firstChild of evt.target is: " + evt.target.firstChild);
-    // console.log("The innerHTML of evt.target is: " + evt.target.innerHTML);
-    // console.log("The outerHTML of evt.target is: " + evt.target.outerHTML);
-    //OPTIONAL: Add tests here if desired, e.g., test whether
+    //  OPTIONAL: Add tests here if desired, e.g., test whether
     //          (a) textContent has acceptable syntax, using regex
     //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
@@ -475,7 +492,7 @@ function onMouseoverCard(evt) {
         console.log("");
     } else {
         // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
-        // console.log("");
+        console.log("");
     }
 }
 
@@ -642,10 +659,31 @@ on second click, update states, check to see if second card == first card
                     run completion animation
                     go to next page
 */
+function startNewGame() {
+    hideDiv('#post-game');
+    unhideDiv('#banner');
+    refresh();
+    startGame();
+}
+
+// TODO flush out refresh() (@668) and fix playAgainInput.addEventListener('click', startNewGame);
+// Probable course of action
+//     @356, move let cards into makeCards()
+//     @380, move let board into new function, makeBoard()
+//     @664, move makeCards() and makeBoard() into refresh()
+function refresh() {
+    console.log("Working on refresh function")
+}
 
 function startGame() {
+    // Test windows.screen.width to adjust confetti constants if necessary
+    if (screenWidth < 768) {
+        board.confettiRowLength = 8;
+        board.confettiMultiplier= 2;
+    }
+    // Hide and display relevant parts of index.html
     hideDiv('#pre-game');
-    unhideDiv('#banner');
+    unhideDiv('#banner-1');
     makeCards();
     // using chosenCards to (a) avoid duplication and (b) create set for duplication
     let remainingCards = cards;
@@ -721,7 +759,7 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
         + sign3 + pixelValueZ + 'px)');
 }
 
-// Generates 8 random signs for animateConfetti()
+// Generates random signs for animateConfetti()
 // TODO: Better way to set end values in for loops; right now, fixed integers
 // TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
 // initial variable declarations are outside of the helper functions, which means that the
@@ -729,7 +767,7 @@ function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
 
 let rndSignsArray = [];
 function makeRndSignsArray() {
-    for (let i = 0; i < (dimensions * 2 * 3 * 3); i += 3) { // almost same multiple of dimensions as in
+    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) { // almost same multiple of dimensions as in
         // makeRndColorComponentArray() --- multiplied by 3 at end: only 3 uses in
         // confettiAnimator(confettiPiece, x)
         let rndSgn = randomSign();
@@ -765,7 +803,7 @@ function makeRndXYZArrays() {
     return rndPixelValueZArray;
 }
 
-// Generates 18 random color components (0-255)for animateConfetti()
+// Generates random color components (0-255)for animateConfetti()
 // TODO: Better way to set end values in for loops; right now, fixed integers
 // TODO-CWH-2019-03-01: Reason that the item-based randomization is not working is that the
 // initial variable declarations are outside of the helper functions, which means that the
@@ -773,7 +811,7 @@ function makeRndXYZArrays() {
 
 let rndColorComponentArray = [];
 function makeRndColorComponentArray() {
-    for (let i = 0; i < (dimensions * 2 * 3 * 4); i++) { // dimensions * confmultiplr * 3 rgb * 4 uses
+    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 4); i++) { // dimensions * confmultiplr * 3 rgb * 4 uses
         let rndColorComponent = randomIntInRange(0,255);
         rndColorComponentArray.push(rndColorComponent);
     }
@@ -823,7 +861,7 @@ function makeRndColorArray() {
 // TODO: Change max values for randomIntInRange if I fix randomIntInRange()
 let rndScaleArray = [];
 function makeRndScaleArray() {
-    for (let i = 0; i < (dimensions * 2 * 3 * 3); i += 3) { // almost same multiple of dimensions as in
+    for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) { // almost same multiple of dimensions as in
         // makeRndColorComponentArray() --- multiplied by 3 at end: only 3 uses in
         // confettiAnimator(confettiPiece, x)
         let rndScl = randomIntInRange(0,11);
@@ -833,16 +871,18 @@ function makeRndScaleArray() {
     return rndScaleArray;
 }
 
+// Adjusts defaults to make 8x8 confetti display and fewer random elements
+//     for smaller viewports (windows.screen.width < 768)
 function animateConfetti() {
-    hideDiv('#post-game-header-1');
+    // hideDiv('#post-game-header-1');
     hideDiv('#post-game-header-2');
+    hideDiv('#contact-information');
 
 // NOTE: This approach to animating multiple elements using the animate method is based upon this:
 //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 //     TODO: Implement eventHandler discussed in last part of article (not presently necessary)
 
     const confettiPieces = document.querySelectorAll('.confetti-piece');
-
 
     // TODO 2019-03-10: New goal --- transform for loop in animateConfetti(), so that:
     //     a.  We create an animation for each confettiPiece, which enables us to
@@ -855,7 +895,7 @@ function animateConfetti() {
     //                 https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 
 
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < (board.confettiRowLength ** 2); i++) {
         let confettiPiece = confettiPieces[i];
         confettiAnimator(confettiPiece, i);
         board.confettiCount += 1;
@@ -883,42 +923,141 @@ function animateConfetti() {
 //       Random scale beginning 2nd phase
 
         confettiPiece.keyframes = [{
-            opacity: (Math.random() * 0.3),
+            opacity: 0.1,
+            color: '#F00',
+            transform: 'translate3d(0px, 100px, 0px) rotate(0.25turn) scale(1.0)'
+        }, {
+            opacity: 0.3,
+            color: '#F00',
+            transform: 'translate3d(-15px, 100px, 0px) rotate(-.25turn) scale(5.0)'
+        }, {
+            opacity: 0.3,
+            color: '#00F',
+            transform: 'translate3d(-10px, 100px, 0px) rotate(0.5turn) scale(2.0)'
+        }, {
+            opacity: 0.5,
+            color: '#00F',
+            transform: 'translate3d(-15px, 100px, 0px) rotate(-0.5turn) scale(5.0)'
+        }, {
+            opacity: 0.7,
+            color: '#00F',
+            transform: 'translate3d(-10px, 100px, 0px) rotate(0.75turn) scale(2.5)'
+        }, {
+            opacity: 1.0,
+            color: '#F00',
+            transform: 'translate3d(-20px, 100px, 0px) rotate(-.75turn) scale(7.5)'
+        }, {
+            opacity: 1.0,
+            color: '#F00',
+            transform: 'translate3d(-20px, 100px, 0px) rotate(1.0turn) scale(8.5)'
+        }, {
+            opacity: 1.0,
+            color: '#F00',
+            transform: 'translate3d(-20px, 100px, 0px) rotate(-1.0turn) scale(9.5)'
+        }, {
+            opacity: (Math.random() * 0.25),
             color: rndColorArray[x],
-            transform: 'translate3d(0, -1000%, 0) scale(15.0)'
+            transform: 'translate3d(-10%, -50%, 0) scale(5.0)'
         }, {
             opacity: Math.random(),
             color: rndColorArray[x + 1],
-            // transform: 'translate3d(0, -1000%, 0) scale(10.0)',
-            transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
-                rndSignsArrayY[x] + (Math.random() * yMax) + 'px, 0px) scale(' +
-                rndScaleArray[x] + ')'
+            transform: 'translate3d(-20px, 100px, 5px) scale(10.0)',
+            // Old code follows:
+            // transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
+            //     rndSignsArrayY[x] + (Math.random() * yMax) + 'px, 0px) scale(' +
+            //     rndScaleArray[x] + ')'
        }, {
-        //     opacity: (Math.random() * 0.6),
-        //     color: rndColorArray[x],
-        //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
-        // }, {
             opacity: 1,
             color: rndColorArray[x + 2],
             transform: 'translate3d(' + rndSignsArrayX[x + 1] + (Math.random() * xMax) + 'px, ' +
-                rndSignsArrayY[x + 1] + (Math.random() * yMax) + 'px, 0px) scale(' +
-                rndScaleArray[x + 1] + ')'
+                '100px, 0px) scale(' + rndScaleArray[x + 1] + ')'
        }, {
-        //     opacity: (Math.random() * 0.6),
-        //     color: rndColorArray[x],
-        //     transform: 'translate3d(0, -1000%, 0) scale(10.0)'
-        // }, {
-            opacity: (Math.random() * 2),
+            opacity: .7,
             color: rndColorArray[x + 3],
+            transform: 'translate3d(-5px, 100px, 0px) rotate(2.0turn) scale(3.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 4],
+            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(10.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 5],
+            transform: 'translate3d(-20px, 100px, 0px) rotate(.75turn) scale(15.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 6],
+            transform: 'translate3d(20px, 100px, 0px) rotate(-.75turn) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 7],
+            transform: 'translate3d(-20px, 100px, 0px) rotate(.75turn) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 8],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 9],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 10],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 11],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 12],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: 1,
+            color: rndColorArray[x + 13],
+            transform: 'translate3d(-80px, 100px, 0px) scale(20.0)'
+       }, {
+            opacity: (Math.random() * 2),
+            color: rndColorArray[x + 10],
             transform: 'translate3d(' + rndSignsArrayX[x + 2] + (Math.random() * xMax) + 'px, ' +
-                rndSignsArrayY[x + 2] + (Math.random() * yMax) + 'px, 0px) scale(' +
-                rndScaleArray[x + 2] + ')'
+                ((rndSignsArrayY[x + 2] + (Math.random() * yMax)) + 100) + 'px, 0px) scale(' +
+                (rndScaleArray[x + 2] + 5.0) + ')'
+        }, {
+            opacity: .1,
+            color: '#F00',
+            transform: 'translate3d(-10px, 100px, 0px) rotate(-.75turn) scale(0.1)'
+       }, {
+            opacity: .1,
+            color: '#F00',
+            transform: 'translate3d(-10px, 100px, 0px) scale(0.1)'
+       }, {
+            opacity: .2,
+            color: '#F00',
+            transform: 'translate3d(-10px, 100px, 0px) scale(0.2)'
+       }, {
+            opacity: .3,
+            color: '#F00',
+            transform: 'translate3d(-25px, 100px, 0px) scale(3.0)'
+       }, {
+            opacity: .4,
+            color: '#F00',
+            transform: 'translate3d(-25px, 100px, 0px) scale(4.0)'
+       }, {
+            opacity: .6,
+            color: '#F00',
+            transform: 'translate3d(-35px, 100px, 0px) scale(5.0)'
+       }, {
+            opacity: .8,
+            color: '#F00',
+            transform: 'translate3d(-35px, 100px, 0px) scale(6.0)'
+       }, {
+            opacity: 1,
+            color: '#F00',
+            transform: 'translate3d(-35px, 100px, 0px) scale(7.0)'
         }];
 
-
         confettiPiece.animProps = {
-            duration: 10000 + (tSuppBase * (Math.random() * tSuppMult)),
-            easing: 'cubic-bezier(1, 0.25, 0.90, 1)',
+            duration: 15000 + (tSuppBase * (Math.random() * tSuppMult)),
+            easing: 'cubic-bezier(0.1, 0.1, 1, 1)',
             // easing: 'steps(4,end)',
             // easing: 'ease-out',
             iterations: 1
@@ -942,6 +1081,7 @@ function animateConfetti() {
             anim.addEventListener('finish', function(e) {
                 hideDiv('#confetti');
                 unhideDiv('#post-game-header-2');
+                unhideDiv('#contact-information');
             }, false);
         }
 
@@ -955,9 +1095,9 @@ function animateConfetti() {
 
 function makeConfetti() {
     board.confettiState = "transConfetti";
-    for (let i = 0; i < (dimensions * 2); i++) {
+    for (let i = 0; i < (board.confettiRowLength); i++) {
         let newDimensionsConfettiHtml = '';
-        for (let j = 0; j < (dimensions * 2); j++) {
+        for (let j = 0; j < (board.confettiRowLength); j++) {
             // const newConfettiHtml = '<div class="confetti-piece border-dark col-2 m-1">*****</div>';
             // TRY: switching to single asterisk to set up individual animations
             const newConfettiHtml = '<div class="confetti-piece border-dark col-1">*</div>';
@@ -965,7 +1105,7 @@ function makeConfetti() {
         }
         const newConfettiDiv = document.createElement('div');
         confettiFragment.appendChild(newConfettiDiv);
-        const newConfettiRowHtml =  '<div class="row four-confetti-piece justify-content-center">' +
+        const newConfettiRowHtml =  '<div class="row col-12 four-confetti-piece justify-content-center">' +
                             newDimensionsConfettiHtml + '</div>';
         newConfettiDiv.innerHTML = newConfettiRowHtml;
         // console.log("confettiPieces is: ") + confettiPieces;
@@ -997,8 +1137,20 @@ function iterateCorrectCardCount() {
 
 // TODO: Deal with case in which same pair of cards is clicked repeatedly
 function testMaxCorrectCardCount() {
+
+//  Test mode for makeConfetti() and animateConfetti()
+//  TODO: Comment out when finished with testing
+    if (board.animationState == true) {
+        hideDiv('#pre-game');
+        hideDiv('#banner');
+        unhideDiv('#post-game');
+        makeConfetti();
+    }
+
+//  Non-test mode part of function begins here
     if (board.cardMatchCount  >= numberCards) {
-        window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
+        // Following window.alert used for testing
+        // window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
         hideDiv('#pre-game');
         hideDiv('#banner');
         unhideDiv('#post-game');
@@ -1026,12 +1178,6 @@ function testMaxCardClickCount() {
     }
 }
 
-
-//TRYING TO FIGURE OUT ERROR: "rules.js:308 Uncaught DOMException:
-// Failed to set the 'outerHTML' property on 'Element':
-// This element has no parent node."
-// Problem seems to be that when you set outerHTML, the variable points
-// to the old parent element
 function onMouseClickNEW(evt) {
     // TODO: Will not need these once helper functions working
     // console.log("evt.target  = " + evt.target);
@@ -1046,6 +1192,13 @@ function onMouseClickNEW(evt) {
     let backgroundIncorrectColor = "card-background-color-incorrect";
     let firstClickedCardClass = "first-card-clicked";
 
+//  Test mode for makeConfetti() and animateConfetti()
+//  TODO: Comment out when finished with testing
+    if (board.animationState == true) {
+        testMaxCorrectCardCount();
+    }
+
+//  Non-test mode part of function resumes here
     if (clickedDivClassList.contains("card")) {
         iterateCardClickCount();
         testMaxCardClickCount();
@@ -1094,6 +1247,83 @@ function onMouseClickNEW(evt) {
             board.secondCardState = "notClicked";
 
             iterateCorrectCardCount();
+
+            if (board.cardMatchCount == 2) {
+                hideDiv('#banner-1');
+                unhideDiv('#banner-2');
+            }
+
+            switch (board.cardMatchCount) {
+                case 2:
+                    hideDiv('#banner-1');
+                    unhideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 4:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    unhideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 6:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    unhideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 8:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    unhideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    break;
+                case 10:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    unhideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 12:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    unhideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 14:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    unhideDiv('#banner-8');
+                    break;
+            }
 
             testMaxCorrectCardCount();
 
@@ -1179,19 +1409,11 @@ function onMouseClickNEW(evt) {
 
 playInput.addEventListener('click', startGame);
 
-// 2019-01-23: TODO: Fix this so it works only on individual cards, not rows
-// 2019-02-04: HYPO: Tried commenting this out to see how it affects onMouseClickNEW; no change
 targetDiv.addEventListener('mouseover', onMouseoverCard);
-// 2019-03-04:  HYPO: Maybe the individual animation problems are because the eventListener
-//              acts during the bubbling phase; testing setting the third parameter to "false",
-                // but it doesn't change anything, so resetting to "true"
-                // FALSE: The animation still fails to do anything
-                // ERROR MESSAGE: rules.js:583 Uncaught DOMException:
-                // INITALLLY: Failed to execute 'animate' on 'Element':
-                // Partial keyframes are not supported.
-                // SUBSEQUENTLY: I added a second element in the keyframe, and it worked!!
+
 targetDiv.addEventListener('click', onMouseClickNEW, true);
 
+playAgainInput.addEventListener('click', startNewGame);
 
 
 // ANIMATION WIP
