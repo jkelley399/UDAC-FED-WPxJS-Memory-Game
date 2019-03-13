@@ -22,7 +22,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
 https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
 
 MDN: HTML
-
+https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
 
 MDN: JavaScript
 https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Return_values
@@ -37,10 +37,12 @@ https://developer.mozilla.org/en-US/docs/Web/API/EffectTiming/easing
 https://developer.mozilla.org/en-US/docs/Web/API/Element
 https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
 https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
+https://developer.mozilla.org/en-US/docs/Web/API/Element/id
 https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML
 https://developer.mozilla.org/en-US/docs/Web/API/EventListener
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
 https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect
 https://developer.mozilla.org/en-US/docs/Web/API/KeyframeEffect/setKeyframes
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_Formats
