@@ -276,13 +276,15 @@
                 when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
                 message disappeared.
             Fix: Prevented clicking on already correct card
-                    Added: augmentMarchedCards(fc, sc) and new test in onMouseClickNEW(evt)
+                    Added: augmentMatchedCards(fc, sc) and new test in onMouseClickNEW(evt)
             WIP: Started on todoTODO(x,y), to prevent clicking same card twice
 
-    TODO:   Prevent
-                (a) clicking already correct card
-                (b) clicking same card twice
-    TODO:   Flush out too make picks alternative
+2019-03-13 am:
+    WIP:    Started work on fixing bug in preventing clicking already correct card
+                Doesn't work properly with a replay --- clearing statement in refresh function not working yet
+    WIP:    Started work on preventing clicking same card twice
+
+    TODO:   Flush out too many picks alternative and test
     TODO:   Fix the green display of the last correct pair
     TODO:   Add comments for each function
     TODO:   Add comments to describe overall structure of program
@@ -422,7 +424,10 @@ let boardInitial = {
     cardClickCount: 0, // 0, 1, 2
     onMouseClickTextColorError: 0, // 0, 1
     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
-    matchedCards: []
+    matchedCards: [],
+    //New properties to prevent clicking on same card twice to get a match
+    firstCardID: "",
+    secondCardID: ""
 
  // TODO:   Convert these stubs into actual methods to replace functions below
             // NOTE: Would probably have to rework initializeBoardObject() if methods added
@@ -521,7 +526,7 @@ function onMouseoverCard(evt) {
         }], {
             //timing and iterations
             delay: 10,
-            duration: 100,
+            duration: 20,
             iterations: 1
         });
     } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
@@ -596,6 +601,7 @@ function startNewGame() {
 function refresh() {
     //reset cards to initial state
     cards = [];
+    matchedCards = [];
 }
 
 function startGame() {
@@ -648,8 +654,15 @@ function startGame() {
             let cardSubsetIndex = cardsSubset.indexOf(cardSubsetRandom);
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
+            // OLD CODE:
+            // const newCardHtml = '<div class="card card-background-color-down text-info border border-dark text-center col-2 m-1">'+
+            //                     cardSubsetRandom + '</div>';
 
-            const newCardHtml = '<div class="card card-background-color-down text-info border border-dark text-center col-2 m-1">'+
+            // TEST CODE:
+
+            // MODEL:          <div id="banner-1" class="d-none row banner-header-1 col-12 m-2 justify-content-center">
+            let newCardHtml =   '<div id="a_' + i + '-' + j +
+                                '" class="card card-background-color-down text-info border border-dark text-center col-2 m-1">' +
                                 cardSubsetRandom + '</div>';
             newDimensionsCardHtml += newCardHtml;
         }
@@ -993,7 +1006,7 @@ function iterateCorrectCardCount() {
 }
 
 // fc and sc are the card values of the first and second matched cards
-function augmentMarchedCards(fc, sc) {
+function augmentMatchedCards(fc, sc) {
     board.matchedCards.push(fc);
     board.matchedCards.push(fc);
 }
@@ -1077,15 +1090,13 @@ function onMouseClickNEW(evt) {
 
     if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
          board.firstCardValue = evt.target.textContent;
-         // Prevent clicking on already matched card
+         //New board property to prevent clicking on same card twice to get a match
+         board.firstCardID = evt.target.id;
+         // New test to prevent clicking on already matched card
          if (board.matchedCards.includes(board.firstCardValue)) {
             window.alert("You've already matched that card.");
             return
          }
-
-        //INSERT TEST HERE TO SEE WHETHER board.firstCardValue is in board.matchedCards
-
-
         board.firstCardState = "clicked";
 
         clickedDivClassList.replace(hiddenText, darkText);
@@ -1095,6 +1106,15 @@ function onMouseClickNEW(evt) {
     } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
         board.secondCardState = "clicked";
         board.secondCardValue = evt.target.textContent;
+        //New board property to prevent clicking on same card twice to get a match
+        board.secondCardID = evt.target.id;
+        // Prevent clicking on same card twice in a row to get a match, but allow later clicking
+         if (board.firstCardID == board.secondCardID) {
+            window.alert("You can't match by clicking the same card twice.");
+            board.firstCardID = "";
+            board.secondCardID = "";
+            return
+         }
         clickedDivClassList.replace(hiddenText, darkText);
         let firstClickedCardDiv = document.querySelector('.first-card-clicked');
         if (board.firstCardValue == board.secondCardValue) {
@@ -1131,7 +1151,7 @@ function onMouseClickNEW(evt) {
             //Keep track of how many cards have been matched
             iterateCorrectCardCount();
             //Keep track of which card values have been matched already
-            augmentMarchedCards(board.firstCardValue, board.secondCardValue);
+            augmentMatchedCards(board.firstCardValue, board.secondCardValue);
 
             switch (board.cardMatchCount) {
                 case 2:
