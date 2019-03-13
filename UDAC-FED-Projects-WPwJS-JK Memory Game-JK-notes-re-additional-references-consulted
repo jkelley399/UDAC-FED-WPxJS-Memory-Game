@@ -87,6 +87,7 @@ https://stackoverflow.com/questions/32027935/addeventlistener-is-not-a-function-
 
 Other
 
+https://codepen.io/rachelnabors/pen/PNYGZQ?editors=0010
 https://www.w3.org/TR/DOM-Level-3-Events/#event-flow
 https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 https://github.com/web-animations/web-animations-js/issues/14
@@ -105,6 +106,14 @@ https://javascript.info/basic-dom-node-properties
 https://meiert.com/en/blog/how-to-order-css-selectors/
 "The Basics of DOM Manipulation in Vanilla JavaScript (No jQuery)"
 https://www.sitepoint.com/dom-manipulation-vanilla-javascript-no-jquery/
+https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
+    NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
+            I repeatedly got the following error message in the DevTools console:
+                "Unchecked runtime.lastError: Could not establish connection.
+                Receiving end does not exist."
+            Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
+            when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
+            message disappeared.
 
 
 
