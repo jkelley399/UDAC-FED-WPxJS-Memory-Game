@@ -260,19 +260,36 @@
             Localized variable names in animateConfetti() to distinguish from helper functions
             Cleaned up old comments
 
-    TODO: Add comments for each function
-    TODO: Add comments to describe overall structure of program
-    TODO: Fix this error
-            index.html#banner:1
-            Unchecked runtime.lastError: Could not establish connection.
-            Receiving end does not exist.
-    TODO: In onMouseoverCard(evt), add a color transformation on evt.target, preferably with bootstrap
+2019-03-12 (PM):
+    Feat:   Simple animation for onMouseoverCard(evt) and fixes
 
-    TODO: Fix the green display of the last correct pair
-    TODO: Prevent
-        (a) clicking correct cardd
-        (b) clicking same card twice
-    TODO: Change incorrect animation so the color reverts at end
+            Fix: After animation, incorrect cards revert to backgroundDownColor
+
+            Fix: "Unchecked runtime.lastError..." error
+                NOTE: Relied on this StackOverlow post:
+                https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
+                When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
+                I repeatedly got the following error message in the DevTools console:
+                    "Unchecked runtime.lastError: Could not establish connection.
+                    Receiving end does not exist."
+                Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
+                when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
+                message disappeared.
+            Fix: Prevented clicking on already correct card
+                    Added: augmentMarchedCards(fc, sc) and new test in onMouseClickNEW(evt)
+            WIP: Started on todoTODO(x,y), to prevent clicking same card twice
+
+    TODO:   Prevent
+                (a) clicking already correct card
+                (b) clicking same card twice
+    TODO:   Flush out too make picks alternative
+    TODO:   Fix the green display of the last correct pair
+    TODO:   Add comments for each function
+    TODO:   Add comments to describe overall structure of program
+    TODO:   Check style guide
+            A.  Single vs. double quotes; fix inconsistencies (probably single)
+            B.  Other
+    TODO:   RUN THROUG VALIDATORS
 
     FUTURE:     ADD exploding and changing color "CONGRATULAITONS" before confetti
     FUTURE:     Change animation for repeated plays.  (Sort of like higher levels in video game.)
@@ -280,6 +297,9 @@
     FUTURE:     Variable size boards (4x4, 8x8, 16x16 (with multiple decks))
     FUTURE:     Refactor with object-oriented architecture.
                 E.g. adding methods in boardInitial object
+    FUTURE:     Figure out why I couldn't use an object.method with eventListener (2019-01-17)
+    FUTURE:     Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
+    FUTURE:     Figure out how to use Bootstrap with Sass options --> see Medium article
 
     GENERAL TODO:
     0.  eventHandler: Really try:
@@ -288,7 +308,7 @@
             (i)     what to do to prevent that from happening in the future; and
             (ii)    how to correct the problem when it does occur.
     1.  MISC
-        A.  Check style guide re single vs. double quotes; fix inconsistencies (probably single)
+
         B.  DONE: Check on whether really using makeCards()
         C.  Add functionality so that once cards have been matched, you can't click on them again.
         D.  Add functionality so that once card is clicked on, it can't match against itself
@@ -338,11 +358,7 @@
         A.  Will always have two cards that will "match"
         B.  Cannot have multiple duplicates of the same cards
             (i) E.g., only two ASs per board
-    7.  FUTURE
-        A.  Figure out why I couldn't use an object.method with eventListener (2019-01-17)
-        B.  Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
-        C.  Figure out how to use Bootstrap with Sass options --> see Medium article
-        D.  Could increase the confetti resolution dramatically and them into "YOU WON" (2019-03-05)
+
 */
 
 // TODO: revise to add spot for changing three screens - will be container
@@ -406,6 +422,7 @@ let boardInitial = {
     cardClickCount: 0, // 0, 1, 2
     onMouseClickTextColorError: 0, // 0, 1
     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
+    matchedCards: []
 
  // TODO:   Convert these stubs into actual methods to replace functions below
             // NOTE: Would probably have to rework initializeBoardObject() if methods added
@@ -492,26 +509,21 @@ function onMouseoverCard(evt) {
     //          (a) textContent has acceptable syntax, using regex
     //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        console.log("mouseOver a card div in onMouseoverCard");
-        //TODO: Add a color transformation on evt.target, preferably with bootstrap
-
-        // 2019-01-27: For time being, commenting out animation
-        // evt.target.animate([
-        //     // keyframes
-        //     {transform: 'translateX(-15px)'},
-        //     {transform: 'translateY(-15px)'},
-        //     {transform: 'translateX(30px)'},
-        //     {transform: 'translateY(30px)'},
-        //     {transform: 'translateX(-30px)'},
-        //     {transform: 'translateY(-15px)'},
-        //     {transform: 'translateX(15px)'},
-        // ], {
-        //     //timing
-        //     delay: 200,
-        //     //direction: 'alternate',
-        //     duration: 5000,
-        //     iterations: 1
-        // });
+        // console.log("mouseOver a card div in onMouseoverCard");
+        evt.target.animate([
+            // keyframes
+            {
+                color: '#999',
+                transform: 'scale(1.1)'
+            }, {
+                color: '#999',
+                transform: 'scale(1.1)'
+        }], {
+            //timing and iterations
+            delay: 10,
+            duration: 100,
+            iterations: 1
+        });
     } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
         // console.log("mouseOver a row-of-cards div");
         console.log("");
@@ -882,35 +894,35 @@ function animateConfetti() {
         }, {
             opacity: .1,
             color: '#F00',
-            transform: 'translate3d(-10px, 100px, 0px) rotate(-.75turn) scale(0.1)'
+            transform: 'translate3d(-1px, 50px, 0px) rotate(-.1turn) scale(0.1)'
        }, {
             opacity: .1,
             color: '#F00',
-            transform: 'translate3d(-10px, 100px, 0px) scale(0.1)'
+            transform: 'translate3d(10px, 40px, 0px) scale(0.1)'
        }, {
             opacity: .2,
             color: '#F00',
-            transform: 'translate3d(-10px, 100px, 0px) scale(0.2)'
+            transform: 'translate3d(-1px, 35px, 0px) scale(0.2)'
        }, {
             opacity: .3,
             color: '#F00',
-            transform: 'translate3d(-25px, 100px, 0px) scale(3.0)'
+            transform: 'translate3d(10px, 30px, 0px) scale(3.0)'
        }, {
             opacity: .4,
             color: '#F00',
-            transform: 'translate3d(-25px, 100px, 0px) scale(4.0)'
+            transform: 'translate3d(-1px, 35px, 0px) scale(4.0)'
        }, {
             opacity: .6,
             color: '#F00',
-            transform: 'translate3d(-35px, 100px, 0px) scale(5.0)'
+            transform: 'translate3d(10px, 40px, 0px) scale(5.0)'
        }, {
             opacity: .8,
             color: '#F00',
-            transform: 'translate3d(-35px, 100px, 0px) scale(6.0)'
+            transform: 'translate3d(-1px, 45px, 0px) scale(6.0)'
        }, {
             opacity: 1,
             color: '#F00',
-            transform: 'translate3d(-35px, 100px, 0px) scale(7.0)'
+            transform: 'translate3d(10px, 50px, 0px) scale(7.0)'
         }];
 
         confettiPiece.animProps = {
@@ -980,6 +992,19 @@ function iterateCorrectCardCount() {
     // console.log("after increment " + board.cardMatchCount);
 }
 
+// fc and sc are the card values of the first and second matched cards
+function augmentMarchedCards(fc, sc) {
+    board.matchedCards.push(fc);
+    board.matchedCards.push(fc);
+}
+
+// calculates positon of clicked card in board section
+// TODO: NEED TO FIGURE OUT INPUTS AND PERHAPS CREATE NEW LIST
+function todoTODO(x,y) {
+    // board.matchedCards.push(fc);
+    // board.matchedCards.push(fc);
+}
+
 // TODO: Deal with case in which same pair of cards is clicked repeatedly
 function testMaxCorrectCardCount() {
 
@@ -1047,12 +1072,22 @@ function onMouseClickNEW(evt) {
         iterateCardClickCount();
         testMaxCardClickCount();
     } else {
-        return;
+        window.alert("You didn't click on a card.  Please try again.")
     }
 
     if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
+         board.firstCardValue = evt.target.textContent;
+         // Prevent clicking on already matched card
+         if (board.matchedCards.includes(board.firstCardValue)) {
+            window.alert("You've already matched that card.");
+            return
+         }
+
+        //INSERT TEST HERE TO SEE WHETHER board.firstCardValue is in board.matchedCards
+
+
         board.firstCardState = "clicked";
-        board.firstCardValue = evt.target.textContent;
+
         clickedDivClassList.replace(hiddenText, darkText);
         clickedDivClassList.add(firstClickedCardClass);
         // console.log("First clicked card value  = " + board.firstCardValue);
@@ -1072,7 +1107,7 @@ function onMouseClickNEW(evt) {
                     {transform: 'translateY(-25px)'},
                     {transform: 'scale(2)'},
                 ], {
-                    duration: 500,
+                    duration: 1000,
                     iterations: 1
                 }
             );
@@ -1081,7 +1116,7 @@ function onMouseClickNEW(evt) {
                     {transform: 'translateY(+25px)'},
                     {transform: 'scale(2)'},
                 ], {
-                    duration: 500,
+                    duration: 1000,
                     iterations: 1
                 }
             );
@@ -1090,12 +1125,13 @@ function onMouseClickNEW(evt) {
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
 
-            iterateCorrectCardCount();
+            // TODO: CREATE NEW FUNCTION HERE TO ADD CARD VALUES AND IDEALLY CARD NUMBER WITHIN divs
+            //     TO "PAIRED CARD LIST"
 
-            if (board.cardMatchCount == 2) {
-                hideDiv('#banner-1');
-                unhideDiv('#banner-2');
-            }
+            //Keep track of how many cards have been matched
+            iterateCorrectCardCount();
+            //Keep track of which card values have been matched already
+            augmentMarchedCards(board.firstCardValue, board.secondCardValue);
 
             switch (board.cardMatchCount) {
                 case 2:
@@ -1176,33 +1212,56 @@ function onMouseClickNEW(evt) {
             firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
             clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
             clickedDivClassList.replace(hiddenText, darkText);
-            // window.alert("Sorry.  The first and second cards do not match!");
 
-            // TODO: Figure out how to delay the change from incorrect to background color
-            // TODO: Figure out how to delay an incorrect second card from black to background for incorrect card
-
-            firstClickedCardDiv.animate([
-                    {transform: 'translateX(-100px)'},
-                    {transform: 'rotate(0.5turn)'}
+            // NOTE: This section revised based on
+                // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+                // https://codepen.io/rachelnabors/pen/PNYGZQ?editors=0010
+                // https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+            let firstClickedIncorrectAnimate = firstClickedCardDiv.animate(
+                [
+                    {
+                        transform: 'translateX(-100px)',
+                        color: backgroundIncorrectColor
+                    }, {
+                        transform: 'rotate(0.5turn)'}
                 ], {
                     duration: 1000,
+                    easing: 'ease-out',
                     iterations: 2
                 }
             );
 
-            evt.target.animate([
-                    {transform: 'translateX(+100px)'},
-                    {transform: 'rotate(0.5turn)'}
+            let evtTargetIncorrectAnimate = evt.target.animate(
+                [
+                    {
+                        transform: 'translateX(+100px)',
+                        color: backgroundIncorrectColor
+                    }, {
+                        transform: 'rotate(0.5turn)'}
                 ], {
                     duration: 1000,
+                    easing: 'ease-out',
                     iterations: 2
                 }
             );
+
+            firstClickedIncorrectAnimate.play();
+            evtTargetIncorrectAnimate.play();
+            firstClickedIncorrectAnimate.onfinish = function() {
+                firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            };
+            evtTargetIncorrectAnimate.onfinish = function() {
+                clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            };
 
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
             board.firstCardState = "notClicked";
             board.secondCardState = "notClicked";
-
+            clickedDivClassList.replace(darkText, hiddenText);
+            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            clickedDivClassList.replace(darkText, hiddenText);
         }
     } else {
         console.log('Error somewhere');
