@@ -284,6 +284,16 @@
                 Doesn't work properly with a replay --- clearing statement in refresh function not working yet
     WIP:    Started work on preventing clicking same card twice
 
+2019-03-14:
+    WIP:    Started work on fixing bug in preventing clicking already correct card
+                Window alert and return don't work when it's the second card clicked,
+                    and, in that case, it ends up with the faceDown color.
+                Doesn't work properly with a replay --- clearing statement in refresh function not working yet
+    WIP:    Started work on preventing clicking same card twice
+                Switches to dark text, not the faceDown color
+    WIP:    2x click on one card followed by 2x click on second wrong card results in
+                "You didn't clock on a card" window.alert
+
     TODO:   Flush out too many picks alternative and test
     TODO:   Fix the green display of the last correct pair
     TODO:   Add comments for each function
@@ -302,6 +312,8 @@
     FUTURE:     Figure out why I couldn't use an object.method with eventListener (2019-01-17)
     FUTURE:     Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
     FUTURE:     Figure out how to use Bootstrap with Sass options --> see Medium article
+
+
 
     GENERAL TODO:
     0.  eventHandler: Really try:
