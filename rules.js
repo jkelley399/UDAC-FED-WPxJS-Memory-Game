@@ -295,18 +295,31 @@
                 "You didn't clock on a card" window.alert
 
 2019-03-15:
-    Feat:   Partially fixed bug to prevent second click on already correct card - 1st play only.
+Feat:   Partially fixed bug to prevent second click on already correct card - 1st play only.
 
-    Details:    Partially fixed bug to prevent clicking already correct card with second click.
-                Window alert and return didn't work when it's the second card clicked,
-                    and, in that case, it ends up with the faceDown color, instead of returning
-                    to the dark text color it should have since it's already been matched.
-                NOTE: Only fixed for first time through, not for replay.
+Details:    Partially fixed bug to prevent clicking already correct card with second click.
+            Window alert and return didn't work when it's the second card clicked,
+                and, in that case, it ends up with the faceDown color, instead of returning
+                to the dark text color it should have since it's already been matched.
+            NOTE: Only fixed for first time through, not for replay.
 
-    WIP:    Working on fixing bug so that "already clicked," whether first or second click
-                works property when the game is replayed.   ---
-                Currently, the clearing statement in refresh function doesn't work.
-                NOTE: To fix for replay, check initializeBoardObject() --- doesn't seem to work.
+WIP:    Working on fixing bug so that "already clicked," whether first or second click
+            works property when the game is replayed.   ---
+            Currently, the clearing statement in refresh function doesn't work.
+            NOTE: To fix for replay, check initializeBoardObject() --- doesn't seem to work.
+
+2019-03-16:
+
+    fix prevented second click on already correct card for replays
+
+    1.  Rewrote initializeBoardObject() with board.matchedCards = []; to handle
+        problem cause by lack of deep cloning in Object.assign()
+            (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+    2.  Further rewrote initializeBoardObject() with boardInitial.matchedCards = [];
+            Not sure why this was necessary, but otherwise boardInitial.matchedCards seemed to
+                continue to have the same values upon return from initializeBoardObject()
+                as from the prior round.
+            FUTURE: Figure out why this additional step is necessary,
 
     TODO:    Started work on preventing clicking same card twice
                 Clicking it again, despite window.alert, results in a color match
@@ -479,8 +492,19 @@ let boardInitial = {
  };
 
 // For play again functionality
+// Inputs are two objects; function resets the target to become a close of the source
+// NOTE: Based upon
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 // NOTE: Would probably have to rework this if methods added to boardInitial object
 function initializeBoardObject() {
+    // Because Object.assign() doesn't do deep cloning
+    //     (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign),
+    //     it's necessary to add a preliminary step in this function to
+    //     reset board.matchedCards; otherwise board.matchedCards, an array, won't be reset, and
+    //     an error would arise on repeated plays.
+    board.matchedCards = [];
+    // FUTURE: Figure out why this additional step is necessary, but it seems to be
+    boardInitial.matchedCards = [];
     board = Object.assign({}, boardInitial);
 }
 // For play again functionality
@@ -650,7 +674,7 @@ function startGame() {
     //initialize board section in index.html
     initializeBoardHTML();
     //initialize confetti section in index.html
-    initializeConfettiHTML()
+    initializeConfettiHTML();
     // Hide and display relevant parts of index.html
     hideDiv('#pre-game');
     unhideDiv('#banner-1');
