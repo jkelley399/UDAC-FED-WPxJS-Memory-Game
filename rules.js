@@ -294,6 +294,27 @@
     WIP:    2x click on one card followed by 2x click on second wrong card results in
                 "You didn't clock on a card" window.alert
 
+2019-03-15:
+    Feat:   Partially fixed bug to prevent second click on already correct card - 1st play only.
+
+    Details:    Partially fixed bug to prevent clicking already correct card with second click.
+                Window alert and return didn't work when it's the second card clicked,
+                    and, in that case, it ends up with the faceDown color, instead of returning
+                    to the dark text color it should have since it's already been matched.
+                NOTE: Only fixed for first time through, not for replay.
+
+    WIP:    Working on fixing bug so that "already clicked," whether first or second click
+                works property when the game is replayed.   ---
+                Currently, the clearing statement in refresh function doesn't work.
+                NOTE: To fix for replay, check initializeBoardObject() --- doesn't seem to work.
+
+    TODO:    Started work on preventing clicking same card twice
+                Clicking it again, despite window.alert, results in a color match
+                    that also locks out its pair with the "You've already matched that card" warning
+                Switches to dark text, not the faceDown color
+    TODO:    2x click on one card followed by 2x click on second wrong card results in
+                "You didn't clock on a card" window.alert
+
     TODO:   Flush out too many picks alternative and test
     TODO:   Fix the green display of the last correct pair
     TODO:   Add comments for each function
@@ -1020,7 +1041,7 @@ function iterateCorrectCardCount() {
 // fc and sc are the card values of the first and second matched cards
 function augmentMatchedCards(fc, sc) {
     board.matchedCards.push(fc);
-    board.matchedCards.push(fc);
+    board.matchedCards.push(sc);
 }
 
 // calculates positon of clicked card in board section
@@ -1104,10 +1125,10 @@ function onMouseClickNEW(evt) {
          board.firstCardValue = evt.target.textContent;
          //New board property to prevent clicking on same card twice to get a match
          board.firstCardID = evt.target.id;
-         // New test to prevent clicking on already matched card
+         // New test to prevent first click on already matched card
          if (board.matchedCards.includes(board.firstCardValue)) {
-            window.alert("You've already matched that card.");
-            return
+            window.alert("Your first click is on a card you've already matched.  Please try again.");
+            return console.log("@1126: First click on an already-matched card.");
          }
         board.firstCardState = "clicked";
 
@@ -1118,14 +1139,19 @@ function onMouseClickNEW(evt) {
     } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
         board.secondCardState = "clicked";
         board.secondCardValue = evt.target.textContent;
-        //New board property to prevent clicking on same card twice to get a match
+        //Board property to prevent clicking on same card twice to get a match
         board.secondCardID = evt.target.id;
-        // Prevent clicking on same card twice in a row to get a match, but allow later clicking
+         // Test to prevent second click on already matched card
+         if (board.matchedCards.includes(board.secondCardValue)) {
+            window.alert("Your second click is on a card you've already matched.  Please try again.");
+            return console.log("@1142: Second click on an already-matched card.");
+         }
+        // Test to prevent clicking on same card twice to get a match, while allowing later clicking
          if (board.firstCardID == board.secondCardID) {
             window.alert("You can't match by clicking the same card twice.");
             board.firstCardID = "";
             board.secondCardID = "";
-            return
+            return console.log ("@1143: You can't match by clicking the same card twice.");
          }
         clickedDivClassList.replace(hiddenText, darkText);
         let firstClickedCardDiv = document.querySelector('.first-card-clicked');
@@ -1296,7 +1322,7 @@ function onMouseClickNEW(evt) {
             clickedDivClassList.replace(darkText, hiddenText);
         }
     } else {
-        console.log('Error somewhere');
+        return console.log('@1314: Error somewhere');
     }
 }
 
