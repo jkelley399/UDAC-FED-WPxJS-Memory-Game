@@ -308,7 +308,7 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
             Currently, the clearing statement in refresh function doesn't work.
             NOTE: To fix for replay, check initializeBoardObject() --- doesn't seem to work.
 
-2019-03-16:
+2019-03-16 1545:
 
     fix prevented second click on already correct card for replays
 
@@ -321,12 +321,14 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
                 as from the prior round.
             FUTURE: Figure out why this additional step is necessary,
 
-    TODO:    Started work on preventing clicking same card twice
-                Clicking it again, despite window.alert, results in a color match
-                    that also locks out its pair with the "You've already matched that card" warning
-                Switches to dark text, not the faceDown color
-    TODO:    2x click on one card followed by 2x click on second wrong card results in
-                "You didn't clock on a card" window.alert
+2019-03-16 1730:
+    fix prevented second click on same card yielding match
+
+    1.  Added resettng of values for the second card within function onMouseClickNEW(evt)
+            after the board.firstCardID == board.secondCardID
+    2.  Retained the window.alert to notify the user of the problem
+    3.  Resetting values obviated the issue about switching to dark text
+            (dark text retained if match, otherwise later code handles return to faceDown color)
 
     TODO:   Flush out too many picks alternative and test
     TODO:   Fix the green display of the last correct pair
@@ -1147,7 +1149,7 @@ function onMouseClickNEW(evt) {
 
     if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
          board.firstCardValue = evt.target.textContent;
-         //New board property to prevent clicking on same card twice to get a match
+         //Board property to prevent clicking on same card twice to get a match
          board.firstCardID = evt.target.id;
          // New test to prevent first click on already matched card
          if (board.matchedCards.includes(board.firstCardValue)) {
@@ -1172,9 +1174,11 @@ function onMouseClickNEW(evt) {
          }
         // Test to prevent clicking on same card twice to get a match, while allowing later clicking
          if (board.firstCardID == board.secondCardID) {
-            window.alert("You can't match by clicking the same card twice.");
-            board.firstCardID = "";
+            window.alert("You can't match by clicking the same card twice.  Please pick a different second card.");
+            // resetting second card values from above to allow for match with new second card
+            board.secondCardValue = "";
             board.secondCardID = "";
+            board.secondCardState = "notClicked";
             return console.log ("@1143: You can't match by clicking the same card twice.");
          }
         clickedDivClassList.replace(hiddenText, darkText);
