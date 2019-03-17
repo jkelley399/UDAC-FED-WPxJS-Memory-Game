@@ -330,7 +330,15 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
     3.  Resetting values obviated the issue about switching to dark text
             (dark text retained if match, otherwise later code handles return to faceDown color)
 
-    TODO:   Flush out too many picks alternative and test
+2019-03-16 1943:
+    feat Added too-many-picks, hard-coded at numberCards * 4
+
+    1.  Added tooManyTriesStartNewGame()
+    2.  Reworked testMaxCardClickCount()
+    3.  Reworked startGame±()
+    4.  Used new maxCardClickCountExceeded variable, rather than new board property
+            because otherwise would complicate startGame() even more
+
     TODO:   Fix the green display of the last correct pair
     TODO:   Add comments for each function
     TODO:   Add comments to describe overall structure of program
@@ -411,7 +419,6 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
 
 */
 
-// TODO: revise to add spot for changing three screens - will be container
 const playInput = document.querySelector('#pre-game-button');
 const playAgainInput = document.querySelector('#play-again-button');
 const boardFragment = document.createDocumentFragment();
@@ -419,8 +426,11 @@ const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
+// FUTURE: Add user input on index.html to pick number of cards
+// FUTURE: Handle and add selector for 8, 16, or 32 cards
 const numberCards = 16;
-// TODO: Handle and add selector for 8, 16, or 32 cards
+// numberCards * maxNumberCardsMultiplier forces new game
+const maxNumberCardsMultiplier = 4;
 const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
 const hiddenClass = 'd-none';
@@ -429,7 +439,9 @@ const suits = ['C', 'D', 'H', 'S'];
 const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2']
 let cards = [];
 let board = {};
-
+// see testMaxCardClickCount(); NOTE: not adding as property of board, because doing so
+// would complicate startGame() even more
+let maxCardClickCountExceeded = false;// true, false; becomes true if number of tries is exceeded
 
 // Generates cards by iterating over suit and rank
 function makeCards() {
@@ -647,14 +659,28 @@ function cardToBackgroundColor(e) {
     let sti = "card card-background-up-color"
     e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
 }
-
+// used if game runs to successful completion and user initiates new play
 function startNewGame() {
     hideDiv('#post-game');
     hideDiv('#banner-8');
-    unhideDiv('#banner');
-    unhideDiv('#confetti');
+    // if maxCardClickCountExceeded, display index.html in initial state
+    if (maxCardClickCountExceeded == false) {
+        unhideDiv('#banner');
+        unhideDiv('#confetti');
+    }
     refresh();
     startGame();
+}
+
+function tooManyTriesStartNewGame() {
+    hideDiv('#banner-1');
+    hideDiv('#banner-2');
+    hideDiv('#banner-3');
+    hideDiv('#banner-4');
+    hideDiv('#banner-5');
+    hideDiv('#banner-6');
+    hideDiv('#banner-7');
+    startNewGame();
 }
 
 function refresh() {
@@ -665,8 +691,8 @@ function refresh() {
 
 function startGame() {
 
-    // INITIALIZATION
-    // Test windows.screen.width to adjust confetti constants if necessary
+    // INITIALIZATION (varies depending on maxCardClickCountExceeded)
+    // test windows.screen.width to adjust confetti constants if necessary
     if (screenWidth < 768) {
         board.confettiRowLength = 8;
         board.confettiMultiplier= 2;
@@ -677,9 +703,19 @@ function startGame() {
     initializeBoardHTML();
     //initialize confetti section in index.html
     initializeConfettiHTML();
-    // Hide and display relevant parts of index.html
-    hideDiv('#pre-game');
-    unhideDiv('#banner-1');
+    // Hide and display relevant parts of index.html, unless maxCardClickCountExceeded
+    if (maxCardClickCountExceeded == false) {
+        hideDiv('#pre-game');
+        unhideDiv('#banner');
+        unhideDiv('#banner-1');
+    } else {
+    // if maxCardClickCountExceeded before startGame(), then reset to false and display
+    // initial version of index.html
+        maxCardClickCountExceeded = false;
+        unhideDiv('#pre-game');
+        hideDiv('#banner');
+        hideDiv('#banner-1');
+    }
     makeCards();
 
     // CORE FUNCTION
@@ -1097,7 +1133,7 @@ function testMaxCorrectCardCount() {
         hideDiv('#banner');
         unhideDiv('#post-game');
         makeConfetti();
-}   else  {
+    }   else  {
         // console.log("board.cardMatchCount still less than " + numberCards);
     }
 }
@@ -1110,12 +1146,18 @@ function iterateCardClickCount() {
 }
 
 function testMaxCardClickCount() {
-    if (board.cardClickCount  >= (numberCards * 2)) {
+    if (board.cardClickCount  >= (maxNumberCardsMultiplier * numberCards)) {
         // console.log(board.cardClickCount);
-        window.alert("SORRY -- TOO MANY CLICKS1! Resetting board...");
-        // TODO: Add board reset functionality in testMaxCardClickCount()
-}   else  {
-        console.log("board.cardClickCount still less than 2X numberCards");
+        window.alert("Sorry, you've exceeded the maximum number of tries.  Please try again.");
+        maxCardClickCountExceeded = true;
+        tooManyTriesStartNewGame();
+    }   else if (board.cardClickCount  >= ((0.75 *maxNumberCardsMultiplier) * numberCards)) {
+        window.alert("You're getting close to the maximum number of tries.  " +
+            "You have only " + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
+            " tries left, before the game will start over.")
+    }   else  {
+            console.log("board.cardClickCount still less than " +
+                "((0.75 *maxNumberCardsMultiplier) * numberCards)");
     }
 }
 
