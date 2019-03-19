@@ -261,7 +261,7 @@
             Cleaned up old comments
 
 2019-03-12 (PM):
-    Feat:   Simple animation for onMouseoverCard(evt) and fixes
+    Feat:   Simple animation for onMouseOverCard(evt) and fixes
 
             Fix: After animation, incorrect cards revert to backgroundDownColor
 
@@ -339,86 +339,138 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
     4.  Used new maxCardClickCountExceeded variable, rather than new board property
             because otherwise would complicate startGame() even more
 
-    TODO:   Fix the green display of the last correct pair
-    TODO:   Add comments for each function
+2019-03-17--3-18:
+
+    docs:   cleaned up prior comments and added new comments to functions
+
     TODO:   Add comments to describe overall structure of program
     TODO:   Check style guide
             A.  Single vs. double quotes; fix inconsistencies (probably single)
             B.  Other
-    TODO:   RUN THROUG VALIDATORS
+    TODO:   Move development history and FUTUREs into separate files
+    TODO:   Bring up on separate URL (GitHub Pages?)
+    TODO:   Write README
+    TODO:   CHANGE COLORS ON CARDS
+    TODO:   RUN THROUGH VALIDATORS
 
-    FUTURE:     ADD exploding and changing color "CONGRATULAITONS" before confetti
-    FUTURE:     Change animation for repeated plays.  (Sort of like higher levels in video game.)
+    FUTURE:     Add tests throughout
+    FUTURE:     Substitute card icons for "rank""suit" format
+    FUTURE:     Fix known issues
+    FUTURE:     Test windows.screen.width to adjust (a) card sizes and
+                    (b) confetti sizes if necessary
+    FUTURE:     Add exploding and changing color "CONGRATULAITONS" before confetti
+    FUTURE:     Change animations for repeated plays (right now this just repeats).
+                Would be somewhat like reaching higher levels in video game.
                 E.g., simple change would be rotating colors at beginning and ending phases
-    FUTURE:     Variable size boards (4x4, 8x8, 16x16 (with multiple decks))
-    FUTURE:     Refactor with object-oriented architecture.
-                E.g. adding methods in boardInitial object
-    FUTURE:     Figure out why I couldn't use an object.method with eventListener (2019-01-17)
-    FUTURE:     Turn the "let cardRandom = remainingCards..." processes in a function (2019-01-22)
+                NOTE:   Simple implementation would be to take existing animation and
+                        comment out parts of it for the first few replays, so that the full
+                        current animation only works on, e.g., the third time through.
+    FUTURE:     Variable size boards (4x4, 8x8, 16x16, 32x32 (with multiple decks))
+                Add user input on index.html to select number of cards for the game
+                Alternatively, make game harder (i.e., bigger board) as user wins and replays
+    FUTURE:     Turn the "let cardRandom = remainingCards..." processes in a function
     FUTURE:     Figure out how to use Bootstrap with Sass options --> see Medium article
-
-
+    FUTURE:     Refactor with object-oriented architecture.
+                Split out board, boardInitial, and card objects
+                E.g. adding methods in boardInitial object
+                LEARN:  Need to understand how to move functions into methods and
+                        have them work properly with animations.
+                        NOTE:   Figure out why I couldn't use an object.method
+                                with eventListener (2019-01-17)
+    FUTURE:     Add tests to onMouseOverCard(evt) if desired, e.g., test whether
+                (a) textContent has acceptable syntax, using regex
+                (b) use None.noneType to test if mouseOver is on an element_node
+    FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
+                    makeRndScaleArray(),
+                        (a) create better way to set end values in for loops
+                            (right now, fixed integers), and
+                        (b) revisit calculation of end of for loop based on
+                            current requirements for confettiAnimator(), or, alternatively,
+                        (c) just use simpler randomizing mechanisms inside confettiAnimator()
 
     GENERAL TODO:
-    0.  eventHandler: Really try:
-        A.  to understand why I keep having problems when I add these to onMouseClickNEW(evt); and
-        B.  to figure out:
-            (i)     what to do to prevent that from happening in the future; and
-            (ii)    how to correct the problem when it does occur.
-    1.  MISC
-
-        B.  DONE: Check on whether really using makeCards()
-        C.  Add functionality so that once cards have been matched, you can't click on them again.
-        D.  Add functionality so that once card is clicked on, it can't match against itself
-                Currently that yields a correct
-        E.  Add count on correctly matched cards, to determine when game is won.
-        F.  DONE:   Enhance project by choosing randomly from standard card deck
-        G.  Update Bootstrap link
-        H.  Comment out the console.log statements when finished
+    1.  OVERALL
+        A.  DONE: Check on whether really using makeCards()
+        B.  DONE: Add functionality so that once cards have been matched, you can't click on them again.
+        C.  DONE: Add functionality so that once card is clicked on, it can't match against itself
+                    Currently that yields a correct
+        D.  DONE: Add count on correctly matched cards, to determine when game is won.
+        E.  DONE: Enhance project by choosing randomly from standard card deck
+        F.  Comment out the console.log statements when finished
     2.  Start adding play functionality
         A.  DONE: REVIEW EVENT DELEGATION
         B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
-        C.  TODO: Reset incorrect matches to face down after a pause
+        C.  DONE: Reset incorrect matches to face down after a pause
         C.  TODO: Add board reset functionality in testMaxCardClickCount()
-        D.  TODO: Handle and add selector for 8, 16, or 32 cards
-        E.  TODO: Prevent 2x clicks on same card
         F.  TODO: Prevent repeated clicks on cards in a positive match
     3.  Add styling
-        A.  DONE: Change all outerHTML to classList!!!
-        B.  TODO: Fix the text layout on index.html
+        A.  DONE: Change all outerHTML to classList
+        B.  DONE: Fix the text layout on index.html
         C.  Example has
             (i) Pre-guess
                 (a) DONE: X && Y color gradients on borders
                 (b) DONE SORT OF: black face down cards
                     NOTE: Have pseudo-Bootstrap-info face down cards at present
-                (c) background color and icons on face up cards
+                (c) SORT OF DONE (NO ICONS): background color and icons on face up cards
             (ii) First click
-                (a) DONE SORT OF (DIFFERENT COLOR) background color of the card changes
+                (a) SORT OF DONE OF (DIFFERENT COLOR): background color of the card changes
                     to blue when it's been clicked
-            (iii) DONE SORT OF (DIFFERENT ANIMATION) Correct guess
-                (a) two cards expand and contract diagonally
-            (iv) DONE SORT OF (DIFFERENT ANIMATION) Incorrect guess
-                (a) background color of both cards changes to red
-                (b) two cards shake side to side
-            (v) WIP: Winning game
-                (a) Add test mechanism to basic logic
-                (b) If game over, page changes, "Congratulations," etc.
+            (iii) Second click
+                (a) SORT OF DONE (DIFFERENT ANIMATION) Correct guess
+                    (i) two cards expand and contract diagonally
+                (b) SORT OF DONE (DIFFERENT ANIMATION) Incorrect guess
+                    (i) background color of both cards changes to red
+                    (ii) two cards shake side to side
+            (v) Winning game
+                (a) DONE: Add test mechanism to basic logic
+                (b) DONE: If game over, page changes, "Congratulations," etc.
         D.  DONE: REVIEW JS ANIMATION
         E.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
-    4.  Add "hiding" of different pages
-    5.  TODO (MAYBE SAVE FOR FUTURE): Better object architecture
-        A.  Figure out how to move the functions into methods
-        B.  board object
-            (i) DONE SORT OF: Create contents of board using loops
-                Have that in a function
-        C.  Card object
-    6.  DONE: Need to add constraints to the random selection, so that
+    4.  DONE: Add "hiding" of different pages
+    5.  DONE: Need to add constraints to the random selection, so that
         A.  Will always have two cards that will "match"
         B.  Cannot have multiple duplicates of the same cards
             (i) E.g., only two ASs per board
 
+KNOWN ISSUES
+
+KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
+KNOWN:  First and last phases of winning animation will not display properly
+        for small and medium sized viewports (e.g., < 768 width)
+
+KNOWN:  Figure out why this additional assignment is necessary in
+            initializeBoardObject(), but it seems to be:
+                boardInitial.matchedCards = [];
+        NOTE: Once fixed, should be able to change
+            let boardInitial = .... to const boardInitial = ....
+
+KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
+        Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
+        Add fixes (if maxInt < minInt, then switch)
+        Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
+            // SHOULD BE SIMPLE FIX TO ADD 1 TO floorMaxInt
+
+KNOWN:  If randomIntInRange(minInt, maxInt) is improved,
+            review and possibly fix other functions that use it
+
+KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
+            To do this, could test with if/else statements for different responses
+                depending on the characteristics of the div
+                    But: remember to look at the lesson about capitalization
+                        See: "The nodeName's Capitalization" in
+                            https://classroom.udacity.com/nanodegrees/nd001/
+                            parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
+                            04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
+                            f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/
+                            85463be2-3206-434e-aa39-4604965daa29
+            NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
+                which provides related functionality
+
 */
 
+// GENERAL INITIALIZATION SECTION
+
+// constants and other variables used throughout
 const playInput = document.querySelector('#pre-game-button');
 const playAgainInput = document.querySelector('#play-again-button');
 const boardFragment = document.createDocumentFragment();
@@ -426,10 +478,9 @@ const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
-// FUTURE: Add user input on index.html to pick number of cards
-// FUTURE: Handle and add selector for 8, 16, or 32 cards
 const numberCards = 16;
-// numberCards * maxNumberCardsMultiplier forces new game
+// If number of tries exceeds (numberCards * maxNumberCardsMultiplier),
+//  program forces a new game
 const maxNumberCardsMultiplier = 4;
 const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
@@ -443,73 +494,44 @@ let board = {};
 // would complicate startGame() even more
 let maxCardClickCountExceeded = false;// true, false; becomes true if number of tries is exceeded
 
-// Generates cards by iterating over suit and rank
-function makeCards() {
-    suits.forEach(function(suit) {
-        ranks.forEach(function(rank) {
-            let card = rank + suit;
-            cards.push(card);
-        });
-    });
-}
-
-function incorrectCardAnimation(carddiv) {
-    carddiv.animate([
-            {transform: 'scale(2)'}
-        ], {
-            duration: 3000,
-            iterations: 2
-        }
-    );
-}
-
+// reference object for initialzing board
+// REFACTOR:   Split out board and card objects, and add methods
 let boardInitial = {
 //  TEST MODE PROPERTY: for makeConfetti() and animateConfetti()
-//  TODO: Comment out when finished with testing
+//      NOTE: only used for testing
     animationState: false,// true, false; use true to test animateConfetti();
 
 //  PRINCIPAL PROPERTIES BEGIN HERE
-    boardState: "preBoard", //preBoard, transBoard, postBoard; re state of game
-    // messages: ["First message.", "Second message.", "Third message."],
-
-    // state information about cards being clicked and clickCount stored in board object
-    confettiState: "preConfetti", //preConfetti, transConfetti, postConfetti; re state of confetti
-    confettiCount: 0, //
-    confettiRowLength: 12,
-    confettiMultiplier: 3,
+    // state of board
+    boardState: "preBoard", //re state of game: preBoard, transBoard, postBoard;
+    // basic state information about cards being clicked
     firstCardState: "notClicked", //notClicked, clicked,
     firstCardValue: "", //empty, card Value (e.g., "4S" || "10C")
     secondCardState: "notClicked", //notClicked, clicked,
     secondCardValue: "", //empty, card Value (e.g., "4S" || "10C")
     cardClickCount: 0, // 0, 1, 2
     onMouseClickTextColorError: 0, // 0, 1
+    // additional state information re cards being clicked
+    // to prevent clicking on same card twice to get a match
+    firstCardID: "",
+    secondCardID: "",
+    // state information about matched cards
     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
     matchedCards: [],
-    //New properties to prevent clicking on same card twice to get a match
-    firstCardID: "",
-    secondCardID: ""
+    // state of confetti for winning animation and confetti parameters
+    confettiState: "preConfetti", //preConfetti, transConfetti, postConfetti; re state of confetti
+    confettiCount: 0, //
+    confettiRowLength: 12,
+    confettiMultiplier: 3
 
- // TODO:   Convert these stubs into actual methods to replace functions below
-            // NOTE: Would probably have to rework initializeBoardObject() if methods added
- //     startGame: function strtGm() {
- //        console.log("board.startGame() called");
- //        console.log("#pre-game-button clicked!");
- //     },
 
- //     makeCards: function mkCrds() {
- //        console.log("board.makeCards() called");
- //     },
-
- //     displayCards: function dsplyCrds() {
- //        console.log("board.displayCards() called");
- //     }
  };
 
-// For play again functionality
-// Inputs are two objects; function resets the target to become a close of the source
-// NOTE: Based upon
+// for play again functionality (i.e., played through successfully and now replaying)
+// initializes board object based on boardInitial object
+// NOTE: based upon
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
-// NOTE: Would probably have to rework this if methods added to boardInitial object
+// NOTE: would probably have to rework this if methods added to boardInitial object
 function initializeBoardObject() {
     // Because Object.assign() doesn't do deep cloning
     //     (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign),
@@ -517,12 +539,13 @@ function initializeBoardObject() {
     //     reset board.matchedCards; otherwise board.matchedCards, an array, won't be reset, and
     //     an error would arise on repeated plays.
     board.matchedCards = [];
-    // FUTURE: Figure out why this additional step is necessary, but it seems to be
+    // KNOWN: Figure out why this additional step is necessary, but it seems to be
     boardInitial.matchedCards = [];
     board = Object.assign({}, boardInitial);
 }
-// For play again functionality
-// NOTE: Based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+// for play again functionality (i.e., played through successfully and now replaying)
+// initializes index.html
+// NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
 function initializeBoardHTML() {
     if (targetDiv.hasChildNodes()) {
         while (targetDiv.firstChild) {
@@ -530,8 +553,9 @@ function initializeBoardHTML() {
         }
     }
 }
-// For play again functionality
-// NOTE: Based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+// for play again functionality (i.e., played through successfully and now replaying)
+// initializes confetti div within index.html
+// NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
 function initializeConfettiHTML() {
     if (confettiDiv.hasChildNodes()) {
         while (confettiDiv.firstChild) {
@@ -540,30 +564,38 @@ function initializeConfettiHTML() {
     }
 }
 
-// This function takes an array as input and then doubles it [x,y,z] -> [x,y,z,x,y,z]
+// MISCELLANEOUS HELPER FUNCTIONS SECTION
+
+// helper function
+// takes an array as input, copies all its elements to the end,
+    // and returns the doubled array
+    // e.g. [x,y,z] -> [x,y,z,x,y,z]
 function doubleArray(x) {
     x.forEach(function(value) {
         x.push(value);
     });
-    return x;
+    return x;   //an array
 }
 
-// NOTE: Based on getRandomInt(max) in MDN - see references for Math.random()
-// TODO: Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
-//       Add fixes (if maxInt < minInt, then switch)
-// TODO: Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
+// helper function
+// NOTE: based on getRandomInt(max) in MDN - see references for Math.random()
+// KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
+//         Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
+//         Add fixes (if maxInt < minInt, then switch)
+//         Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
             // SHOULD BE SIMPLE FIX TO ADD 1 TO floorMaxInt
 function randomIntInRange(minInt, maxInt) { //input, two integers
-    // If either parameter is not an integer, its floor value != origiinal parameter
+    // if either parameter is not an integer, its floor value != origiinal parameter
     let floorMinInt = Math.floor(minInt);
     let floorMaxInt = Math.floor(maxInt);
     deltInt = floorMaxInt - floorMinInt;
-    // Expected output integer from minInt to (maxInt -1)
+    // returns random integer between minInt and (maxInt -1)
     return (floorMinInt + Math.floor(Math.random() * Math.floor(deltInt)));
-    console.log(deltInt);
+    // console.log(deltInt);
 }
 
-// TODO: Revise if necessary after testing randomIntInRange re the case (maxInt = (minInt + 1))
+// helper function
+// KNOWN: Revise if necessary after testing randomIntInRange re the case (maxInt = (minInt + 1))
 function randomSign() {
     // Returns a string, either "-" or ""
     if (randomIntInRange(1,3) == 1) {
@@ -574,129 +606,50 @@ function randomSign() {
     }
 }
 
-// FUTURE: Fix this so it works only on individual cards, not rows
-// To do this, can experiment with an if/else statement for different responses
-// depending on the characteristics of the div
-// But remember to look at the lesson about capitalization
-// See: "The nodeName's Capitalization" in
-// https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/85463be2-3206-434e-aa39-4604965daa29
-function onMouseoverCard(evt) {
-    //  OPTIONAL: Add tests here if desired, e.g., test whether
-    //          (a) textContent has acceptable syntax, using regex
-    //          (b) use None.noneType to test if mouseOver is on an element_node
-    if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        // console.log("mouseOver a card div in onMouseoverCard");
-        evt.target.animate([
-            // keyframes
-            {
-                color: '#999',
-                transform: 'scale(1.1)'
-            }, {
-                color: '#999',
-                transform: 'scale(1.1)'
-        }], {
-            //timing and iterations
-            delay: 10,
-            duration: 20,
-            iterations: 1
+// helper function
+// takes string that is a div id as input and hides the div
+function hideDiv(strH) {
+    let divToHide = document.querySelector(strH);
+    divToHide.classList.add(hiddenClass);
+}
+
+// helper function
+// takes string that is a div id as input and unhides the div
+function unhideDiv(strU) {
+    let divToUnhide = document.querySelector(strU);
+    divToUnhide.classList.remove(hiddenClass);
+}
+
+
+// STARTING GAME SECTION
+
+// helper function startGame()
+// generates cards by iterating over suit and rank
+function makeCards() {
+    suits.forEach(function(suit) {
+        ranks.forEach(function(rank) {
+            let card = rank + suit;
+            cards.push(card);
         });
-    } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
-        // console.log("mouseOver a row-of-cards div");
-        console.log("");
-    } else {
-        // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
-        console.log("");
-    }
+    });
 }
 
-//Helper function for cardMatchSetupError
-function cardMatchSetupError() {
-    console.log("In cardMatchSetupError(evt)");
-}
-
-//Parameters are two ???
-//TODO: How to get card IDs?
-function sameCardClickedTwiceQuery (ci1, ci2) {
-    let cardId1 = ci1;
-    let cardId2 = ci2;
-    if (cardId1 === cardId2) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//Parameters are two strings
-function doDifferentCardsMatchQuery (vc1, vc2) {
-    let valueCard1 = vc1;
-    let valueCard2 = vc2;
-    if (valueCard1 == valueCard2) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//Helper function to turn text-info to text-dark
-function textInfoToTextDark (evt) {
-    let stHidden = "text-info";
-    let sti = "text-dark";
-    evt.target.outerHTML = evt.target.outerHTML.replace(stHidden, sti);
-}
-
-//FUTURE: Helper function for cardsDoMatch alternative
-function cardsDoMatch () {console.log("");
-}
-
-//FUTURE: Helper function for cardsDoNotMatch alternative
-function cardsDoNotMatch () {console.log("");
-}
-
-// TODO: REVIEW THIS;
-//Helper function to add .card card-background-up-color to .card
-function cardToBackgroundColor(e) {
-    let stHidden = "card";
-    let sti = "card card-background-up-color"
-    e.target.outerHTML = e.target.outerHTML.replace(stHidden, sti);
-}
-// used if game runs to successful completion and user initiates new play
-function startNewGame() {
-    hideDiv('#post-game');
-    hideDiv('#banner-8');
-    // if maxCardClickCountExceeded, display index.html in initial state
-    if (maxCardClickCountExceeded == false) {
-        unhideDiv('#banner');
-        unhideDiv('#confetti');
-    }
-    refresh();
-    startGame();
-}
-
-function tooManyTriesStartNewGame() {
-    hideDiv('#banner-1');
-    hideDiv('#banner-2');
-    hideDiv('#banner-3');
-    hideDiv('#banner-4');
-    hideDiv('#banner-5');
-    hideDiv('#banner-6');
-    hideDiv('#banner-7');
-    startNewGame();
-}
-
-function refresh() {
-    //reset cards to initial state
-    cards = [];
-    matchedCards = [];
-}
-
+// creates the card board, intitialzing based on windows.screen.width and
+//     prior play state
 function startGame() {
 
-    // INITIALIZATION (varies depending on maxCardClickCountExceeded)
-    // test windows.screen.width to adjust confetti constants if necessary
+    // VIEWPORT INITIALIZATION
+    // KNOWN:  card sizes will vary for small viewports (e.g., < 375 width)
+    // KNOWN:  first and last phases of winning animation will not display properly
+    //             for small and medium sized viewports (e.g., < 768 width)
+    // FUTURE: Test windows.screen.width to adjust (a) card sizes and
+    //          (b) confetti sizes
     if (screenWidth < 768) {
         board.confettiRowLength = 8;
         board.confettiMultiplier= 2;
     }
+
+    // PRIOR PLAY INITIALIZATION (varies depending on maxCardClickCountExceeded from prior play)
     //initialize board object
     initializeBoardObject();
     //initialize board section in index.html
@@ -718,16 +671,15 @@ function startGame() {
     }
     makeCards();
 
-    // CORE FUNCTION
-    // using chosenCards to (a) avoid duplication and (b) create set for duplication
+    // CORE SECTION
     let remainingCards = cards;
-    let chosenCards = [];
+    // uses removedCards to avoid duplication of pairs of cards on board
     let removedCards = [];
 
     for (let h = 0; h < (dimensions * 2); h++) {
         // uses remainingCards.length, because randomIntInRange ranges over
-        // first-last index of array
-        // TODO Turn the "let cardRandom = remainingCards..." processes in a function
+        //  first-last index of array
+        // TODO Turn the "let cardRandom = remainingCards..." processes into a function
         let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
         let cardRandomIndex = remainingCards.indexOf(cardRandom);
         removedCard = remainingCards.splice(cardRandomIndex, 1);
@@ -735,27 +687,17 @@ function startGame() {
     }
 
     let cardsSubset = doubleArray(removedCards);
-
-    // console.log(cardsSubset);
-
     let displayedCards = [];
 
     for (let i = 0; i < dimensions; i++) {
         let newDimensionsCardHtml = '';
         for (let j = 0; j < dimensions; j++) {
             // uses cardsSubset.length, because randomIntInRange ranges over
-            // first-last index of array
+            //  first-last index of array
             let cardSubsetRandom = cardsSubset[randomIntInRange(0,cardsSubset.length)];
             let cardSubsetIndex = cardsSubset.indexOf(cardSubsetRandom);
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
-            // OLD CODE:
-            // const newCardHtml = '<div class="card card-background-color-down text-info border border-dark text-center col-2 m-1">'+
-            //                     cardSubsetRandom + '</div>';
-
-            // TEST CODE:
-
-            // MODEL:          <div id="banner-1" class="d-none row banner-header-1 col-12 m-2 justify-content-center">
             let newCardHtml =   '<div id="a_' + i + '-' + j +
                                 '" class="card card-background-color-down text-info border border-dark text-center col-2 m-1">' +
                                 cardSubsetRandom + '</div>';
@@ -769,40 +711,434 @@ function startGame() {
     }
     targetDiv.appendChild(boardFragment);
     board.boardState = "transBoard";
-    // console.log("2nd board.boardState is " + board.boardState);
  }
 
-function unhideDiv(strU) {
-    let divToUnhide = document.querySelector(strU);
-    divToUnhide.classList.remove(hiddenClass);
+
+// used to start new game with two variations
+// if game runs to successful completion to allow user to initiate new play
+// if game terminates because maxCardClickCountExceeded reached, to force starting over
+function startNewGame() {
+    hideDiv('#post-game');
+    hideDiv('#banner-8');
+    // if maxCardClickCountExceeded reached, display index.html in initial state
+    if (maxCardClickCountExceeded == false) {
+        unhideDiv('#banner');
+        unhideDiv('#confetti');
+    }
+    refresh();
+    startGame();
 }
 
-function hideDiv(strH) {
-    let divToHide = document.querySelector(strH);
-    divToHide.classList.add(hiddenClass);
+// helper function to start new game if maxCardClickCountExceeded reached
+function tooManyTriesStartNewGame() {
+    hideDiv('#banner-1');
+    hideDiv('#banner-2');
+    hideDiv('#banner-3');
+    hideDiv('#banner-4');
+    hideDiv('#banner-5');
+    hideDiv('#banner-6');
+    hideDiv('#banner-7');
+    startNewGame();
 }
 
+// helper function for startNewGame
+function refresh() {
+    //reset cards to initial state
+    cards = [];
+    matchedCards = [];
+}
+
+// CARD CLICKING SECTION
+
+// provides animation when mousing over cards
+// KNOWN: Fix onMouseOverCard(evt) so it works only on individual cards, not rows
+//  To do this, could test with if/else statements for different responses
+//      depending on the characteristics of the div
+//          But: remember to look at the lesson about capitalization
+//              See: "The nodeName's Capitalization" in
+//                  https://classroom.udacity.com/nanodegrees/nd001/
+//                  parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
+//                  04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
+//                  f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/
+//                  85463be2-3206-434e-aa39-4604965daa29
+//  NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
+        // which provides related functionality
+function onMouseOverCard(evt) {
+    //  FUTURE: Add tests here if desired, e.g., test whether
+    //          (a) textContent has acceptable syntax, using regex
+    //          (b) use None.noneType to test if mouseOver is on an element_node
+    if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
+        // console.log("mouseOver a card div in onMouseOverCard");
+        evt.target.animate([
+            // keyframes
+            {
+                color: '#999',
+                transform: 'scale(1.1)'
+            }, {
+                color: '#999',
+                transform: 'scale(1.1)'
+        }], {
+            //timing and iterations
+            delay: 10,
+            duration: 20,
+            iterations: 1
+        });
+    // KNOWN: to build out if fixing to work only on individual cards, not rows
+    } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
+        // console.log("mouseOver a row-of-cards div in onMouseOverCard");
+        console.log("");
+    // KNOWN: to build out if fixing to work only on individual cards, not rows
+    } else {
+        // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
+        console.log("");
+    }
+}
+
+// helper function to track count of correctly matched cards
+function iterateCorrectCardCount() {
+    // console.log("before " + board.cardMatchCount);
+    board.cardMatchCount += 2;
+    // console.log("after increment " + board.cardMatchCount);
+}
+
+// helper function to track count of correctly matched cards
+// fc and sc are the card values of the first and second matched cards
+function augmentMatchedCards(fc, sc) {
+    board.matchedCards.push(fc);
+    board.matchedCards.push(sc);
+}
+
+
+// tests whether all the cards on the board have been properly matched
+function testMaxCorrectCardCount() {
+
+//  test mode for makeConfetti() and animateConfetti() to facilitate testing
+    if (board.animationState == true) {
+        hideDiv('#pre-game');
+        hideDiv('#banner');
+        unhideDiv('#post-game');
+        makeConfetti();
+    }
+
+//  non-test mode part of function begins here
+    if (board.cardMatchCount  >= numberCards) {
+        // window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
+        hideDiv('#pre-game');
+        hideDiv('#banner');
+        unhideDiv('#post-game');
+        makeConfetti();
+    }   else  {
+        // console.log("board.cardMatchCount still less than " + numberCards);
+    }
+}
+
+// helper function to track count of how many cards have been clicked
+function iterateCardClickCount() {
+    // console.log("before " + board.cardClickCount);
+    board.cardClickCount += 1;
+    // console.log("after increment " + board.cardClickCount);
+}
+
+// tests whether the number of cards clicked exceeds a pre-determined maximum number of tries
+function testMaxCardClickCount() {
+    if (board.cardClickCount  >= (maxNumberCardsMultiplier * numberCards)) {
+        // console.log(board.cardClickCount);
+        window.alert("Sorry, you've exceeded the maximum number of tries.  Please try again.");
+        maxCardClickCountExceeded = true;
+        tooManyTriesStartNewGame();
+    }   else if (board.cardClickCount  >= ((0.75 *maxNumberCardsMultiplier) * numberCards)) {
+        window.alert("You're getting close to the maximum number of tries.  " +
+            "You have only " + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
+            " tries left, before the game will start over.")
+    }   else  {
+            console.log("board.cardClickCount still less than " +
+                "((0.75 *maxNumberCardsMultiplier) * numberCards)");
+    }
+}
+
+// principal function for handling clicking of cards on board
+function onMouseClickNEW(evt) {
+
+    let clickedDivClassList = evt.target.classList;
+    let hiddenText = "text-info";
+    let darkText = "text-dark";
+    let backgroundDownColor = "card-background-color-down";
+    let backgroundUpColor = "card-background-color-up";
+    let backgroundCorrectColor = "card-background-color-correct";
+    let backgroundIncorrectColor = "card-background-color-incorrect";
+    let firstClickedCardClass = "first-card-clicked";
+
+//  Test mode for makeConfetti() and animateConfetti()
+    if (board.animationState == true) {
+        testMaxCorrectCardCount();
+    }
+
+//  non-test mode part of function resumes here
+//  FUTURE: consider this functionality if revising onMouseOverCard(evt)
+    if (clickedDivClassList.contains("card")) {
+        iterateCardClickCount();
+        testMaxCardClickCount();
+    } else {
+        window.alert("You didn't click on a card.  Please try again.")
+    }
+
+    // clicking on first card
+    if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
+         board.firstCardValue = evt.target.textContent;
+         // board property to prevent clicking on same card twice to get a match
+         board.firstCardID = evt.target.id;
+         // test to prevent first click on already matched card
+         if (board.matchedCards.includes(board.firstCardValue)) {
+            window.alert("Your first click is on a card you've already matched.  Please try again.");
+            return console.log("@1126: First click on an already-matched card.");
+         }
+        board.firstCardState = "clicked";
+
+        clickedDivClassList.replace(hiddenText, darkText);
+        clickedDivClassList.add(firstClickedCardClass);
+        // console.log("First clicked card value  = " + board.firstCardValue);
+
+    // clicking on second card after first card has been sucdessfully clicked
+    } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
+        board.secondCardState = "clicked";
+        board.secondCardValue = evt.target.textContent;
+        // board property to prevent clicking on same card twice to get a match
+        board.secondCardID = evt.target.id;
+         // test to prevent second click on already matched card
+         if (board.matchedCards.includes(board.secondCardValue)) {
+            window.alert("Your second click is on a card you've already matched.  Please try again.");
+            return console.log("@1142: Second click on an already-matched card.");
+         }
+        // test to prevent clicking on same card twice to get a match, while allowing later clicking
+         if (board.firstCardID == board.secondCardID) {
+            window.alert("You can't match by clicking the same card twice.  Please pick a different second card.");
+            // resetting second card values from above to allow for match with new second card
+            board.secondCardValue = "";
+            board.secondCardID = "";
+            board.secondCardState = "notClicked";
+            return console.log ("@1143: You can't match by clicking the same card twice.");
+         }
+        clickedDivClassList.replace(hiddenText, darkText);
+        let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+
+        // first and second clicked cards match
+        if (board.firstCardValue == board.secondCardValue) {
+
+            let firstClickedCardDiv = document.querySelector('.first-card-clicked');
+            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundCorrectColor);
+            clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
+
+            // animation when first and second clicked cards match
+
+            firstClickedCardDiv.animate([
+                    // keyframes
+                    {transform: 'translateY(-25px)'},
+                    {transform: 'scale(2)'},
+                ], {
+                    //timing options
+                    duration: 1000,
+                    iterations: 1
+                }
+            );
+
+            evt.target.animate([
+                    // keyframes
+                    {transform: 'translateY(+25px)'},
+                    {transform: 'scale(2)'},
+                ], {
+                    //timing options
+                    duration: 1000,
+                    iterations: 1
+                }
+            );
+
+            firstClickedCardDiv.classList.remove(firstClickedCardClass);
+            board.firstCardState = "notClicked";
+            board.secondCardState = "notClicked";
+
+            // track how many cards have been matched
+            iterateCorrectCardCount();
+            // track which card values have been matched already
+            augmentMatchedCards(board.firstCardValue, board.secondCardValue);
+
+            // cleaning up board, depending on how many cards have previously been
+            // matched, if the limit for tries has been reached
+            switch (board.cardMatchCount) {
+                case 2:
+                    hideDiv('#banner-1');
+                    unhideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 4:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    unhideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 6:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    unhideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 8:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    unhideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    break;
+                case 10:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    unhideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 12:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    unhideDiv('#banner-7');
+                    hideDiv('#banner-8');
+                    break;
+                case 14:
+                    hideDiv('#banner-1');
+                    hideDiv('#banner-2');
+                    hideDiv('#banner-3');
+                    hideDiv('#banner-4');
+                    hideDiv('#banner-5');
+                    hideDiv('#banner-6');
+                    hideDiv('#banner-7');
+                    unhideDiv('#banner-8');
+                    break;
+            }
+            // test for whether all the cards on the board have been correctly matched
+            testMaxCorrectCardCount();
+
+        // first and second clicked cards do not match
+        } else {
+            clickedDivClassList.replace(hiddenText, darkText);
+            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
+            clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
+            clickedDivClassList.replace(hiddenText, darkText);
+
+            // animation when first and second clicked cards do not match
+            // NOTE: This section revised based on
+                // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+                // https://codepen.io/rachelnabors/pen/PNYGZQ?editors=0010
+                // https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+            let firstClickedIncorrectAnimate = firstClickedCardDiv.animate(
+                [
+                // keyframes
+                    {
+                        transform: 'translateX(-100px)',
+                        color: backgroundIncorrectColor
+                    }, {
+                        transform: 'rotate(0.5turn)'}
+                ], {
+                    //timing options
+                    duration: 1000,
+                    easing: 'ease-out',
+                    iterations: 2
+                }
+            );
+
+            let evtTargetIncorrectAnimate = evt.target.animate(
+                [
+                // keyframes
+                    {
+                        transform: 'translateX(+100px)',
+                        color: backgroundIncorrectColor
+                    }, {
+                        transform: 'rotate(0.5turn)'}
+                ], {
+                //timing options
+                    duration: 1000,
+                    easing: 'ease-out',
+                    iterations: 2
+                }
+            );
+
+            // resetting the first and second clicked cards when they do not match
+            // after animation
+            firstClickedIncorrectAnimate.play();
+            evtTargetIncorrectAnimate.play();
+            firstClickedIncorrectAnimate.onfinish = function() {
+                firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            };
+            evtTargetIncorrectAnimate.onfinish = function() {
+                clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            };
+
+            firstClickedCardDiv.classList.remove(firstClickedCardClass);
+            board.firstCardState = "notClicked";
+            board.secondCardState = "notClicked";
+            clickedDivClassList.replace(darkText, hiddenText);
+            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
+            firstClickedCardDiv.classList.replace(darkText, hiddenText);
+            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
+            clickedDivClassList.replace(darkText, hiddenText);
+        }
+
+    } else {
+        // catchall console.log if error in onMouseClickNEW(evt)
+        return console.log('@ end of onMouseClickNEW(evt) - error somewhere');
+    }
+}
+
+// WINNING GAME INITIALIZATION SECTION
+
+// helper function for winning game animation
+// inputs are integers (but not really testing for this at present)
 function rgbColorString(x,y,z) {
     // Returns a string of an RGB color, e.g., "rgb(30, 40, 50)"
     return ('rgb(' + x.toString() + ', ' + y.toString() + ', ' + z.toString() + ')');
 }
 
+// helper function for possible future animation functionality
+// all inputs must be strings
+//  inputs are "X" or "Y", a sign ("" or "-")), and an integer
+//  (but not really testing for this at present)
+// FUTURE: modify translateXorYString() to work with two perCent values and translate3D
 function translateXorYString(axis,sign,perCent) {
-    // All inputs must be strings
-    // Returns a string of a keyframe translateX or translateY value, e.g., "rgb(30, 40, 50)"
+    // returns a string of a keyframe translateX or translateY value
     return ('translate' + axis + '(' + sign + perCent + '%)');
 }
-// TODO: Modify translateXorYString() to work with two perCent values and translate3D
+
+// helper function for possible future animation functionality
+// FUTURE: modify translateXorYString() to work with two perCent values and translate3D
 function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ) {
-    // All inputs must be strings
-    // Returns a string of a keyframe translateX or translateY value, e.g., "rgb(30, 40, 50)"
+    // all inputs must be strings
+    // returns a string of a keyframe translateX or translateY value, e.g., "rgb(30, 40, 50)"
     return ('translate3D(' + sign1 + perCentX + '%, ' + sign2 + perCentY + '%, '
         + sign3 + pixelValueZ + 'px)');
 }
 
-// Generates random signs for animateConfetti()
-// FUTURE: Better way to set end values in for loops; right now, fixed integers
-// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
+// generates random signs for animateConfetti()
+// FUTURE: better way to set end values in for loops; right now, fixed integers
+// FUTURE: revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndSignsArray = [];
 function makeRndSignsArray() {
     for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) {
@@ -813,9 +1149,10 @@ function makeRndSignsArray() {
     return rndSignsArray;
 }
 
-// Generates random color components (0-255)for animateConfetti()
-// FUTURE: Better way to set end values in for loops; right now, fixed integers
-// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
+// helper function for winning game animation
+// generates random color components (0-255) for animateConfetti()
+// FUTURE: better way to set end values in for loops; right now, fixed integers
+// FUTURE: revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndColorComponentArray = [];
 function makeRndColorComponentArray() {
     for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 4); i++) {
@@ -826,9 +1163,10 @@ function makeRndColorComponentArray() {
     return rndColorComponentArray;
 }
 
-// Generates 6 random colors in *****FORMAT*** for animateConfetti()
-// FUTURE: Better way to set end values in for loops; right now, fixed integers
-// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
+// helper function for winning game animation
+// generates 6 random colors in rgb format (e.g., "rgb(30, 40, 50)") for animateConfetti()
+// FUTURE: better way to set end values in for loops; right now, fixed integers
+// FUTURE: revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndColorArray = [];
 function makeRndColorArray() {
     for (let i = 0; i < (dimensions * 2 * 3 * 4); i += 3) {
@@ -840,9 +1178,10 @@ function makeRndColorArray() {
     return rndColorArray;
 }
 
-// Generates array of random integers, first in range (0,10)
-// FUTURE: Change max values for randomIntInRange if I fix randomIntInRange()
-// FUTURE: Revisit calculation of end of for loop based on current requirements for confettiAnimator()
+// helper function for winning game animation
+// generates array of random integers, first in range (0,10)
+// FUTURE: change max values for randomIntInRange if I fix randomIntInRange()
+// FUTURE: revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndScaleArray = [];
 function makeRndScaleArray() {
     for (let i = 0; i < (dimensions * board.confettiMultiplier * 3 * 3); i += 3) { // almost same multiple of dimensions as in
@@ -855,17 +1194,16 @@ function makeRndScaleArray() {
     return rndScaleArray;
 }
 
-// Adjusts defaults to make 8x8 confetti display and fewer random elements
-//     for smaller viewports (windows.screen.width < 768)
+// winning game animation
 function animateConfetti() {
-    // hideDiv('#post-game-header-1');
+    // initializing area for display of confetti
     hideDiv('#post-game-header-2');
     hideDiv('#contact-information');
 
-// NOTE: This approach to animating multiple elements uses the animate method based upon this:
+// NOTE: this approach to animating multiple elements uses the animate method based upon this:
 //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 //     a.  An animation is created for each confettiPiece, which enables one to
-//     b.  Use the animation object properties of that animation, e.g., onfinish
+//          use the animation object properties of that animation, e.g., onfinish
 //     c.  See:    https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
 //                 https://developer.mozilla.org/en-US/docs/Web/API/Animation
 //                 https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
@@ -882,14 +1220,14 @@ function animateConfetti() {
     }
 
      function confettiAnimator(confettiPiece) {
-// Configuration variables for fine-tuning animation
+// configuration variables for fine-tuning animation
         let xMax = 20;
         let yMax = 20;
         let sMax = 10;
         let tSuppBase = 10;
         let tSuppMult = 10;
         let tMax = 10;
-// Localizing variable names to distinguish from helper functions
+// localizing variable names to distinguish from helper functions
         let rndColorComponentArrayLocal = makeRndColorComponentArray();
         let rndColorArrayLocal = makeRndColorArray();
         let rndSignsArrayX = makeRndSignsArray();
@@ -898,8 +1236,8 @@ function animateConfetti() {
 
         let x = board.confettiCount;
 
-// Keyframes
-// NOTE: Long animation, with beginning, middle, and end phases
+        // keyframes
+        // NOTE: long (15000ms) animation, with beginning, middle, and end phases
         confettiPiece.keyframes = [{
             opacity: 0.1,
             color: '#F00',
@@ -940,10 +1278,6 @@ function animateConfetti() {
             opacity: Math.random(),
             color: rndColorArrayLocal[x + 1],
             transform: 'translate3d(-20px, 100px, 5px) scale(10.0)',
-            // Old code follows:
-            // transform: 'translate3d(' + rndSignsArrayX[x] + (Math.random() * xMax) + 'px, ' +
-            //     rndSignsArrayY[x] + (Math.random() * yMax) + 'px, 0px) scale(' +
-            //     rndScaleArray[x] + ')'
        }, {
             opacity: 1,
             color: rndColorArrayLocal[x + 2],
@@ -1033,6 +1367,7 @@ function animateConfetti() {
             transform: 'translate3d(10px, 50px, 0px) scale(7.0)'
         }];
 
+        //timing options
         confettiPiece.animProps = {
             duration: 15000 + (tSuppBase * (Math.random() * tSuppMult)),
             easing: 'cubic-bezier(0.1, 0.1, 1, 1)',
@@ -1041,7 +1376,7 @@ function animateConfetti() {
             iterations: 1
         }
 
-// NOTE: The following is based on:
+// NOTE: the following is based on:
 //      https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 
         let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
@@ -1058,6 +1393,7 @@ function animateConfetti() {
     board.confettiState = "postConfetti";
 }
 
+// make the confetti used in the winning game animation
 function makeConfetti() {
     board.confettiState = "transConfetti";
     for (let i = 0; i < (board.confettiRowLength); i++) {
@@ -1086,6 +1422,7 @@ function makeConfetti() {
     // console.log("3rd board.boardState, confetti, is " + board.boardState);
  }
 
+// control display of area on index.html that will display the confetti
 function testConfettiState() {
     if (board.confettiState == 'postConfetti') {
         hideDiv('#confetti');
@@ -1094,313 +1431,10 @@ function testConfettiState() {
     }
 }
 
-function iterateCorrectCardCount() {
-    // console.log("before " + board.cardMatchCount);
-    board.cardMatchCount += 2;
-    // console.log("after increment " + board.cardMatchCount);
-}
-
-// fc and sc are the card values of the first and second matched cards
-function augmentMatchedCards(fc, sc) {
-    board.matchedCards.push(fc);
-    board.matchedCards.push(sc);
-}
-
-// calculates positon of clicked card in board section
-// TODO: NEED TO FIGURE OUT INPUTS AND PERHAPS CREATE NEW LIST
-function todoTODO(x,y) {
-    // board.matchedCards.push(fc);
-    // board.matchedCards.push(fc);
-}
-
-// TODO: Deal with case in which same pair of cards is clicked repeatedly
-function testMaxCorrectCardCount() {
-
-//  Test mode for makeConfetti() and animateConfetti()
-//  TODO: Comment out when finished with testing
-    if (board.animationState == true) {
-        hideDiv('#pre-game');
-        hideDiv('#banner');
-        unhideDiv('#post-game');
-        makeConfetti();
-    }
-
-//  Non-test mode part of function begins here
-    if (board.cardMatchCount  >= numberCards) {
-        // Following window.alert used for testing
-        // window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
-        hideDiv('#pre-game');
-        hideDiv('#banner');
-        unhideDiv('#post-game');
-        makeConfetti();
-    }   else  {
-        // console.log("board.cardMatchCount still less than " + numberCards);
-    }
-}
-
-// TODO: ADD THESE IN THE APPROPRIATE LOCATIONS
-function iterateCardClickCount() {
-    // console.log("before " + board.cardClickCount);
-    board.cardClickCount += 1;
-    // console.log("after increment " + board.cardClickCount);
-}
-
-function testMaxCardClickCount() {
-    if (board.cardClickCount  >= (maxNumberCardsMultiplier * numberCards)) {
-        // console.log(board.cardClickCount);
-        window.alert("Sorry, you've exceeded the maximum number of tries.  Please try again.");
-        maxCardClickCountExceeded = true;
-        tooManyTriesStartNewGame();
-    }   else if (board.cardClickCount  >= ((0.75 *maxNumberCardsMultiplier) * numberCards)) {
-        window.alert("You're getting close to the maximum number of tries.  " +
-            "You have only " + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
-            " tries left, before the game will start over.")
-    }   else  {
-            console.log("board.cardClickCount still less than " +
-                "((0.75 *maxNumberCardsMultiplier) * numberCards)");
-    }
-}
-
-function onMouseClickNEW(evt) {
-    // TODO: Will not need these once helper functions working
-    // console.log("evt.target  = " + evt.target);
-
-    let clickedDivClassList = evt.target.classList;
-    // TODO: Maybe get rid of most of these variables and just use strings below
-    let hiddenText = "text-info";
-    let darkText = "text-dark";
-    let backgroundDownColor = "card-background-color-down";
-    let backgroundUpColor = "card-background-color-up";
-    let backgroundCorrectColor = "card-background-color-correct";
-    let backgroundIncorrectColor = "card-background-color-incorrect";
-    let firstClickedCardClass = "first-card-clicked";
-
-//  Test mode for makeConfetti() and animateConfetti()
-//  TODO: Comment out when finished with testing
-    if (board.animationState == true) {
-        testMaxCorrectCardCount();
-    }
-
-//  Non-test mode part of function resumes here
-    if (clickedDivClassList.contains("card")) {
-        iterateCardClickCount();
-        testMaxCardClickCount();
-    } else {
-        window.alert("You didn't click on a card.  Please try again.")
-    }
-
-    if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
-         board.firstCardValue = evt.target.textContent;
-         //Board property to prevent clicking on same card twice to get a match
-         board.firstCardID = evt.target.id;
-         // New test to prevent first click on already matched card
-         if (board.matchedCards.includes(board.firstCardValue)) {
-            window.alert("Your first click is on a card you've already matched.  Please try again.");
-            return console.log("@1126: First click on an already-matched card.");
-         }
-        board.firstCardState = "clicked";
-
-        clickedDivClassList.replace(hiddenText, darkText);
-        clickedDivClassList.add(firstClickedCardClass);
-        // console.log("First clicked card value  = " + board.firstCardValue);
-
-    } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
-        board.secondCardState = "clicked";
-        board.secondCardValue = evt.target.textContent;
-        //Board property to prevent clicking on same card twice to get a match
-        board.secondCardID = evt.target.id;
-         // Test to prevent second click on already matched card
-         if (board.matchedCards.includes(board.secondCardValue)) {
-            window.alert("Your second click is on a card you've already matched.  Please try again.");
-            return console.log("@1142: Second click on an already-matched card.");
-         }
-        // Test to prevent clicking on same card twice to get a match, while allowing later clicking
-         if (board.firstCardID == board.secondCardID) {
-            window.alert("You can't match by clicking the same card twice.  Please pick a different second card.");
-            // resetting second card values from above to allow for match with new second card
-            board.secondCardValue = "";
-            board.secondCardID = "";
-            board.secondCardState = "notClicked";
-            return console.log ("@1143: You can't match by clicking the same card twice.");
-         }
-        clickedDivClassList.replace(hiddenText, darkText);
-        let firstClickedCardDiv = document.querySelector('.first-card-clicked');
-        if (board.firstCardValue == board.secondCardValue) {
-
-            let firstClickedCardDiv = document.querySelector('.first-card-clicked');
-            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundCorrectColor);
-            clickedDivClassList.replace(backgroundDownColor, backgroundCorrectColor);
-
-            firstClickedCardDiv.animate([
-                    {transform: 'translateY(-25px)'},
-                    {transform: 'scale(2)'},
-                ], {
-                    duration: 1000,
-                    iterations: 1
-                }
-            );
-
-            evt.target.animate([
-                    {transform: 'translateY(+25px)'},
-                    {transform: 'scale(2)'},
-                ], {
-                    duration: 1000,
-                    iterations: 1
-                }
-            );
-
-            firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            board.firstCardState = "notClicked";
-            board.secondCardState = "notClicked";
-
-            // TODO: CREATE NEW FUNCTION HERE TO ADD CARD VALUES AND IDEALLY CARD NUMBER WITHIN divs
-            //     TO "PAIRED CARD LIST"
-
-            //Keep track of how many cards have been matched
-            iterateCorrectCardCount();
-            //Keep track of which card values have been matched already
-            augmentMatchedCards(board.firstCardValue, board.secondCardValue);
-
-            switch (board.cardMatchCount) {
-                case 2:
-                    hideDiv('#banner-1');
-                    unhideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    hideDiv('#banner-8');
-                    break;
-                case 4:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    unhideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    hideDiv('#banner-8');
-                    break;
-                case 6:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    unhideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    hideDiv('#banner-8');
-                    break;
-                case 8:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    unhideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    break;
-                case 10:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    unhideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    hideDiv('#banner-8');
-                    break;
-                case 12:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    unhideDiv('#banner-7');
-                    hideDiv('#banner-8');
-                    break;
-                case 14:
-                    hideDiv('#banner-1');
-                    hideDiv('#banner-2');
-                    hideDiv('#banner-3');
-                    hideDiv('#banner-4');
-                    hideDiv('#banner-5');
-                    hideDiv('#banner-6');
-                    hideDiv('#banner-7');
-                    unhideDiv('#banner-8');
-                    break;
-            }
-
-            testMaxCorrectCardCount();
-
-        } else {
-            clickedDivClassList.replace(hiddenText, darkText);
-            firstClickedCardDiv.classList.replace(backgroundDownColor, backgroundIncorrectColor);
-            clickedDivClassList.replace(backgroundDownColor, backgroundIncorrectColor);
-            clickedDivClassList.replace(hiddenText, darkText);
-
-            // NOTE: This section revised based on
-                // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
-                // https://codepen.io/rachelnabors/pen/PNYGZQ?editors=0010
-                // https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
-            let firstClickedIncorrectAnimate = firstClickedCardDiv.animate(
-                [
-                    {
-                        transform: 'translateX(-100px)',
-                        color: backgroundIncorrectColor
-                    }, {
-                        transform: 'rotate(0.5turn)'}
-                ], {
-                    duration: 1000,
-                    easing: 'ease-out',
-                    iterations: 2
-                }
-            );
-
-            let evtTargetIncorrectAnimate = evt.target.animate(
-                [
-                    {
-                        transform: 'translateX(+100px)',
-                        color: backgroundIncorrectColor
-                    }, {
-                        transform: 'rotate(0.5turn)'}
-                ], {
-                    duration: 1000,
-                    easing: 'ease-out',
-                    iterations: 2
-                }
-            );
-
-            firstClickedIncorrectAnimate.play();
-            evtTargetIncorrectAnimate.play();
-            firstClickedIncorrectAnimate.onfinish = function() {
-                firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
-            };
-            evtTargetIncorrectAnimate.onfinish = function() {
-                clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            };
-
-            firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            board.firstCardState = "notClicked";
-            board.secondCardState = "notClicked";
-            clickedDivClassList.replace(darkText, hiddenText);
-            // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
-            firstClickedCardDiv.classList.replace(darkText, hiddenText);
-            // clickedDivClassList.replace(backgroundIncorrectColor, backgroundDownColor);
-            clickedDivClassList.replace(darkText, hiddenText);
-        }
-    } else {
-        return console.log('@1314: Error somewhere');
-    }
-}
-
-// console.log("1st board.boardState is " + board.boardState);
-
+// eventListeners
 playInput.addEventListener('click', startGame);
 
-targetDiv.addEventListener('mouseover', onMouseoverCard);
+targetDiv.addEventListener('mouseover', onMouseOverCard);
 
 targetDiv.addEventListener('click', onMouseClickNEW, true);
 
