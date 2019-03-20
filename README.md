@@ -40,13 +40,13 @@ Chrome or Firefox
 
 ### Starting Points: Prior Materials Used
 
-Started from previous materials from the following projects, exercises, and quizes:
+This project incorporates certain previous materials I prepared in connection with the following projects, exercises, and quizes:
 
-Project: Build a Portfolio Website //TODO: ADD URL
+* Project: [Build a Portfolio Website] (https://github.com/jkelley399/UDAC-FED-WF-Project-Build-a-Portfolio-Site)
 
-Exercise: Pixel Art Maker //TODO: ADD URL
+* Exercise: [Pixel Art Maker](https://github.com/jkelley399/project-pixel-art-maker-starter)
 
-Quizes: 
+* Quizes: 
 
 [Bank Accounts 1 (7-3)](https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/cd56eea9-99b5-40c8-8725-a66a651e1ff0/lessons/634eb53a-2f3f-47a3-9447-598090024758/concepts/a35ae1dd-3f00-4798-8983-a43b4b5ad589) 
 
