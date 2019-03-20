@@ -339,9 +339,11 @@ WIP:    Working on fixing bug so that "already clicked," whether first or second
     4.  Used new maxCardClickCountExceeded variable, rather than new board property
             because otherwise would complicate startGame() even more
 
-2019-03-17--3-18:
+2019-03-19:
 
-    docs:   cleaned up prior comments and added new comments to functions
+    docs: revised and expanded README.md
+
+2019-03-19:
 
     TODO:   Add comments to describe overall structure of program
     TODO:   Check style guide
