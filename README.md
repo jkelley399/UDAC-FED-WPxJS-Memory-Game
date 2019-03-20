@@ -54,6 +54,39 @@ Chrome or Firefox
 
 ## Known Bugs or Implementation Problems
 
+KNOWN ISSUES
+
+KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
+KNOWN:  First and last phases of winning animation will not display properly
+        for small and medium sized viewports (e.g., < 768 width)
+
+KNOWN:  Figure out why this additional assignment is necessary in
+            initializeBoardObject(), but it seems to be:
+                boardInitial.matchedCards = [];
+        NOTE: Once fixed, should be able to change
+            let boardInitial = .... to const boardInitial = ....
+
+KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
+        Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
+        Add fixes (if maxInt < minInt, then switch)
+        Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
+            // SHOULD BE SIMPLE FIX TO ADD 1 TO floorMaxInt
+
+KNOWN:  If randomIntInRange(minInt, maxInt) is improved,
+            review and possibly fix other functions that use it
+
+KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
+            To do this, could test with if/else statements for different responses
+                depending on the characteristics of the div
+                    But: remember to look at the lesson about capitalization
+                        See: "The nodeName's Capitalization" in
+                            https://classroom.udacity.com/nanodegrees/nd001/
+                            parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
+                            04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
+                            f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/
+                            85463be2-3206-434e-aa39-4604965daa29
+            NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
+                which provides related functionality
 
 ## Starting Points and References
 
