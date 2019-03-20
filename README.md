@@ -19,13 +19,13 @@ In addition to this required functionality, a few things have been added:
 
 ## Table of Contents
 
-* Introduction
-* Table of Contents
-* Instructions
-* Design
-* Known Bugs or Implementation Problems
-* Starting Points and References
-* TODO
+* [Introduction](#introduction)
+* [Table of Contents](#table-of-contents)
+* [Instructions](#instructions)
+* [Design](#design)
+* [Known Bugs or Implementation Problems](#known-bugs-or-implementation-problems)
+* [Starting Points and References](#starting-points-and-references)
+* [TODO](#todo)
 
 ## Instructions
 
