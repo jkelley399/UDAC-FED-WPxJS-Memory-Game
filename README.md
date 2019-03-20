@@ -5,8 +5,8 @@
 ## Table of Contents
 
 * Instructions
-* [Starting Points and References](#starting)
-* [TODO](#todo)
+* Starting Points and References
+* TODO
 
 ## Instructions
 
