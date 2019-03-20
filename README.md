@@ -61,4 +61,4 @@ Quizes:
 
 ## TODO
 
-In addition to fixing [known bugs and overcoming implementation problems](### Installation Instructions), 
+In addition to fixing [known bugs and overcoming implementation problems](#bugs---known-bugs-or-implementation-problems), 
