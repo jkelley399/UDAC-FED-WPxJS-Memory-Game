@@ -80,4 +80,4 @@ This project incorporates certain previous materials I prepared in connection wi
 
 ## TODO
 
-In addition to fixing [known bugs and overcoming implementation problems](#bugs---known-bugs-or-implementation-problems), 
+In addition to fixing [known bugs and overcoming implementation problems](#known-bugs-or-implementation-problems), 
