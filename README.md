@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-* [Instructions] (#instructions)
+* Instructions
 * [Starting Points and References](#starting)
 * [TODO](#todo)
 
