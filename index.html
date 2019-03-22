@@ -20,8 +20,6 @@
     <div class="container">
         <section id="pre-game" class="">
             <div class="row pre-game-header col-12 m-2 justify-content-center">
-<!--                 <h1 class="row col-12 m-2 justify-content-center">Welcome To</h1>
-                <h1 class="row col-12 m-2 justify-content-center">The Memory Game</h1> -->
                 <h1 class="row col-12 m-2 justify-content-center">Welcome to the Memory Game</h1>
                 <h2 class="row col-12 m-2 justify-content-center">Would you like to play?</h2>
             </div>
@@ -58,11 +56,6 @@
             </section>
         </section>
         <section id="post-game" class="d-none">
-<!--             <div id="post-game-header-1" class="row col-12 m-2 justify-content-center">
-                <h1>YOU'VE WON!</h1>
-                <h1>Thanks for playing </h1>
-                <h1>the Memory Game.</h1>
-            </div> -->
             <div id="confetti" class="row col-12 m-2 justify-content-center">
             </div>
             <div id="post-game-header-2" class="row col-12 m-2 justify-content-center">
@@ -80,17 +73,19 @@
         <section id="contact-information" class="col-12 m-2 p-2">
             <footer>
                 <div class="row justify-content-center" id="jk-contact-info">
+                        <!-- Below, using title attribute value as subsitute for alt, based on:
+                        https://stackoverflow.com/questions/11746619/alt-or-title-attribute-for-i-tag -->
                         <a href="https://github.com/jkelley399">
-                            <i class="fab fa-4x m-2 px-3 fa-github"></i>
+                            <i class="fab fa-4x m-2 px-3 fa-github" title="Font Awesome icon for GitHub with link to John Kelley GitHub page."></i>
                         </a>
                         <a href="https://twitter.com/jkelley399">
-                            <i class="fab fa-4x m-2 px-3 fa-twitter"></i>
+                            <i class="fab fa-4x m-2 px-3 fa-twitter" title="Font Awesome icon for Twitter with link to John Kelley Twitter page."></i>
                         </a>
                         <a href="https://www.linkedin.com/in/john-kelley-a274a58/">
-                            <i class="fab fa-4x m-2 px-3 fa-linkedin-in"></i>
+                            <i class="fab fa-4x m-2 px-3 fa-linkedin-in" title="Font Awesome icon for linkedIn with link to John Kelley LinkedIn page."></i>
                         </a>
                         <a href="mailto:jkelley@399innovation.com">
-                            <i class="fas fa-4x m-2 px-3 fa-envelope"></i>
+                            <i class="fas fa-4x m-2 px-3 fa-envelope" title="Font Awesome icon for email with link to John Kelley email address."></i>
                         </a>
                 </div>
                 <div class="row mr-2 justify-content-end" id=copyright-notice>© 2019 John Kelley</div>
@@ -104,7 +99,13 @@
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-
-
 </body>
 </html>
+
+<!--
+NOTES TO REVIEWER:
+1.  I am aware that a couple of sections, e.g., <section id="board">,
+    generate warnings in the HTML validator (https://validator.w3.org/#validate_by_upload).
+    My understanding is that these are simply warnings, and the suggested corrections,
+    e.g., adding h2-h6 elments, would either create actual errors or would be at odds with the design that I chose.
+-->

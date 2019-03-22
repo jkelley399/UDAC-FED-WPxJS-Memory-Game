@@ -28,12 +28,8 @@ h2 {
 /*12(a). .class*/
 
 .card-background-color-down {
-    background-color: #DDD; /* RESENT TO #17a2b8 after debugging;
+    background-color: #ddd; /* RESET TO #17a2b8 after debugging;
     the light blue is Boostrap 4 info */
-}
-
-.card-background-color-up {
-    background-color: #5cb85c; /* the green is Boostrap 4 success */
 }
 
 .card-background-color-correct {
@@ -44,29 +40,13 @@ h2 {
     background-color: #d9534f; /* the red is Boostrap 4 danger */
 }
 
-/*.first-card-clicked {  /* TODO: POSSIBLY REMOVE, BECAUSE NOT CURRENTLY USED */
-}
-
-}*/
-
 /*12(b). #id*/
 
 #board {
     background: radial-gradient(#ddd, #0275d8, #333) /* the blue is Boostrap 4 primary */
 }
 
-
 /*12(c). Other*/
-
-
-/*.card {
-    display: inline;
-}*/
-
-.four-cards {
-}
-
-
 
 
 
@@ -75,6 +55,4 @@ h2 {
 1.  Experimenting with trying to follow ordering in
 "How to Order CSS Selectors,"
 https://meiert.com/en/blog/how-to-order-css-selectors/
-
-2.  Although using Bootstrap, am leaving in
-@include media-breakpoints for future reference.*/
+*/

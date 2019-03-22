@@ -1,475 +1,3 @@
-/*
-2019-01-16:
-    Initial commit
-
-    Sketch of overall flow:
-    Select board input
-    Generate board
-    Select card input
-    Test and generate cards
-    End game
-
-2019-01-17:
-    3-state Bootstrap skeleton w 1st eventListener
-    PROBLEM: couldn't use board.startGame() with eventListener
-    QUICK-FIX: created new startGameFunction()
-
-2019-01-18:
-    created const newRowHtmlString
-    got newRowHtmlString into targetDiv
-    PROBLEM: targetDiv not adjusting on repeated cycles
-
-2019-01-19:
-    Problem re targetDiv not adjusting on repeated cycles was caused by
-    my not remembering that you can't use appendChild to repeatedly
-    add the same element.  See:
-        https://stackoverflow.com/questions/36635392/how-to-appendchildelement-many-times-the-same-element
-        https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
-    Choice then becomes whether to use cloneNode or DocumentFragment
-    Decided to use DocumentFragment, but it took me a while to figure out for loops.
-    Started working on makeCards()
-
-2019-01-20:
-    feat created randomIntInRange(minInt, maxInt) & modified startGame()
-
-    added randomizing ranks and suits to cards in startGame()
-
-2019-01-21:
-    feat startGame produces matching cards; fixed makeCards
-
-    startGame now produces 8x2 matching cards, not 16 random cards
-    fixed makeCards to use forEach instead of for loops
-    added new doubleArray function (took a while to figure out)
-    Updated TODO to include play functionality, styling, hiding, etc.
-
-2019-01-23:ds
-    fix got the mouseover eventListener to finally work
-
-    Problem was that I had the wrong target (adding to to board).
-    Solution was to add it to targetDiv
-    New issue will be to get it to only work on individual cards,
-    because it's currently working on entire rows.
-
-2019-01-25:
-    feat syntax & simple tests to discriminate cards from rows of cards
-
-    Key is to use the textContent of divs that can be single card or groups of cards
-    First use is simply in console.log statements:
-
-    if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        console.log("The mouse is mouseOver a div that is a card.");
-    } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
-        console.log("The mouse is mouseOver a div that is a row of cards.");
-    } else {
-        console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
-    }
-2019-01-26:
-    feat simple animation as part of mouseOver
-
-    Had modest success with a "dancing" pattern using a series of x && y transforms
-        evt.target.animate([
-            // keyframes
-            {transform: 'translateX(-15px)'},
-            {transform: 'translateY(-15px)'},
-            {transform: 'translateX(30px)'},
-            {transform: 'translateY(30px)'},
-            {transform: 'translateX(-30px)'},
-            {transform: 'translateY(-15px)'},
-            {transform: 'translateX(15px)'},
-        ], {
-            //timing
-            delay: 200,
-            //direction: 'alternate',
-            duration: 5000,
-            iterations: 1
-        });
-2019-01-27:
-    feat simple gradients on boaders && card face down
-
-    WIP: onMouseClick(evt) with several helper functions
-    NOTE: so far, couldn't get bootstrap _variables.scss to work
-
-2019-01-28--29:
-    fix wrestling with evt.target.outerHTML w some success
-
-    WIP: rewriting onMouseClick(evt) w helper functions failed
-    DISC: learned that when using Element.outerHTML,
-    "while the element will be replaced in the document,
-    the variable whose outerHTML property was set will still hold
-    a reference to the original element:..."
-    See: https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML#Notes
-    So, basically wasted a lot of time creating the helper functions,
-    at least those relying upon Element.outerHTML.
-
-    NOTE: did, however, get the right color values to match Bootstrap 4
-    using Chrome Developer Tools
-
-2019-01-30--31:
-    fix wrestling with onMouseClickNEW(evt) w some success
-
-    DISC: reminded once again of need to look for simple mistakes in logic tests,
-    but did stick with it and figured out the problem.
-    EXPLR: how scopes work with event handlers
-
-2019-02-02--04:
-    fix continuing to wrestle with onMouseClickNEW(evt) w some success
-
-    Got the all correct branch of the logic working.
-    Appear to have gotten the incorrect branch of the logic working.
-    DISC: When in doubt, step through carefully and completely.
-    Still have problem with actually displaying the incorrect branch
-    when not in debug mode.
-    HYPO: Solve with setTimeout() method.
-
-2019-02-05--08:
-    fix: continuing wrestling with onMouseClickNEW(evt) with more success
-
-    Got animation working on both correct and incorrect branches after
-        (1) changing the eventListener to act during the capturing phase; and
-        (2) commenting out the resetting of the incorrect to down color for the incorrect branch
-    KEY RESOURCES:  (1) MDN basics re web annimations;
-                    (2) https://github.com/web-animations/web-animations-js/issues/14
-                    The latter, in particular, helped me to undertand that you need to have
-                    multi-element keyframe transformations.  This occurred after I was getting
-                    an "Failed to execute 'animate' on 'Element': Partial keyframes are not supported."
-                    error message.
-    TODO:   Still can't seem to get the incorrect branch background color and text color to persist
-            during and slightly after the animation.  Some ideas about how to proceed:
-            (1) Call a timeout before things change.
-            (2) Move the change outside the current function (e.g., on mouse move out of the card)
-            (3) Reset the color in the animation (if that's possible)
-            (4) Dig deeper, and see if I can access and use the animation timeline
-
-2019-02-09--10:
-    feat: Added basic functions for winning game, but WIP
-
-    function makeConfetti()
-    function iterateCorrectCardCount()
-    function testMaxCorrectCardCount()
-    function iterateCardClickCount()
-    function testMaxCardClickCount()
-
-    TODO: Hide other pages to start
-    TODO: Style h1s
-    TODO: Confetti animation
-
-2019-02-11:
-    feat: Hiding and unhiding pages
-
-    TODO: Confetti animation in makeConfetti()
-    TODO: Style h1s
-
-2019-02-12--17:
-    feat: Separate animation function for makeConfetti()
-
-    function animateConfetti()
-        Working rudimentarily with row-based randomization
-    function randomSign()
-    function quoteRGBColor(x,y,z)
-    function translateXorYString(axis,sign,perCent)
-
-    TODO: NEED TO REALLY USE:
-        function quoteRGBColor(x,y,z)
-        function translateXorYString(axis,sign,perCent)
-
-
-2019-02-18--03-04:
-    WIP: Item-based randomization for confetti
-
-    2019-02-18--03-04:
-        function translateXorYString(axis,sign,perCent)
-        function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ)
-        function makeRndSignsArray()
-        function makeRndXYZArrays()
-        function makeRndColorComponentArray()
-        function makeRndColorArray()
-
-    WH: Item-based randomization not working because of improper forEach syntax
-         See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-    WH 2019-03-02: Item-based randomization not working because of improper forEach syntax
-                    See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
-                    RESULT: Tried with element, index, array, and no change
-    WH 2019-03-04: Item-based randomization not working because of improper forEach and not a for loop
-                    See: https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-                    RESULT: Tried with a for loop, and no change
-
-2019-03-04--05 (cont'd):
-    Feat: Item-based randomization for confetti
-
-    LEARN: Have spent a long time working on this to no avail.  It wasn't until I read
-           "Animating Many Elements and the Animate Method" by kirupa
-           (https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm)
-           that I found this, which seems to be key:
-
-           "They are separated out into their own properties that live directly on each of the
-           circle elements we are animating. This makes working with them much easier – both aesthetically
-           and, as you will see in a little bit, functionally. The thing to note is that the end
-           result is still the same as what you've seen before: the animate object gets called
-           on an element with the keyframes and animation properties specified as arguments:"
-
-2019-03-06:
-    Feat:   Fine-tuned animateConfetti(), with cubic Bézier timing
-
-            Added return values to more helper functions, making them more useful
-            Fixed random color to use rgb and utilize helper functions
-            Fixed random X, random Y, and random scale, beginning in 2nd phase
-            Fixed makeRndSignsArray() to replace variable declarations for sign1, sign2, etc.
-
-2019-03-09--10:
-    Feat:   Figured out how to use hideDiv('#confetti') at the end
-
-    Notes:  Final solution was a hack that should be refactored.
-            Used new board.confettiCount to carry iteration out of for loop
-
-            TODO: Re-factor the various keyframes so they don't use helper functions.
-
-            Relied further on:
-                https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-
-            WIP:    Spent a lot of time trying to understand the differences between
-                    element.animate(), animation interface, and animation object.
-
-            TODO:   Should work on this further to really understand them.
-
-            See:    https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
-                    https://developer.mozilla.org/en-US/docs/Web/API/Animation
-                    https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
-                    http://danielcwilson.com/blog/2015/07/animations-part-1/
-                    https://css-tricks.com/css-animations-vs-web-animations-api/
-                    https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
-2019-03-11:
-    Feat:   Refined animateConfetti(); multiple devices & prompts
-
-            Created faster test cycle for animateConfetti()
-                Added animationState property to board object
-                Modified onMouseClickNEW(evt) and testMaxCorrectCardCount() to
-                    look for board.animatonState
-            Created long (1500 ms animation) with three principal phases
-            Added support for multiple devices, based on screen width test in startGame()
-                See:    https://developer.mozilla.org/en-US/docs/Web/API/Screen/width
-            Tested on multiple devices in Chrome dev tools
-            Added multiple prompts as cards are matched
-            Started work on startNewGame()
-
-2019-03-12:
-    Feat:   Repeated play working.  Refined animateConfetti(); multiple devices & prompts
-
-            Created boardInitial object to facilitate re-initializing board object
-            Added:  initializeBoardObject(), initializeBoardHTML(),
-                    initializeConfettiHTML(), refresh()
-            Localized variable names in animateConfetti() to distinguish from helper functions
-            Cleaned up old comments
-
-2019-03-12 (PM):
-    Feat:   Simple animation for onMouseOverCard(evt) and fixes
-
-            Fix: After animation, incorrect cards revert to backgroundDownColor
-
-            Fix: "Unchecked runtime.lastError..." error
-                NOTE: Relied on this StackOverlow post:
-                https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
-                When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
-                I repeatedly got the following error message in the DevTools console:
-                    "Unchecked runtime.lastError: Could not establish connection.
-                    Receiving end does not exist."
-                Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
-                when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
-                message disappeared.
-            Fix: Prevented clicking on already correct card
-                    Added: augmentMatchedCards(fc, sc) and new test in onMouseClickNEW(evt)
-            WIP: Started on todoTODO(x,y), to prevent clicking same card twice
-
-2019-03-13 am:
-    WIP:    Started work on fixing bug in preventing clicking already correct card
-                Doesn't work properly with a replay --- clearing statement in refresh function not working yet
-    WIP:    Started work on preventing clicking same card twice
-
-2019-03-14:
-    WIP:    Started work on fixing bug in preventing clicking already correct card
-                Window alert and return don't work when it's the second card clicked,
-                    and, in that case, it ends up with the faceDown color.
-                Doesn't work properly with a replay --- clearing statement in refresh function not working yet
-    WIP:    Started work on preventing clicking same card twice
-                Switches to dark text, not the faceDown color
-    WIP:    2x click on one card followed by 2x click on second wrong card results in
-                "You didn't clock on a card" window.alert
-
-2019-03-15:
-Feat:   Partially fixed bug to prevent second click on already correct card - 1st play only.
-
-Details:    Partially fixed bug to prevent clicking already correct card with second click.
-            Window alert and return didn't work when it's the second card clicked,
-                and, in that case, it ends up with the faceDown color, instead of returning
-                to the dark text color it should have since it's already been matched.
-            NOTE: Only fixed for first time through, not for replay.
-
-WIP:    Working on fixing bug so that "already clicked," whether first or second click
-            works property when the game is replayed.   ---
-            Currently, the clearing statement in refresh function doesn't work.
-            NOTE: To fix for replay, check initializeBoardObject() --- doesn't seem to work.
-
-2019-03-16 1545:
-
-    fix prevented second click on already correct card for replays
-
-    1.  Rewrote initializeBoardObject() with board.matchedCards = []; to handle
-        problem cause by lack of deep cloning in Object.assign()
-            (see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
-    2.  Further rewrote initializeBoardObject() with boardInitial.matchedCards = [];
-            Not sure why this was necessary, but otherwise boardInitial.matchedCards seemed to
-                continue to have the same values upon return from initializeBoardObject()
-                as from the prior round.
-            FUTURE: Figure out why this additional step is necessary,
-
-2019-03-16 1730:
-    fix prevented second click on same card yielding match
-
-    1.  Added resettng of values for the second card within function onMouseClickNEW(evt)
-            after the board.firstCardID == board.secondCardID
-    2.  Retained the window.alert to notify the user of the problem
-    3.  Resetting values obviated the issue about switching to dark text
-            (dark text retained if match, otherwise later code handles return to faceDown color)
-
-2019-03-16 1943:
-    feat Added too-many-picks, hard-coded at numberCards * 4
-
-    1.  Added tooManyTriesStartNewGame()
-    2.  Reworked testMaxCardClickCount()
-    3.  Reworked startGame±()
-    4.  Used new maxCardClickCountExceeded variable, rather than new board property
-            because otherwise would complicate startGame() even more
-
-2019-03-19:
-
-    docs: revised and expanded README.md
-
-2019-03-19:
-
-    TODO:   Add comments to describe overall structure of program
-    TODO:   Check style guide
-            A.  Single vs. double quotes; fix inconsistencies (probably single)
-            B.  Other
-    TODO:   Move development history and FUTUREs into separate files
-    TODO:   Bring up on separate URL (GitHub Pages?)
-    TODO:   Write README
-    TODO:   CHANGE COLORS ON CARDS
-    TODO:   RUN THROUGH VALIDATORS
-
-    FUTURE:     Add tests throughout
-    FUTURE:     Substitute card icons for "rank""suit" format
-    FUTURE:     Fix known issues
-    FUTURE:     Test windows.screen.width to adjust (a) card sizes and
-                    (b) confetti sizes if necessary
-    FUTURE:     Add exploding and changing color "CONGRATULAITONS" before confetti
-    FUTURE:     Change animations for repeated plays (right now this just repeats).
-                Would be somewhat like reaching higher levels in video game.
-                E.g., simple change would be rotating colors at beginning and ending phases
-                NOTE:   Simple implementation would be to take existing animation and
-                        comment out parts of it for the first few replays, so that the full
-                        current animation only works on, e.g., the third time through.
-    FUTURE:     Variable size boards (4x4, 8x8, 16x16, 32x32 (with multiple decks))
-                Add user input on index.html to select number of cards for the game
-                Alternatively, make game harder (i.e., bigger board) as user wins and replays
-    FUTURE:     Turn the "let cardRandom = remainingCards..." processes in a function
-    FUTURE:     Figure out how to use Bootstrap with Sass options --> see Medium article
-    FUTURE:     Refactor with object-oriented architecture.
-                Split out board, boardInitial, and card objects
-                E.g. adding methods in boardInitial object
-                LEARN:  Need to understand how to move functions into methods and
-                        have them work properly with animations.
-                        NOTE:   Figure out why I couldn't use an object.method
-                                with eventListener (2019-01-17)
-    FUTURE:     Add tests to onMouseOverCard(evt) if desired, e.g., test whether
-                (a) textContent has acceptable syntax, using regex
-                (b) use None.noneType to test if mouseOver is on an element_node
-    FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
-                    makeRndScaleArray(),
-                        (a) create better way to set end values in for loops
-                            (right now, fixed integers), and
-                        (b) revisit calculation of end of for loop based on
-                            current requirements for confettiAnimator(), or, alternatively,
-                        (c) just use simpler randomizing mechanisms inside confettiAnimator()
-
-    GENERAL TODO:
-    1.  OVERALL
-        A.  DONE: Check on whether really using makeCards()
-        B.  DONE: Add functionality so that once cards have been matched, you can't click on them again.
-        C.  DONE: Add functionality so that once card is clicked on, it can't match against itself
-                    Currently that yields a correct
-        D.  DONE: Add count on correctly matched cards, to determine when game is won.
-        E.  DONE: Enhance project by choosing randomly from standard card deck
-        F.  Comment out the console.log statements when finished
-    2.  Start adding play functionality
-        A.  DONE: REVIEW EVENT DELEGATION
-        B.  DONE: Fix the mouseover eventListener to work on individual cards, not rows
-        C.  DONE: Reset incorrect matches to face down after a pause
-        C.  TODO: Add board reset functionality in testMaxCardClickCount()
-        F.  TODO: Prevent repeated clicks on cards in a positive match
-    3.  Add styling
-        A.  DONE: Change all outerHTML to classList
-        B.  DONE: Fix the text layout on index.html
-        C.  Example has
-            (i) Pre-guess
-                (a) DONE: X && Y color gradients on borders
-                (b) DONE SORT OF: black face down cards
-                    NOTE: Have pseudo-Bootstrap-info face down cards at present
-                (c) SORT OF DONE (NO ICONS): background color and icons on face up cards
-            (ii) First click
-                (a) SORT OF DONE OF (DIFFERENT COLOR): background color of the card changes
-                    to blue when it's been clicked
-            (iii) Second click
-                (a) SORT OF DONE (DIFFERENT ANIMATION) Correct guess
-                    (i) two cards expand and contract diagonally
-                (b) SORT OF DONE (DIFFERENT ANIMATION) Incorrect guess
-                    (i) background color of both cards changes to red
-                    (ii) two cards shake side to side
-            (v) Winning game
-                (a) DONE: Add test mechanism to basic logic
-                (b) DONE: If game over, page changes, "Congratulations," etc.
-        D.  DONE: REVIEW JS ANIMATION
-        E.  DONE: REVIEW COLOR STYLING WITH BOOTSTRAP
-    4.  DONE: Add "hiding" of different pages
-    5.  DONE: Need to add constraints to the random selection, so that
-        A.  Will always have two cards that will "match"
-        B.  Cannot have multiple duplicates of the same cards
-            (i) E.g., only two ASs per board
-
-KNOWN ISSUES
-
-KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
-KNOWN:  First and last phases of winning animation will not display properly
-        for small and medium sized viewports (e.g., < 768 width)
-
-KNOWN:  Figure out why this additional assignment is necessary in
-            initializeBoardObject(), but it seems to be:
-                boardInitial.matchedCards = [];
-        NOTE: Once fixed, should be able to change
-            let boardInitial = .... to const boardInitial = ....
-
-KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
-        Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
-        Add fixes (if maxInt < minInt, then switch)
-        Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
-            // SHOULD BE SIMPLE FIX TO ADD 1 TO floorMaxInt
-
-KNOWN:  If randomIntInRange(minInt, maxInt) is improved,
-            review and possibly fix other functions that use it
-
-KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
-            To do this, could test with if/else statements for different responses
-                depending on the characteristics of the div
-                    But: remember to look at the lesson about capitalization
-                        See: "The nodeName's Capitalization" in
-                            https://classroom.udacity.com/nanodegrees/nd001/
-                            parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
-                            04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
-                            f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/
-                            85463be2-3206-434e-aa39-4604965daa29
-            NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
-                which provides related functionality
-
-*/
-
 // GENERAL INITIALIZATION SECTION
 
 // constants and other variables used throughout
@@ -494,7 +22,7 @@ let cards = [];
 let board = {};
 // see testMaxCardClickCount(); NOTE: not adding as property of board, because doing so
 // would complicate startGame() even more
-let maxCardClickCountExceeded = false;// true, false; becomes true if number of tries is exceeded
+let maxCardClickCountExceeded = false;  // true, false; becomes true if number of tries is exceeded
 
 // reference object for initialzing board
 // REFACTOR:   Split out board and card objects, and add methods
@@ -505,23 +33,23 @@ let boardInitial = {
 
 //  PRINCIPAL PROPERTIES BEGIN HERE
     // state of board
-    boardState: "preBoard", //re state of game: preBoard, transBoard, postBoard;
+    boardState: 'preBoard', //re state of game: preBoard, transBoard, postBoard;
     // basic state information about cards being clicked
-    firstCardState: "notClicked", //notClicked, clicked,
-    firstCardValue: "", //empty, card Value (e.g., "4S" || "10C")
-    secondCardState: "notClicked", //notClicked, clicked,
-    secondCardValue: "", //empty, card Value (e.g., "4S" || "10C")
+    firstCardState: 'notClicked', //notClicked, clicked,
+    firstCardValue: '', //empty, card Value (e.g., '4S' || '10C')
+    secondCardState: 'notClicked', //notClicked, clicked,
+    secondCardValue: '', //empty, card Value (e.g., '4S' || '10C')
     cardClickCount: 0, // 0, 1, 2
     onMouseClickTextColorError: 0, // 0, 1
     // additional state information re cards being clicked
     // to prevent clicking on same card twice to get a match
-    firstCardID: "",
-    secondCardID: "",
+    firstCardID: '',
+    secondCardID: '',
     // state information about matched cards
     cardMatchCount: 0, // Positive integers (0, even); max value determined by board size
     matchedCards: [],
     // state of confetti for winning animation and confetti parameters
-    confettiState: "preConfetti", //preConfetti, transConfetti, postConfetti; re state of confetti
+    confettiState: 'preConfetti', //preConfetti, transConfetti, postConfetti; re state of confetti
     confettiCount: 0, //
     confettiRowLength: 12,
     confettiMultiplier: 3
@@ -599,12 +127,12 @@ function randomIntInRange(minInt, maxInt) { //input, two integers
 // helper function
 // KNOWN: Revise if necessary after testing randomIntInRange re the case (maxInt = (minInt + 1))
 function randomSign() {
-    // Returns a string, either "-" or ""
+    // Returns a string, either '-' or ''
     if (randomIntInRange(1,3) == 1) {
-        return "-";
+        return '-';
     }
     else {
-        return "";
+        return '';
     }
 }
 
@@ -681,7 +209,7 @@ function startGame() {
     for (let h = 0; h < (dimensions * 2); h++) {
         // uses remainingCards.length, because randomIntInRange ranges over
         //  first-last index of array
-        // TODO Turn the "let cardRandom = remainingCards..." processes into a function
+        // TODO Turn the 'let cardRandom = remainingCards...' processes into a function
         let cardRandom = remainingCards[randomIntInRange(0,remainingCards.length)];
         let cardRandomIndex = remainingCards.indexOf(cardRandom);
         removedCard = remainingCards.splice(cardRandomIndex, 1);
@@ -712,7 +240,7 @@ function startGame() {
         newRowDiv.innerHTML = newRowHtml;
     }
     targetDiv.appendChild(boardFragment);
-    board.boardState = "transBoard";
+    board.boardState = 'transBoard';
  }
 
 
@@ -757,7 +285,7 @@ function refresh() {
 //  To do this, could test with if/else statements for different responses
 //      depending on the characteristics of the div
 //          But: remember to look at the lesson about capitalization
-//              See: "The nodeName's Capitalization" in
+//              See: 'The nodeName's Capitalization' in
 //                  https://classroom.udacity.com/nanodegrees/nd001/
 //                  parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
 //                  04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
@@ -770,7 +298,7 @@ function onMouseOverCard(evt) {
     //          (a) textContent has acceptable syntax, using regex
     //          (b) use None.noneType to test if mouseOver is on an element_node
     if ((evt.target.textContent.length >= 2) && (evt.target.textContent.length <= 6)) {
-        // console.log("mouseOver a card div in onMouseOverCard");
+        // console.log('mouseOver a card div in onMouseOverCard');
         evt.target.animate([
             // keyframes
             {
@@ -787,20 +315,20 @@ function onMouseOverCard(evt) {
         });
     // KNOWN: to build out if fixing to work only on individual cards, not rows
     } else if ((evt.target.textContent.length >= 8) && (evt.target.textContent.length <= 12)) {
-        // console.log("mouseOver a row-of-cards div in onMouseOverCard");
-        console.log("");
+        // console.log('mouseOver a row-of-cards div in onMouseOverCard');
+        console.log('');
     // KNOWN: to build out if fixing to work only on individual cards, not rows
     } else {
-        // console.log("ERROR: mouse is mouseOver neither card nor row of cards.");
-        console.log("");
+        // console.log('ERROR: mouse is mouseOver neither card nor row of cards.');
+        console.log('');
     }
 }
 
 // helper function to track count of correctly matched cards
 function iterateCorrectCardCount() {
-    // console.log("before " + board.cardMatchCount);
+    // console.log('before ' + board.cardMatchCount);
     board.cardMatchCount += 2;
-    // console.log("after increment " + board.cardMatchCount);
+    // console.log('after increment ' + board.cardMatchCount);
 }
 
 // helper function to track count of correctly matched cards
@@ -824,37 +352,37 @@ function testMaxCorrectCardCount() {
 
 //  non-test mode part of function begins here
     if (board.cardMatchCount  >= numberCards) {
-        // window.alert("CONGRATUALTIONS! board.cardMatchCount >= " + numberCards);
+        // window.alert('CONGRATUALTIONS! board.cardMatchCount >= ' + numberCards);
         hideDiv('#pre-game');
         hideDiv('#banner');
         unhideDiv('#post-game');
         makeConfetti();
     }   else  {
-        // console.log("board.cardMatchCount still less than " + numberCards);
+        // console.log('board.cardMatchCount still less than ' + numberCards);
     }
 }
 
 // helper function to track count of how many cards have been clicked
 function iterateCardClickCount() {
-    // console.log("before " + board.cardClickCount);
+    // console.log('before ' + board.cardClickCount);
     board.cardClickCount += 1;
-    // console.log("after increment " + board.cardClickCount);
+    // console.log('after increment ' + board.cardClickCount);
 }
 
 // tests whether the number of cards clicked exceeds a pre-determined maximum number of tries
 function testMaxCardClickCount() {
     if (board.cardClickCount  >= (maxNumberCardsMultiplier * numberCards)) {
         // console.log(board.cardClickCount);
-        window.alert("Sorry, you've exceeded the maximum number of tries.  Please try again.");
+        window.alert('Sorry, you have exceeded the maximum number of tries.  Please try again.');
         maxCardClickCountExceeded = true;
         tooManyTriesStartNewGame();
     }   else if (board.cardClickCount  >= ((0.75 *maxNumberCardsMultiplier) * numberCards)) {
-        window.alert("You're getting close to the maximum number of tries.  " +
-            "You have only " + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
-            " tries left, before the game will start over.")
+        window.alert('You are getting close to the maximum number of tries.  ' +
+            'You have only ' + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
+            ' tries left, before the game will start over.')
     }   else  {
-            console.log("board.cardClickCount still less than " +
-                "((0.75 *maxNumberCardsMultiplier) * numberCards)");
+            console.log('board.cardClickCount still less than ' +
+                '((0.75 *maxNumberCardsMultiplier) * numberCards)');
     }
 }
 
@@ -862,13 +390,12 @@ function testMaxCardClickCount() {
 function onMouseClickNEW(evt) {
 
     let clickedDivClassList = evt.target.classList;
-    let hiddenText = "text-info";
-    let darkText = "text-dark";
-    let backgroundDownColor = "card-background-color-down";
-    let backgroundUpColor = "card-background-color-up";
-    let backgroundCorrectColor = "card-background-color-correct";
-    let backgroundIncorrectColor = "card-background-color-incorrect";
-    let firstClickedCardClass = "first-card-clicked";
+    let hiddenText = 'text-info';
+    let darkText = 'text-dark';
+    let backgroundDownColor = 'card-background-color-down';
+    let backgroundCorrectColor = 'card-background-color-correct';
+    let backgroundIncorrectColor = 'card-background-color-incorrect';
+    let firstClickedCardClass = 'first-card-clicked';
 
 //  Test mode for makeConfetti() and animateConfetti()
     if (board.animationState == true) {
@@ -877,48 +404,48 @@ function onMouseClickNEW(evt) {
 
 //  non-test mode part of function resumes here
 //  FUTURE: consider this functionality if revising onMouseOverCard(evt)
-    if (clickedDivClassList.contains("card")) {
+    if (clickedDivClassList.contains('card')) {
         iterateCardClickCount();
         testMaxCardClickCount();
     } else {
-        window.alert("You didn't click on a card.  Please try again.")
+        window.alert('You did not click on a card.  Please try again.')
     }
 
     // clicking on first card
-    if ((clickedDivClassList.contains("card")) && (board.firstCardState == "notClicked")) {
+    if ((clickedDivClassList.contains('card')) && (board.firstCardState == 'notClicked')) {
          board.firstCardValue = evt.target.textContent;
          // board property to prevent clicking on same card twice to get a match
          board.firstCardID = evt.target.id;
          // test to prevent first click on already matched card
          if (board.matchedCards.includes(board.firstCardValue)) {
-            window.alert("Your first click is on a card you've already matched.  Please try again.");
-            return console.log("@1126: First click on an already-matched card.");
+            window.alert('Your first click is on a card you have already matched.  Please try again.');
+            return console.log('clicking on first card: First click on an already-matched card.');
          }
-        board.firstCardState = "clicked";
+        board.firstCardState = 'clicked';
 
         clickedDivClassList.replace(hiddenText, darkText);
         clickedDivClassList.add(firstClickedCardClass);
-        // console.log("First clicked card value  = " + board.firstCardValue);
+        // console.log('First clicked card value  = ' + board.firstCardValue);
 
     // clicking on second card after first card has been sucdessfully clicked
-    } else if ((clickedDivClassList.contains("card")) && (board.firstCardState == "clicked")) {
-        board.secondCardState = "clicked";
+    } else if ((clickedDivClassList.contains('card')) && (board.firstCardState == 'clicked')) {
+        board.secondCardState = 'clicked';
         board.secondCardValue = evt.target.textContent;
         // board property to prevent clicking on same card twice to get a match
         board.secondCardID = evt.target.id;
          // test to prevent second click on already matched card
          if (board.matchedCards.includes(board.secondCardValue)) {
-            window.alert("Your second click is on a card you've already matched.  Please try again.");
-            return console.log("@1142: Second click on an already-matched card.");
+            window.alert('Your second click is on a card you have already matched.  Please try again.');
+            return console.log('clicking on second card: Second click on an already-matched card.');
          }
         // test to prevent clicking on same card twice to get a match, while allowing later clicking
          if (board.firstCardID == board.secondCardID) {
-            window.alert("You can't match by clicking the same card twice.  Please pick a different second card.");
+            window.alert('You can not match by clicking the same card twice.  Please pick a different second card.');
             // resetting second card values from above to allow for match with new second card
-            board.secondCardValue = "";
-            board.secondCardID = "";
-            board.secondCardState = "notClicked";
-            return console.log ("@1143: You can't match by clicking the same card twice.");
+            board.secondCardValue = '';
+            board.secondCardID = '';
+            board.secondCardState = 'notClicked';
+            return console.log ('testing on clicking same card twice: You can not match by clicking the same card twice.');
          }
         clickedDivClassList.replace(hiddenText, darkText);
         let firstClickedCardDiv = document.querySelector('.first-card-clicked');
@@ -955,8 +482,8 @@ function onMouseClickNEW(evt) {
             );
 
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            board.firstCardState = "notClicked";
-            board.secondCardState = "notClicked";
+            board.firstCardState = 'notClicked';
+            board.secondCardState = 'notClicked';
 
             // track how many cards have been matched
             iterateCorrectCardCount();
@@ -1095,8 +622,8 @@ function onMouseClickNEW(evt) {
             };
 
             firstClickedCardDiv.classList.remove(firstClickedCardClass);
-            board.firstCardState = "notClicked";
-            board.secondCardState = "notClicked";
+            board.firstCardState = 'notClicked';
+            board.secondCardState = 'notClicked';
             clickedDivClassList.replace(darkText, hiddenText);
             // firstClickedCardDiv.classList.replace(backgroundIncorrectColor, backgroundDownColor);
             firstClickedCardDiv.classList.replace(darkText, hiddenText);
@@ -1115,13 +642,13 @@ function onMouseClickNEW(evt) {
 // helper function for winning game animation
 // inputs are integers (but not really testing for this at present)
 function rgbColorString(x,y,z) {
-    // Returns a string of an RGB color, e.g., "rgb(30, 40, 50)"
+    // Returns a string of an RGB color, e.g., 'rgb(30, 40, 50)'
     return ('rgb(' + x.toString() + ', ' + y.toString() + ', ' + z.toString() + ')');
 }
 
 // helper function for possible future animation functionality
 // all inputs must be strings
-//  inputs are "X" or "Y", a sign ("" or "-")), and an integer
+//  inputs are 'X' or 'Y', a sign ('' or '-')), and an integer
 //  (but not really testing for this at present)
 // FUTURE: modify translateXorYString() to work with two perCent values and translate3D
 function translateXorYString(axis,sign,perCent) {
@@ -1133,7 +660,7 @@ function translateXorYString(axis,sign,perCent) {
 // FUTURE: modify translateXorYString() to work with two perCent values and translate3D
 function translate3DString(sign1, sign2, sign3, perCentX, perCentY, pixelValueZ) {
     // all inputs must be strings
-    // returns a string of a keyframe translateX or translateY value, e.g., "rgb(30, 40, 50)"
+    // returns a string of a keyframe translateX or translateY value, e.g., 'rgb(30, 40, 50)'
     return ('translate3D(' + sign1 + perCentX + '%, ' + sign2 + perCentY + '%, '
         + sign3 + pixelValueZ + 'px)');
 }
@@ -1166,7 +693,7 @@ function makeRndColorComponentArray() {
 }
 
 // helper function for winning game animation
-// generates 6 random colors in rgb format (e.g., "rgb(30, 40, 50)") for animateConfetti()
+// generates 6 random colors in rgb format (e.g., 'rgb(30, 40, 50)') for animateConfetti()
 // FUTURE: better way to set end values in for loops; right now, fixed integers
 // FUTURE: revisit calculation of end of for loop based on current requirements for confettiAnimator()
 let rndColorArray = [];
@@ -1392,16 +919,16 @@ function animateConfetti() {
             }, false);
         }
     }
-    board.confettiState = "postConfetti";
+    board.confettiState = 'postConfetti';
 }
 
 // make the confetti used in the winning game animation
 function makeConfetti() {
-    board.confettiState = "transConfetti";
+    board.confettiState = 'transConfetti';
     for (let i = 0; i < (board.confettiRowLength); i++) {
         let newDimensionsConfettiHtml = '';
         for (let j = 0; j < (board.confettiRowLength); j++) {
-            // const newConfettiHtml = '<div class="confetti-piece border-dark col-2 m-1">*****</div>';
+            // const newConfettiHtml = '<div class='confetti-piece border-dark col-2 m-1'>*****</div>';
             // TRY: switching to single asterisk to set up individual animations
             const newConfettiHtml = '<div class="confetti-piece border-dark col-1">*</div>';
             newDimensionsConfettiHtml += newConfettiHtml;
@@ -1411,7 +938,7 @@ function makeConfetti() {
         const newConfettiRowHtml =  '<div class="row col-12 four-confetti-piece justify-content-center">' +
                             newDimensionsConfettiHtml + '</div>';
         newConfettiDiv.innerHTML = newConfettiRowHtml;
-        // console.log("confettiPieces is: ") + confettiPieces;
+        // console.log('confettiPieces is: ' + confettiPieces);
 
     }
     confettiDiv.appendChild(confettiFragment);
@@ -1419,9 +946,9 @@ function makeConfetti() {
     animateConfetti();
 
     // TODO: Probably add hideDiv('#post-game-header-1'); here
-    board.boardState = "postBoard";
-    // console.log("3rd board.boardState, confetti, is " + board.boardState);
-    // console.log("3rd board.boardState, confetti, is " + board.boardState);
+    board.boardState = 'postBoard';
+    // console.log('3rd board.boardState, confetti, is ' + board.boardState);
+    // console.log('3rd board.boardState, confetti, is ' + board.boardState);
  }
 
 // control display of area on index.html that will display the confetti
@@ -1442,4 +969,112 @@ targetDiv.addEventListener('click', onMouseClickNEW, true);
 
 playAgainInput.addEventListener('click', startNewGame);
 
+/*
 
+2.  I consulted a variety of other sources in connection with this project.
+    Please see the accompanying file, "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
+    which lists additional, non-Udacity materials consulted and relied upon in preparing this project.
+3.  Also listed in "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
+    I wish to call out a few references that I relied upon in particular:
+    A.  Regarding animations, in general:
+        https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
+        https://developer.mozilla.org/en-US/docs/Web/API/Animation
+        https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+        http://danielcwilson.com/blog/2015/07/animations-part-1/
+        https://css-tricks.com/css-animations-vs-web-animations-api/
+    B.  Regarding animating multiple elements, especially:
+        https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+ 4. NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
+            I repeatedly got the following error message in the DevTools console:
+                "Unchecked runtime.lastError: Could not establish connection.
+                Receiving end does not exist."
+            I was fortunate to find:
+            https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
+            Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
+            when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
+            message disappeared.
+*/
+
+
+/*
+KNOWN ISSUES
+
+KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
+KNOWN:  First and last phases of winning animation will not display properly
+        for small and medium sized viewports (e.g., < 768 width)
+
+KNOWN:  Figure out why this additional assignment is necessary in
+            initializeBoardObject(), but it seems to be:
+                boardInitial.matchedCards = [];
+        NOTE: Once fixed, should be able to change
+            let boardInitial = .... to const boardInitial = ....
+
+KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
+        Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
+        Add fixes (if maxInt < minInt, then switch)
+        Test the case (maxInt = (minInt + 1)), and, if necessary, fix or add test
+            // SHOULD BE SIMPLE FIX TO ADD 1 TO floorMaxInt
+
+KNOWN:  If randomIntInRange(minInt, maxInt) is improved,
+            review and possibly fix other functions that use it
+
+KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
+            To do this, could test with if/else statements for different responses
+                depending on the characteristics of the div
+                    But: remember to look at the lesson about capitalization
+                        See: 'The nodeName's Capitalization' in
+                            https://classroom.udacity.com/nanodegrees/nd001/
+                            parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/
+                            04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/
+                            f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/
+                            85463be2-3206-434e-aa39-4604965daa29
+            NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
+                which provides related functionality
+*/
+
+/*
+TODO:   Bring up on separate URL (GitHub Pages?)
+TODO:   Revise and expand upon README.md
+TODO:   CHANGE COLORS ON CARDS
+*/
+
+/*
+REFACTOR:   Convert to object-oriented design, e.g.
+                split out board and card objects, and add methods
+
+/*
+FUTURE:     Add tests throughout
+FUTURE:     Substitute card icons for 'rank''suit' format
+FUTURE:     Fix known issues
+FUTURE:     Test windows.screen.width to adjust (a) card sizes and
+                (b) confetti sizes if necessary
+FUTURE:     Add exploding and changing color 'CONGRATULAITONS' before confetti
+FUTURE:     Change animations for repeated plays (right now this just repeats).
+            Would be somewhat like reaching higher levels in video game.
+            E.g., simple change would be rotating colors at beginning and ending phases
+            NOTE:   Simple implementation would be to take existing animation and
+                    comment out parts of it for the first few replays, so that the full
+                    current animation only works on, e.g., the third time through.
+FUTURE:     Variable size boards (4x4, 8x8, 16x16, 32x32 (with multiple decks))
+            Add user input on index.html to select number of cards for the game
+            Alternatively, make game harder (i.e., bigger board) as user wins and replays
+FUTURE:     Turn the 'let cardRandom = remainingCards...' processes in a function
+FUTURE:     Figure out how to use Bootstrap with Sass options --> see Medium article
+FUTURE:     Refactor with object-oriented architecture.
+            Split out board, boardInitial, and card objects
+            E.g. adding methods in boardInitial object
+            LEARN:  Need to understand how to move functions into methods and
+                    have them work properly with animations.
+                    NOTE:   Figure out why I couldn't use an object.method
+                            with eventListener (2019-01-17)
+FUTURE:     Add tests to onMouseOverCard(evt) if desired, e.g., test whether
+            (a) textContent has acceptable syntax, using regex
+            (b) use None.noneType to test if mouseOver is on an element_node
+FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
+                makeRndScaleArray(),
+                    (a) create better way to set end values in for loops
+                        (right now, fixed integers), and
+                    (b) revisit calculation of end of for loop based on
+                        current requirements for confettiAnimator(), or, alternatively,
+                    (c) just use simpler randomizing mechanisms inside confettiAnimator()
+*/
