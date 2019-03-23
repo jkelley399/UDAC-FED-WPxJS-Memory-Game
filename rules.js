@@ -748,7 +748,7 @@ function animateConfetti() {
         board.confettiCount += 1;
     }
 
-     function confettiAnimator(confettiPiece) {
+function confettiAnimator(confettiPiece) {
 // configuration variables for fine-tuning animation
         let xMax = 20;
         let yMax = 20;
@@ -970,11 +970,10 @@ targetDiv.addEventListener('click', onMouseClickNEW, true);
 playAgainInput.addEventListener('click', startNewGame);
 
 /*
-
-2.  I consulted a variety of other sources in connection with this project.
+1.  I consulted a variety of other sources in connection with this project.
     Please see the accompanying file, "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
     which lists additional, non-Udacity materials consulted and relied upon in preparing this project.
-3.  Also listed in "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
+2.  While also listed in "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
     I wish to call out a few references that I relied upon in particular:
     A.  Regarding animations, in general:
         https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
@@ -984,15 +983,15 @@ playAgainInput.addEventListener('click', startNewGame);
         https://css-tricks.com/css-animations-vs-web-animations-api/
     B.  Regarding animating multiple elements, especially:
         https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
- 4. NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
-            I repeatedly got the following error message in the DevTools console:
-                "Unchecked runtime.lastError: Could not establish connection.
-                Receiving end does not exist."
-            I was fortunate to find:
-            https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
-            Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
-            when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
-            message disappeared.
+    C.  NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
+                I repeatedly got the following error message in the DevTools console:
+                    "Unchecked runtime.lastError: Could not establish connection.
+                    Receiving end does not exist."
+                I was fortunate to find:
+                https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
+                Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
+                when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
+                message disappeared.
 */
 
 
@@ -1000,6 +999,7 @@ playAgainInput.addEventListener('click', startNewGame);
 KNOWN ISSUES
 
 KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
+KNOWN:  Game winning animation behavior will vary for very large viewports (there doesn't seem to be a particular size at which this behavior appears; instead, it seems to depend on the ratio between the viewport size and the degree of zoom being used within the browser.
 KNOWN:  First and last phases of winning animation will not display properly
         for small and medium sized viewports (e.g., < 768 width)
 
@@ -1033,8 +1033,6 @@ KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
 */
 
 /*
-TODO:   Bring up on separate URL (GitHub Pages?)
-TODO:   Revise and expand upon README.md
 TODO:   CHANGE COLORS ON CARDS
 */
 

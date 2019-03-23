@@ -28,7 +28,9 @@ h2 {
 /*12(a). .class*/
 
 .card-background-color-down {
-    background-color: #ddd; /* RESET TO #17a2b8 after debugging;
+    background-color: #17a2b8;
+    /* RESET TO #17a2b8 after debugging;
+    toggle to #ddd when debugging
     the light blue is Boostrap 4 info */
 }
 
