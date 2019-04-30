@@ -190,6 +190,7 @@ function startGame() {
     if (maxCardClickCountExceeded == false) {
         hideDiv('#pre-game');
         unhideDiv('#banner');
+        unhideDiv('#banner-dashboard');
         unhideDiv('#banner-1');
     } else {
     // if maxCardClickCountExceeded before startGame(), then reset to false and display
@@ -197,6 +198,7 @@ function startGame() {
         maxCardClickCountExceeded = false;
         unhideDiv('#pre-game');
         hideDiv('#banner');
+        hideDiv('#banner-dashboard');
         hideDiv('#banner-1');
     }
     makeCards();
@@ -243,7 +245,6 @@ function startGame() {
     board.boardState = 'transBoard';
  }
 
-
 // used to start new game with two variations
 // if game runs to successful completion to allow user to initiate new play
 // if game terminates because maxCardClickCountExceeded reached, to force starting over
@@ -259,8 +260,9 @@ function startNewGame() {
     startGame();
 }
 
-// helper function to start new game if maxCardClickCountExceeded reached
+// helper function to start new game if maxCardClickCountExceeded is reached
 function tooManyTriesStartNewGame() {
+    hideDiv('#banner-dashboard');
     hideDiv('#banner-1');
     hideDiv('#banner-2');
     hideDiv('#banner-3');
@@ -492,6 +494,8 @@ function onMouseClickNEW(evt) {
 
             // cleaning up board, depending on how many cards have previously been
             // matched, if the limit for tries has been reached
+            // not hiding or unhiding #banner-dashboard')
+            //      its display is controlled elsewhere
             switch (board.cardMatchCount) {
                 case 2:
                     hideDiv('#banner-1');
@@ -970,6 +974,28 @@ targetDiv.addEventListener('click', onMouseClickNEW, true);
 playAgainInput.addEventListener('click', startNewGame);
 
 /*
+TODO:   Add new functionality based on 2019-04 revised project rubric
+        2019-04-29: Try putting something at top of <section id="banner">
+
+        1.  Victory "modal"
+            A.  How much time
+            B.  Star rating
+            C.  ADDL: Number of moves
+        2.  Star rating display
+            3 descending to 1 at some point
+        3.  Timer
+        4.  Move counter
+
+TODO:   Explore something like progress bars in bootstrap
+            https://getbootstrap.com/docs/4.0/components/progress/
+
+TODO:   Control div sizes dynamically with
+            window.innerHeight
+            window.innerWidth
+
+*/
+
+/*
 1.  I consulted a variety of other sources in connection with this project.
     Please see the accompanying file, "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
     which lists additional, non-Udacity materials consulted and relied upon in preparing this project.
@@ -1033,13 +1059,13 @@ KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
 */
 
 /*
-TODO:   CHANGE COLORS ON CARDS
-*/
-
-/*
 REFACTOR:   Convert to object-oriented design, e.g.
                 split out board and card objects, and add methods
-
+REFACTOR:   Convert to additional Bootstrap components
+                cards:      https://getbootstrap.com/docs/4.0/components/card/
+                modals:     https://getbootstrap.com/docs/4.0/components/modal/
+                progress:   https://getbootstrap.com/docs/4.0/components/progress/
+                tooltips:   https://getbootstrap.com/docs/4.0/components/tooltips/
 /*
 FUTURE:     Add tests throughout
 FUTURE:     Substitute card icons for 'rank''suit' format

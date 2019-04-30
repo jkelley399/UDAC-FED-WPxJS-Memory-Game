@@ -48,6 +48,26 @@ h2 {
     background: radial-gradient(#ddd, #0275d8, #333) /* the blue is Boostrap 4 primary */
 }
 
+#banner-dashboard-main {
+    height: 60%;
+    width: 100%;
+}
+
+#banner-dashboard-moves {
+    height: 10%;
+    width: 33.33%;
+}
+
+#banner-dashboard-rating {
+    height: 10%;
+    width: 33.34%;
+}
+
+#banner-dashboard-time {
+    height: 10%;
+    width: 33.33%;
+}
+
 /*12(c). Other*/
 
 

@@ -7,6 +7,10 @@ https://classroom.udacity.com/courses/ud777
 
 Bootstrap
 https://getbootstrap.com/
+https://getbootstrap.com/docs/4.0/components/card/
+https://getbootstrap.com/docs/4.0/components/modal/
+https://getbootstrap.com/docs/4.0/components/progress/
+https://getbootstrap.com/docs/4.0/components/tooltips/
 https://getbootstrap.com/docs/4.0/layout/grid/
 https://getbootstrap.com/docs/4.0/utilities/borders/
 https://getbootstrap.com/docs/4.0/utilities/colors/
@@ -19,11 +23,13 @@ https://github.com/programmiri/brunch-setup-bootstrap4/blob/master/app/scss/boot
 MDN: CSS
 https://developer.mozilla.org/en-US/docs/Web/CSS/color
 https://developer.mozilla.org/en-US/docs/Web/CSS/gradient
+https://developer.mozilla.org/en-US/docs/Web/CSS/percentage
 https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
 https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
 
 MDN: HTML
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div
 https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
 
 MDN: JavaScript
@@ -58,6 +64,10 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Web_Animations_API_Concepts
 https://developer.mozilla.org/en-US/docs/Web/API/Window/alert
+https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
+https://developer.mozilla.org/en-US/docs/Web/API/window/innerWidth
+https://developer.mozilla.org/en-US/docs/Web/API/Window/outerHeight
+https://developer.mozilla.org/en-US/docs/Web/API/Window/outerWidth
 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseover
