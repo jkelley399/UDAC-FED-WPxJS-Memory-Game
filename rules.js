@@ -9,6 +9,22 @@ const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
 const numberCards = 16;
+// constants for divs for new user dashboard
+const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
+const ratingDiv = document.querySelector('#dashboard-rating');
+const clickCountDiv = document.querySelector('#dashboard-click-count');
+const twoStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>' +
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>';
+const oneStarInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>' +
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>';
+// variables for values for new user dashboard
+let dashboardElapsedTime = 0;
+let dashboardRating = 3;
+let dashboardClickCount = 0;
 // If number of tries exceeds (numberCards * maxNumberCardsMultiplier),
 //  program forces a new game
 const maxNumberCardsMultiplier = 4;
@@ -52,9 +68,9 @@ let boardInitial = {
     confettiState: 'preConfetti', //preConfetti, transConfetti, postConfetti; re state of confetti
     confettiCount: 0, //
     confettiRowLength: 12,
-    confettiMultiplier: 3
-
-
+    confettiMultiplier: 3,
+    // state of rating for statistics
+    ratingStars: 3
  };
 
 // for play again functionality (i.e., played through successfully and now replaying)
@@ -76,6 +92,7 @@ function initializeBoardObject() {
 // for play again functionality (i.e., played through successfully and now replaying)
 // initializes index.html
 // NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+//       I don't recall the exact date, but I can probably estimate it if necessary.
 function initializeBoardHTML() {
     if (targetDiv.hasChildNodes()) {
         while (targetDiv.firstChild) {
@@ -86,6 +103,7 @@ function initializeBoardHTML() {
 // for play again functionality (i.e., played through successfully and now replaying)
 // initializes confetti div within index.html
 // NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+//       I don't recall the exact date, but I can probably estimate it if necessary.
 function initializeConfettiHTML() {
     if (confettiDiv.hasChildNodes()) {
         while (confettiDiv.firstChild) {
@@ -109,6 +127,7 @@ function doubleArray(x) {
 
 // helper function
 // NOTE: based on getRandomInt(max) in MDN - see references for Math.random()
+//       I don't recall the exact date, but I can probably estimate it if necessary.
 // KNOWN:  Test, fix, and improve randomIntInRange(minInt, maxInt)
 //         Add tests (e.g., ensure both parameters are integers && maxInt >= minInt)
 //         Add fixes (if maxInt < minInt, then switch)
@@ -365,10 +384,31 @@ function testMaxCorrectCardCount() {
 }
 
 // helper function to track count of how many cards have been clicked
+// also increments #click-count-div
 function iterateCardClickCount() {
     // console.log('before ' + board.cardClickCount);
     board.cardClickCount += 1;
     // console.log('after increment ' + board.cardClickCount);
+    // increment #click-count-div
+    dashboardClickCount += 1;
+    clickCountDiv.innerHTML = dashboardClickCount;
+}
+
+
+// tests whether player loses a star in ratings statistics for too many cards clicked
+function testStarRating() {
+    if ((board.cardClickCount  >= (0.75 * maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 2)) {
+        board.ratingStars = 1;
+        ratingDiv.innerHTML = oneStarInnerHTML;
+        window.alert('You have one star left in the ratings.  Keep going!');
+
+    }   else if ((board.cardClickCount  >= (0.5 * maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 3)) {
+        board.ratingStars = 2;
+        ratingDiv.innerHTML = twoStarsInnerHTML;
+        window.alert('You have two stars left.  You are doing well!');
+    }   else {
+            console.log('');
+    }
 }
 
 // tests whether the number of cards clicked exceeds a pre-determined maximum number of tries
@@ -378,13 +418,13 @@ function testMaxCardClickCount() {
         window.alert('Sorry, you have exceeded the maximum number of tries.  Please try again.');
         maxCardClickCountExceeded = true;
         tooManyTriesStartNewGame();
-    }   else if (board.cardClickCount  >= ((0.75 *maxNumberCardsMultiplier) * numberCards)) {
+    }   else if (board.cardClickCount  >= ((0.75 * maxNumberCardsMultiplier) * numberCards)) {
         window.alert('You are getting close to the maximum number of tries.  ' +
             'You have only ' + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
             ' tries left, before the game will start over.')
     }   else  {
             console.log('board.cardClickCount still less than ' +
-                '((0.75 *maxNumberCardsMultiplier) * numberCards)');
+                '((0.75 * maxNumberCardsMultiplier) * numberCards)');
     }
 }
 
@@ -408,6 +448,7 @@ function onMouseClickNEW(evt) {
 //  FUTURE: consider this functionality if revising onMouseOverCard(evt)
     if (clickedDivClassList.contains('card')) {
         iterateCardClickCount();
+        testStarRating();
         testMaxCardClickCount();
     } else {
         window.alert('You did not click on a card.  Please try again.')
@@ -582,6 +623,7 @@ function onMouseClickNEW(evt) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
                 // https://codepen.io/rachelnabors/pen/PNYGZQ?editors=0010
                 // https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+                // I don't recall the exact dates, but I can probably estimate them if necessary.
             let firstClickedIncorrectAnimate = firstClickedCardDiv.animate(
                 [
                 // keyframes
@@ -735,6 +777,7 @@ function animateConfetti() {
 
 // NOTE: this approach to animating multiple elements uses the animate method based upon this:
 //     https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+//     I don't recall the exact date, but I can probably estimate it if necessary.
 //     a.  An animation is created for each confettiPiece, which enables one to
 //          use the animation object properties of that animation, e.g., onfinish
 //     c.  See:    https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API
@@ -910,6 +953,7 @@ function confettiAnimator(confettiPiece) {
         }
 
 // NOTE: the following is based on:
+//      I don't recall the exact date, but I can probably estimate it if necessary.
 //      https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
 
         let confettiPlayer = confettiPiece.animate(confettiPiece.keyframes, confettiPiece.animProps);
@@ -1007,8 +1051,10 @@ TODO:   Control div sizes dynamically with
         https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
         http://danielcwilson.com/blog/2015/07/animations-part-1/
         https://css-tricks.com/css-animations-vs-web-animations-api/
+        I don't recall the exact date, but I can probably estimate it if necessary.
     B.  Regarding animating multiple elements, especially:
         https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
+        I don't recall the exact date, but I can probably estimate it if necessary.
     C.  NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
                 I repeatedly got the following error message in the DevTools console:
                     "Unchecked runtime.lastError: Could not establish connection.
@@ -1102,3 +1148,39 @@ FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
                         current requirements for confettiAnimator(), or, alternatively,
                     (c) just use simpler randomizing mechanisms inside confettiAnimator()
 */
+
+// WIP SCRATCH
+
+// feat: basic stats layout & simple ranking test
+//         added testStarRating();
+
+// const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
+// const ratingDiv = document.querySelector('#dashboard-rating');
+// const clickCountDiv = document.querySelector('#dashboard-click-count');
+
+// let dashboardElapsedTime = 0;
+// let dashboardRating = 3;
+// let dashboardClickCount = 0;
+
+// star ratings:
+// @390, see function testMaxCardClickCount()
+
+// @405 testStarRating()
+//         deleteOneStar();
+
+// reset all counters when game starts over
+// redo display when too many clicks
+//     ---Currently, the board is shown even though it is the second game
+//     ---Maybe change to "Would you like to play again?"
+
+// '<div id="a_' + i + '-' + j +
+
+// ratingDiv
+// oneStarInnerHTML
+// twoStarsInnerHTML
+// board.ratingStars
+
+// Possible use:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
+// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
+

@@ -18,8 +18,9 @@
 </head>
 <body>
     <div class="container">
-        <section id="pre-game" class="">
+        <section id="pre-game">
             <div class="row pre-game-header col-12 m-2 justify-content-center">
+                <h1 class="row col-12 m-2 justify-content-center">***WARNING: WIP***</h1>
                 <h1 class="row col-12 m-2 justify-content-center">Welcome to the Memory Game</h1>
                 <h2 class="row col-12 m-2 justify-content-center">Would you like to play?</h2>
             </div>
@@ -32,15 +33,31 @@
                 <div id="banner-dashboard-top" class="row banner-header-1 col-12 m-2 justify-content-center">
                     <h1>Your Statistics</h1>
                 </div>
-                <div id="banner-dashboard-main" class="row justify-content-center">
-                    <div id="banner-dashboard-time"> <!-- class="col-3 m-1 justify-content-center"> -->
-                        <h2>Time</h2>
+                <div id="banner-dashboard-main" class="row col-12 justify-content-center text-center">
+                    <div class="col-3 m-1" id="banner-dashboard-time">
+                        <p><b>Time</b></p>
+                        <div id="dashboard-elapsed-time">Zero</div>
                     </div>
-                    <div id="banner-dashboard-rating"> <!-- class="col-3 m-1 justify-content-center"> -->
-                        <h2>Rating</h2>
+                    <div class="col-3 m-1" id="banner-dashboard-rating">
+                        <p><b>Rating</b></p>
+                            <!-- NOTE: The use of these icons is based on
+                            https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
+                            I don't recall the first exact dates, but I estimate it was in 2018.  Also reviewed again on 2019-05-02 -->
+                        <div id="dashboard-rating">
+                            <span>
+                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
+                            </span>
+                            <span>
+                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
+                            </span>
+                            <span>
+                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
+                            </span>
+                        </div>
                     </div>
-                    <div id="banner-dashboard-moves"> <!-- class="col-3 m-1 justify-content-center"> -->
-                        <h2>Moves</h2>
+                    <div class="col-3 m-1" id="banner-dashboard-moves">
+                        <p><b>Moves</b></p>
+                        <div id="dashboard-click-count">0</div>
                     </div>
                 </div>
             </div>
@@ -90,7 +107,11 @@
             <footer>
                 <div class="row justify-content-center" id="jk-contact-info">
                         <!-- Below, using title attribute value as subsitute for alt, based on:
-                        https://stackoverflow.com/questions/11746619/alt-or-title-attribute-for-i-tag -->
+                        https://stackoverflow.com/questions/11746619/alt-or-title-attribute-for-i-tag
+                        I don't recall the eacct date, but I estimate it was in 2018-->
+                        <!--                     NOTE: The use of these icons is based on
+                        https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
+                        I don't recall the first exact dates, but I estimate it was in 2018 -->
                         <a href="https://github.com/jkelley399">
                             <i class="fab fa-4x m-2 px-3 fa-github" title="Font Awesome icon for GitHub with link to John Kelley GitHub page."></i>
                         </a>

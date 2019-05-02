@@ -1,6 +1,6 @@
 UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted
 
-Besides reviewing various Udacity FED lessons, my answers to FED exercises, and my previous projects, I consulted the following additonal references in completing this project:
+Besides reviewing various Udacity FED lessons, my answers to FED exercises, and my previous projects, I consulted the following additional references in completing this project:
 
 Udacity: Writing READMEs
 https://classroom.udacity.com/courses/ud777
@@ -22,7 +22,9 @@ https://github.com/programmiri/brunch-setup-bootstrap4/blob/master/app/scss/boot
 
 MDN: CSS
 https://developer.mozilla.org/en-US/docs/Web/CSS/color
+https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Alignment
 https://developer.mozilla.org/en-US/docs/Web/CSS/gradient
+https://developer.mozilla.org/en-US/docs/Web/CSS/Layout_cookbook/Center_an_element
 https://developer.mozilla.org/en-US/docs/Web/CSS/percentage
 https://developer.mozilla.org/en-US/docs/Web/CSS/transform
 https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate3d
@@ -37,6 +39,7 @@ https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Return
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 https://developer.mozilla.org/en-US/docs/Web/API/Animation
 https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
+https://developer.mozilla.org/en-US/docs/Web/API/Console/time
 https://developer.mozilla.org/en-US/docs/Web/API/Document/createDocumentFragment
 https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
 https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model
@@ -46,6 +49,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Element
 https://developer.mozilla.org/en-US/docs/Web/API/Element/animate
 https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
 https://developer.mozilla.org/en-US/docs/Web/API/Element/id
+https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML
 https://developer.mozilla.org/en-US/docs/Web/API/Element/outerHTML
 https://developer.mozilla.org/en-US/docs/Web/API/EventListener
 https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
@@ -57,6 +61,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Keyframe_For
 https://developer.mozilla.org/en-US/docs/Web/API/Node
 https://developer.mozilla.org/en-US/docs/Web/API/Node/appendChild
 https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
+https://developer.mozilla.org/en-US/docs/Web/API/Node/removeChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/lastElementChild
 https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/childElementCount
 https://developer.mozilla.org/en-US/docs/Web/API/Screen/width
@@ -76,6 +81,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/sqrt
@@ -85,6 +91,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch
 https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events
+
 
 GH: Markdown
 https://help.github.com/en/articles/basic-writing-and-formatting-syntax#lists
@@ -116,14 +123,14 @@ https://javascript.info/basic-dom-node-properties
 https://meiert.com/en/blog/how-to-order-css-selectors/
 "The Basics of DOM Manipulation in Vanilla JavaScript (No jQuery)"
 https://www.sitepoint.com/dom-manipulation-vanilla-javascript-no-jquery/
+https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
+
 https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
     NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
             I repeatedly got the following error message in the DevTools console:
                 "Unchecked runtime.lastError: Could not establish connection.
                 Receiving end does not exist."
-            Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
-            when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
-            message disappeared.
+            Based on the above StackOverflow post, I tried toggling my Chrome extensions, and, when I inactivated the "Udacity Front End Feedback" Chrome extension, the error message disappeared.
 
 
 
