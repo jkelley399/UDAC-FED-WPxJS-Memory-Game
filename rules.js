@@ -9,22 +9,6 @@ const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
 const numberCards = 16;
-// constants for divs for new user dashboard
-const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
-const ratingDiv = document.querySelector('#dashboard-rating');
-const clickCountDiv = document.querySelector('#dashboard-click-count');
-const twoStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>' +
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>';
-const oneStarInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>' +
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>';
-// variables for values for new user dashboard
-let dashboardElapsedTime = 0;
-let dashboardRating = 3;
-let dashboardClickCount = 0;
 // If number of tries exceeds (numberCards * maxNumberCardsMultiplier),
 //  program forces a new game
 const maxNumberCardsMultiplier = 4;
@@ -37,8 +21,27 @@ const ranks = ['A','K','Q','J','10','9','8','7','6','5','4','3','2']
 let cards = [];
 let board = {};
 // see testMaxCardClickCount(); NOTE: not adding as property of board, because doing so
-// would complicate startGame() even more
+//  would complicate startGame() even more
 let maxCardClickCountExceeded = false;  // true, false; becomes true if number of tries is exceeded
+
+// constants for divs for new user dashboard
+const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
+const ratingDiv = document.querySelector('#dashboard-rating');
+const clickCountDiv = document.querySelector('#dashboard-click-count');
+const twoStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>' +
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>';
+const oneStarInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>' +
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>';
+
+// variables for values for new user dashboard
+// REVIEW: CHECK TO MAKE SURE THEY ARE USED
+let dashboardElapsedTime = 0;
+let dashboardRating = 3;
+let dashboardClickCount = 0;
 
 // reference object for initialzing board
 // REFACTOR:   Split out board and card objects, and add methods
@@ -70,7 +73,11 @@ let boardInitial = {
     confettiRowLength: 12,
     confettiMultiplier: 3,
     // state of rating for statistics
-    ratingStars: 3
+    ratingStars: 3,
+    // state of elapsed time for statistics
+    hHours: 0,
+    mMinutes: 0,
+    sSeconds: 0
  };
 
 // for play again functionality (i.e., played through successfully and now replaying)
@@ -111,6 +118,64 @@ function initializeConfettiHTML() {
         }
     }
 }
+
+
+// HELPER FUNCTIONS FOR PLAYER DASHBOARD SECTION
+
+// helper function
+// converts a one- or two-digit whole number to a two-digit string in '0X' format
+// TODO: add test for whole number input
+function toTDString(wn) {
+    let tds = (wn < 10) ? (0 + wn.toString()) : wn.toString();
+    return tds; //a two-digit string
+}
+
+// helper function
+// returns board.hHours, board.mMinutes, and board.sSeconds in HH:MM:SS string format
+// TODO: add test for whole number input
+function boardHHMMSS() {
+    return toTDString(board.hHours) + ':' + toTDString(board.mMinutes) +
+        ':' + toTDString(board.sSeconds);
+}
+
+// helper function
+// increments digital display of time in HH:MM:SS string format by one second up to 24 hours
+// assumes it is called in one-second intervals; shorter intervals can be used for testing
+// consulted:
+//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString
+//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+// TODO: Styling to display seconds in a smaller format
+function displayNextSecondInHHMMSS() {
+    if (board.sSeconds < 59) {
+        board.sSeconds += 1;
+    } else {
+        board.sSeconds = 0;
+        if (board.mMinutes < 59) {
+            board.mMinutes += 1;
+        } else {
+            board.mMinutes = 0;
+            if (board.hHours < 24) {
+                board.hHours += 1;
+            } else {
+                window.alert('24-hour time limit reached.  The game will restart.');
+                startNewGame();
+            }
+        }
+    }
+    return boardHHMMSS();
+}
+
+// helper function
+// display updated elapsed time in elapsedTimeDiv
+//  NOTE: in context of actual call (see onMouseClickNEW(evt), below),
+//      also tests for a click on a card
+//  TODO: test against system clock and fine tune interval in ms actual elapsed time
+//          For example, there will be some delay in computing functions,
+//          so, instead of using 1000ms, better value may be, e.g., 990ms
+function updateElapsedTime() {
+        elapsedTimeDiv.innerHTML = displayNextSecondInHHMMSS();
+}
+
 
 // MISCELLANEOUS HELPER FUNCTIONS SECTION
 
@@ -405,7 +470,7 @@ function testStarRating() {
     }   else if ((board.cardClickCount  >= (0.5 * maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 3)) {
         board.ratingStars = 2;
         ratingDiv.innerHTML = twoStarsInnerHTML;
-        window.alert('You have two stars left.  You are doing well!');
+        window.alert('You have two stars left.  You can still finish well!');
     }   else {
             console.log('');
     }
@@ -450,6 +515,15 @@ function onMouseClickNEW(evt) {
         iterateCardClickCount();
         testStarRating();
         testMaxCardClickCount();
+        // if first card clicked and elapsedTimeDiv.innerHTML == '',
+        //  then begin setInterval for elapsed time, which will be displayed
+        //  in new user dashboard
+        if (elapsedTimeDiv.innerHTML == '') {
+            // constant for setInterval for elapsed time display in new user dashboard
+            //  based on https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+            //  consulted 2019-05-03
+            const elapsedTimeInterval = setInterval(updateElapsedTime, 10);
+        }
     } else {
         window.alert('You did not click on a card.  Please try again.')
     }
@@ -1039,6 +1113,7 @@ TODO:   Control div sizes dynamically with
 
 */
 
+
 /*
 1.  I consulted a variety of other sources in connection with this project.
     Please see the accompanying file, "UDAC-FED-Projects-WPwJS-JK Memory Game-JK-notes-re-additional-references-consulted,"
@@ -1104,6 +1179,7 @@ KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
                 which provides related functionality
 */
 
+
 /*
 REFACTOR:   Convert to object-oriented design, e.g.
                 split out board and card objects, and add methods
@@ -1112,6 +1188,9 @@ REFACTOR:   Convert to additional Bootstrap components
                 modals:     https://getbootstrap.com/docs/4.0/components/modal/
                 progress:   https://getbootstrap.com/docs/4.0/components/progress/
                 tooltips:   https://getbootstrap.com/docs/4.0/components/tooltips/
+*/
+
+
 /*
 FUTURE:     Add tests throughout
 FUTURE:     Substitute card icons for 'rank''suit' format
@@ -1149,38 +1228,63 @@ FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
                     (c) just use simpler randomizing mechanisms inside confettiAnimator()
 */
 
+
+/* FUNCTIONS THAT ARE NOT CURRENTLY USED, BUT WITH POTENTIAL FUTURE USES
+
+// helper function
+// countup digital display, without timer
+// displays seconds, minutes, and hours in digital display up to 24 hours
+// uses HH:MM:SS format and increments one second each time it's called
+// consulted:
+//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/toString
+//  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_Operator
+// TODO: Styling to display seconds in a smaller format
+function oneSecondIncrementClockDisplaySMH() {
+    for (let h = 0; h < 24; h++) {
+        let hh = (h < 10) ? (0 + h.toString()) : h.toString();
+        for (let m = 0; m < 60; m++) {
+            let mm = (m < 10) ? (0 + m.toString()) : m.toString();
+            for (let s = 0; s < 60; s++) {
+                let ss = (s < 10) ? (0 + s.toString()) : s.toString();
+                console.log(hh + ':' + mm + ':' + ss)
+            }
+        }
+    }
+}
+
+*/
+
+
+
 // WIP SCRATCH
-
-// feat: basic stats layout & simple ranking test
-//         added testStarRating();
-
-// const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
-// const ratingDiv = document.querySelector('#dashboard-rating');
-// const clickCountDiv = document.querySelector('#dashboard-click-count');
-
-// let dashboardElapsedTime = 0;
-// let dashboardRating = 3;
-// let dashboardClickCount = 0;
-
-// star ratings:
-// @390, see function testMaxCardClickCount()
-
-// @405 testStarRating()
-//         deleteOneStar();
-
-// reset all counters when game starts over
+// IN THE MAIN ACKNOWLEDGEMENTS ADD ONE ABOUT setInterval
+// ***AFTER TESTING, RESET THE MILLSECONDS ON THE ELAPSED TIME TIMER TO 1000
+// ***MAYBE ADD A "SPEED TEST" MODE
+// ***ADD SOME STOPS FOR THE SET setInterval
+// ***CHECK ALL THE NEW DASHBOARD VALUES TO MAKE SURE THEY RESET WITH NEW GAME
+//     reset all counters when game starts over
+// ***ADD RESET FOR THE SET INTERVAL ON NEW PLAY;
+//     IN PARTICULAR THE CLOCK SEEMS TO START WHEN HITTING THE PLAY AGAIN BUTTON
+//     AFTER AN INITIAL GAME
+// ***CHECK THE REVIEW ITEMS IN rules.js
+// ***MAKE SURE THE BOARD DOES NOT DISPLAY ON THE LANDING PAGE SECOND TIME THROUGH
 // redo display when too many clicks
 //     ---Currently, the board is shown even though it is the second game
 //     ---Maybe change to "Would you like to play again?"
+// ***CHANGE WARNINGS SO THEY DON NOT OCCUR EVERY TIME THROUGH DURING LAST PART OF PLAY
+// ***ADD INFO RE innerHTML security concern to FUTURE
 
-// '<div id="a_' + i + '-' + j +
+// feat: added elapsed time functionality
 
-// ratingDiv
-// oneStarInnerHTML
-// twoStarsInnerHTML
-// board.ratingStars
+//     function toTDString(wn)
+//     function boardHHMMSS()
+//     function displayNextSecondInHHMMSS()
+//     function updateElapsedTime()
+//     const elapsedTimeInterval
+
+//     TODO: test and improve the elapsed time functionality
 
 // Possible use:
+// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
 // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
-
