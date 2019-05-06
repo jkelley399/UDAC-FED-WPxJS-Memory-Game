@@ -1236,6 +1236,8 @@ KNOWN-C:    window.alert will interrupt the elapsed time in the banner-dashboard
 
 KNOWN-C:    when playing through multiple times, the intervals do not reset
                 correctly all of the time --- need to add to the initialization
+
+KNOW-C:     timer still not working properly following animation will
 */
 
 
