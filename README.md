@@ -1,17 +1,7 @@
 # UDAC-FED-Web Programming with JavaScript-Project-Memory Game
 
 ## Introduction
-This project is being submitted in connection with part 2, "Web Programming with JavaScript," of the Udacity Front-End Web Developer Nanodegree.  The [general required functionality for the project](https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/677caa06-55d6-444e-a853-08627c5516a7/lessons/4227cbf4-f6ce-4798-a7e5-b1ce3b9e7c33/concepts/0a38769e-8e23-4e3f-9482-d8d1aa80fbb6) was stated as follows:
-
-> ### Game Functionality
-> [In t]he real-life game, players flip over cards to locate the pairs that match[.] The goal is to recreate this effect in your project. There are a couple of interactions that you'll need to handle:
-
->   *   Flipping cards
->   *   What happens when cards match
->   *   What happens when cards do not match
->   *   When the game finishes
-
-In addition to thesed requirements, some additional functionality has been added:
+This project is being submitted in connection with part 2, "Web Programming with JavaScript," of the Udacity Front-End Web Developer Nanodegree.   *See*: ["PROJECT SPECIFICATION, Memory Game"](https://review.udacity.com/#!/rubrics/591/view).  As submitted, this project is not based upon the Starter Code.  *Cf.*: ["Get the Starter Code"](https://classroom.udacity.com/nanodegrees/nd001/parts/8d8cb0aa-ec2b-4e20-b961-85fb324b6787/modules/d23c2328-c79f-4e9e-92d3-6362724392a6/lessons/f5911397-4fba-4a30-ab40-3447cc6b2b90/concepts/b98425f0-10b1-4fa4-9fce-174767c240b6).  Some additional functionality has been added, including:
 
 *   basing the faces of cards on a simplified model of playing cards (although currently without icons);
 *   allowing the user to choose immediately to resume play after winning;
@@ -34,7 +24,7 @@ In addition to thesed requirements, some additional functionality has been added
 ## Instructions
 
 ### Project Instructions
-For detailed instructions, see the [Udacity Classroom-Project: Memory Game > 2. Instructions](https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/677caa06-55d6-444e-a853-08627c5516a7/lessons/4227cbf4-f6ce-4798-a7e5-b1ce3b9e7c33/concepts/0a38769e-8e23-4e3f-9482-d8d1aa80fbb6) (referred to above).
+For detailed instructions, *see*: ["PROJECT SPECIFICATION, Memory Game"](https://review.udacity.com/#!/rubrics/591/view) (referred to above).
 
 ### Dependencies and Requirements
 
@@ -73,15 +63,15 @@ If you wish to install this project locally:
 
 ### High-Level Design
 
-The high-level design of the project generally tracks [the example implementation of the project](https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/677caa06-55d6-444e-a853-08627c5516a7/lessons/4227cbf4-f6ce-4798-a7e5-b1ce3b9e7c33/concepts/0a38769e-8e23-4e3f-9482-d8d1aa80fbb6) (referred to above):
+The high-level design of the project can be summarized as follows:
 
 *   there is a game board;
-*   in this project, the area surrounding the game board changes, depending on the state of play;
+*   the area surrounding the game board changes, depending on the state of play;
 *   the game board has representations of sixteen "cards" in a four-by-our grid;
     *   initially, the cards are arranged face down;
-*   in this project, the cards, when chosen are intended to reflect playing cards;
+*   the cards, when chosen are intended to reflect playing cards;
     *   for example, "AC" signifies the ace of clubs, and "2D" the two of diamonds;
-*   in this project, there are eight pairs of perfectly matching cards;
+*   there are eight pairs of perfectly matching cards;
     *   for example, if there is one "AC," there will be a second "AC" as well;
 *   the face down cards are chosen by being clicked, and when a card is clicked, it is flipped over to reveal its identity, e.g., "2D";
 *   the player flips two cards two cards in a row, trying to match between the two cards successively flipped;
@@ -95,7 +85,11 @@ The high-level design of the project generally tracks [the example implementatio
         *  if that limit is reached, the player is forced to start completely over;
 *   if all of the cards are succesfully matched before that pre-determined limit has been reached, the player is notified; and
     *   in this project, the player is also given the opportunity to begin the game again immediately.
-
+*   there is also an area above the game board providing statistics concerning the player's performance:
+    *   elapsed time;
+    *   rating (starting with three stars and declining to one); and
+    *   cumulative number of picks.
+    
 ### Board Object
 
 The board object, `board`, is initialized from another object, `boardInitial`.  `board` maintains state information concerning the board and the state of play.  (In terms of possible future work on this project, I'd like to learn how to re-implement it with a true object-oriented architecture.  See: [REFACTOR](#refactor), below.)
@@ -119,6 +113,8 @@ The principal files are `index.html`, `rules.js`, and `styles.css`.  In addtion 
 ### Known Bugs or Implementation Problems
 
 *   Card sizes will vary for small viewports (e.g., < 375 width)
+*   The incorrect match animation shows the value of the second card (*i.e.*, the shown state) only momentarily.  
+    *   Need to figure out how to allow it to be displayed for a longer period of time.
 *   Game winning animation behavior will vary for very large viewports.
     *   There doesn't seem to be a particular size at which this behavior appears.
     *   Instead, the behavior seems to depend on the ratio between the viewport size and the degree of zoom being used within the browser.
@@ -135,14 +131,18 @@ The principal files are `index.html`, `rules.js`, and `styles.css`.  In addtion 
     *   Test the case `maxInt == (minInt + 1)`, and, if necessary, fix or add test
         *   Should be simple fix to add to `floorMaxInt`
 
-* If `randomIntInRange(minInt, maxInt)` is improved:
+*   If `randomIntInRange(minInt, maxInt)` is improved:
     *   review and possibly fix other functions that use it
 
-* Fix `onMouseOverCard(evt)` so it works only on individual cards, not rows
+*   Fix `onMouseOverCard(evt)` so it works only on individual cards, not rows
     *   To do this, could test with if/else statements for different responses depending on the characteristics of the div
         *   But: remember to look at the lesson about capitalization
             *See*: ["The `nodeName`'s Capitalization"](https://classroom.udacity.com/nanodegrees/nd001/parts/3d3d1bdc-316b-46c2-bdcf-b713c82804da/modules/04eb38bd-45e1-4a58-98c8-1e6f1e770438/lessons/f270dbcf-eb43-4ce3-b7be-a74d26023496/concepts/85463be2-3206-434e-aa39-4604965daa29)
         *   NOTE: if fixing, also review the `window.alert` in `onMouseClickNEW(evt)`, which provides related functionality
+*   window.alert will interrupt the elapsed time in the banner-dashboard
+*   when playing through multiple times, the intervals do not reset correctly all of the time --- need to add to the initialization
+*   timer still not working properly following animation will
+   
 
 ### Implementation Problems
 
@@ -193,7 +193,10 @@ I wish to call out a few references that I relied upon in particular:
     *   [*CSS Animations vs Web Animations API*](https://css-tricks.com/css-animations-vs-web-animations-api/)
 *   Regarding animating multiple elements, especially:
     *   [*Animating Many Elements and the Animate Method*](https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm)
-
+*   Regarding the banner-dashboard in general, and the use of (1) setInterval,and (2) clearInterval:
+    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval]
+    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval]    
+    
 ## TODO
 
 In addition to fixing [known bugs and overcoming implementation problems](#known-bugs-or-implementation-problems),
@@ -223,7 +226,7 @@ In addition to fixing [known bugs and overcoming implementation problems](#known
     *   Alternatively, force the game to become harder (i.e., by requiring a bigger board) as a user wins and replays
 *   Turn the `let cardRandom = remainingCards...` processes into a function
 *   Figure out how to use Bootstrap with Sass options
-    * See [*My favored SCSS setup with Bootstrap 4*](https://medium.com/@programmiri/my-favored-scss-setup-with-bootstrap-4-547e9ea290f8)
+    * *See* [*My favored SCSS setup with Bootstrap 4*](https://medium.com/@programmiri/my-favored-scss-setup-with-bootstrap-4-547e9ea290f8)
 *   Refactor with an object-oriented architecture.
     *   Split out board, boardInitial, and card objects
     *   E.g. adding methods in boardInitial object
@@ -235,7 +238,10 @@ In addition to fixing [known bugs and overcoming implementation problems](#known
     *   to create a better way to set end values in `for` loops (right now, simply fixed integers), and
     *   to revisit calculation of end of `for` loop based on current requirements for confettiAnimator(), or, alternatively,
         *   to use simpler randomizing mechanisms inside `confettiAnimator()`
-
+ *   Explore something like [progress bars in bootstrap](https://getbootstrap.com/docs/4.0/components/progress/) 
+ *   Control div sizes dynamically with window.innerHeight and window.innerWidth
+ *   Figure out how to add a "fast testing" mode
+ 
 ## LEARN
 
 *   Need to understand how to move functions into methods and have them work properly with animations.
