@@ -4,6 +4,7 @@
 const playInput = document.querySelector('#pre-game-button');
 const playAgainInput = document.querySelector('#play-again-button');
 const tooManyClicksInput = document.querySelector('#too-many-clicks-button');
+const resetInput = document.querySelector('#reset-button');
 const boardFragment = document.createDocumentFragment();
 const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
@@ -311,6 +312,7 @@ function startGame() {
     unhideDiv('#banner');
     unhideDiv('#banner-dashboard');
     unhideDiv('#banner-1');
+    unhideDiv('#reset');
     // create cares
     makeCards();
 
@@ -1153,6 +1155,7 @@ playAgainInput.addEventListener('click', startNewGame);
 
 tooManyClicksInput.addEventListener('click', startNewGame);
 
+resetInput.addEventListener('click', startNewGame);
 
 /*
 1.  I consulted a variety of other sources in connection with this project.
