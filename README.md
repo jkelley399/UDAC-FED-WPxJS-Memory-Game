@@ -1,5 +1,3 @@
-# NOTE FOR REVIEWR 2019-05-05: I just recognized that my submission is missing a "Restart Button" as required by the Project Rubric.  My apologies for not reading the Project Rubric more carefully, but I missed that and, in testing, I didn't find the nedd for such a restart button, because I would simply use the browerser refresh button.  Because of my schedule this week, and because of the impending due date for the project, I am submitting what I have to find out what else I need to fix to submit the project.  I apologize in advance for any inconvenience this may cause you.
-
 # UDAC-FED-Web Programming with JavaScript-Project-Memory Game
 
 ## Introduction
