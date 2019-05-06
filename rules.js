@@ -3,16 +3,18 @@
 // constants and other variables used throughout
 const playInput = document.querySelector('#pre-game-button');
 const playAgainInput = document.querySelector('#play-again-button');
+const tooManyClicksInput = document.querySelector('#too-many-clicks-button');
 const boardFragment = document.createDocumentFragment();
 const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
 const targetDiv = document.querySelector('#board');
 const confettiDiv = document.querySelector('#confetti');
-const numberCards = 16;
+const numberCards = 16; // can't change at present; preferably an even square
+const clickCountWarningFactor = .75; // its product with numberCards should be even
+const clickCountWarningInterval = 4; // should be even
 // If number of tries exceeds (numberCards * maxNumberCardsMultiplier),
 //  program forces a new game
 const maxNumberCardsMultiplier = 4;
-const maxCardsMultiplier = 2; // Natural number
 const dimensions = Math.sqrt(numberCards);
 const hiddenClass = 'd-none';
 const screenWidth = window.screen.width;
@@ -22,12 +24,17 @@ let cards = [];
 let board = {};
 // see testMaxCardClickCount(); NOTE: not adding as property of board, because doing so
 //  would complicate startGame() even more
-let maxCardClickCountExceeded = false;  // true, false; becomes true if number of tries is exceeded
 
-// constants for divs for new user dashboard
+// constants for new user dashboard
 const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
 const ratingDiv = document.querySelector('#dashboard-rating');
 const clickCountDiv = document.querySelector('#dashboard-click-count');
+const threeStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>' +
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>'+
+                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
+                          'title="Font Awesome icon one solid star."></i></span>';
 const twoStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
                           'title="Font Awesome icon one solid star."></i></span>' +
                           '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
@@ -36,12 +43,19 @@ const oneStarInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' 
                           'title="Font Awesome icon one solid star."></i></span>' +
                           '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
                           'title="Font Awesome icon one solid star."></i></span>';
+const twoStarsThreshold = .5; // its product with numberCards should be even
+const oneStarThreshold = .75; // its product with numberCards should be even
+const elapsedTimeInitialHTML = '0';
+const clickCountDivInitialHTML = '0';
 
-// variables for values for new user dashboard
-// REVIEW: CHECK TO MAKE SURE THEY ARE USED
-let dashboardElapsedTime = 0;
-let dashboardRating = 3;
-let dashboardClickCount = 0;
+// variable for new user dashboard
+// NOTE: the click count for the dashboard comes from board.cardClickCount
+// variable for elapsed time setInterval()
+//  declaring here to have global scope
+//  based on https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+//  consulted 2019-05-04
+    // NOTE: See "Example 1: Basic syntax"
+let elapsedTimeInterval
 
 // reference object for initialzing board
 // REFACTOR:   Split out board and card objects, and add methods
@@ -73,14 +87,16 @@ let boardInitial = {
     confettiRowLength: 12,
     confettiMultiplier: 3,
     // state of rating for statistics
-    ratingStars: 3,
+    ratingStars: 3, // somewhat duplicative of threeStarsInnerHTML, but used in testStarRating()
     // state of elapsed time for statistics
+    // hHours, mMinutes, and sSeconds are somewhat duplicative of elapsedTimeInitialHTML, but
+    // used in boardHHMMSS()
     hHours: 0,
     mMinutes: 0,
     sSeconds: 0
  };
 
-// for play again functionality (i.e., played through successfully and now replaying)
+// for play again functionality (i.e., played through and now replaying)
 // initializes board object based on boardInitial object
 // NOTE: based upon
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
@@ -96,7 +112,7 @@ function initializeBoardObject() {
     boardInitial.matchedCards = [];
     board = Object.assign({}, boardInitial);
 }
-// for play again functionality (i.e., played through successfully and now replaying)
+// for play again functionality (i.e., played through and now replaying)
 // initializes index.html
 // NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
 //       I don't recall the exact date, but I can probably estimate it if necessary.
@@ -107,7 +123,7 @@ function initializeBoardHTML() {
         }
     }
 }
-// for play again functionality (i.e., played through successfully and now replaying)
+// for play again functionality (i.e., played through and now replaying)
 // initializes confetti div within index.html
 // NOTE: based on https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes
 //       I don't recall the exact date, but I can probably estimate it if necessary.
@@ -176,6 +192,18 @@ function updateElapsedTime() {
         elapsedTimeDiv.innerHTML = displayNextSecondInHHMMSS();
 }
 
+// helper function
+// stops setInterval that updates the elapsed time for display in new user dashboard
+//  based on https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+//  consulted 2019-05-03--04
+    // NOTE: See "Return Value" section:
+    //     Return value identifies the timer created.
+    // NOTE: See "Example 2: Alternating two colors"
+    //     Uses variable as parameter for clearInterval
+function stopElapsedTimeUpdate() {
+    clearInterval(elapsedTimeInterval);
+}
+
 
 // MISCELLANEOUS HELPER FUNCTIONS SECTION
 
@@ -237,7 +265,16 @@ function unhideDiv(strU) {
 
 // STARTING GAME SECTION
 
-// helper function startGame()
+// helper function for startGame()
+// tests whether the board div (targetDiv) is hidden, and
+// if it is hidden, unhides it at the end of startGame()
+function conditionalUnhideBoard() {
+    if (targetDiv.classList.contains(hiddenClass)) {
+    targetDiv.classList.remove(hiddenClass);
+    }
+}
+
+// helper function for startGame()
 // generates cards by iterating over suit and rank
 function makeCards() {
     suits.forEach(function(suit) {
@@ -263,28 +300,18 @@ function startGame() {
         board.confettiMultiplier= 2;
     }
 
-    // PRIOR PLAY INITIALIZATION (varies depending on maxCardClickCountExceeded from prior play)
     //initialize board object
     initializeBoardObject();
     //initialize board section in index.html
     initializeBoardHTML();
     //initialize confetti section in index.html
     initializeConfettiHTML();
-    // Hide and display relevant parts of index.html, unless maxCardClickCountExceeded
-    if (maxCardClickCountExceeded == false) {
-        hideDiv('#pre-game');
-        unhideDiv('#banner');
-        unhideDiv('#banner-dashboard');
-        unhideDiv('#banner-1');
-    } else {
-    // if maxCardClickCountExceeded before startGame(), then reset to false and display
-    // initial version of index.html
-        maxCardClickCountExceeded = false;
-        unhideDiv('#pre-game');
-        hideDiv('#banner');
-        hideDiv('#banner-dashboard');
-        hideDiv('#banner-1');
-    }
+    //set up layout
+    hideDiv('#pre-game');
+    unhideDiv('#banner');
+    unhideDiv('#banner-dashboard');
+    unhideDiv('#banner-1');
+    // create cares
     makeCards();
 
     // CORE SECTION
@@ -310,13 +337,14 @@ function startGame() {
         for (let j = 0; j < dimensions; j++) {
             // uses cardsSubset.length, because randomIntInRange ranges over
             //  first-last index of array
-            let cardSubsetRandom = cardsSubset[randomIntInRange(0,cardsSubset.length)];
+            let cardSubsetRandom =
+                cardsSubset[randomIntInRange(0,cardsSubset.length)];
             let cardSubsetIndex = cardsSubset.indexOf(cardSubsetRandom);
             displayCard = cardsSubset.splice(cardSubsetIndex, 1);
             displayedCards.push(displayCard);
             let newCardHtml =   '<div id="a_' + i + '-' + j +
-                                '" class="card card-background-color-down text-info border border-dark text-center col-2 m-1">' +
-                                cardSubsetRandom + '</div>';
+                '" class="card card-background-color-down text-info border border-dark text-center col-2 m-1">' +
+                cardSubsetRandom + '</div>';
             newDimensionsCardHtml += newCardHtml;
         }
         const newRowDiv = document.createElement('div');
@@ -326,27 +354,16 @@ function startGame() {
         newRowDiv.innerHTML = newRowHtml;
     }
     targetDiv.appendChild(boardFragment);
+    conditionalUnhideBoard();
+    // necessary to keep time from starting on "Click here..." button after prior play
+    stopElapsedTimeUpdate();
     board.boardState = 'transBoard';
  }
 
-// used to start new game with two variations
-// if game runs to successful completion to allow user to initiate new play
-// if game terminates because maxCardClickCountExceeded reached, to force starting over
+// used to start new game
 function startNewGame() {
     hideDiv('#post-game');
-    hideDiv('#banner-8');
-    // if maxCardClickCountExceeded reached, display index.html in initial state
-    if (maxCardClickCountExceeded == false) {
-        unhideDiv('#banner');
-        unhideDiv('#confetti');
-    }
-    refresh();
-    startGame();
-}
-
-// helper function to start new game if maxCardClickCountExceeded is reached
-function tooManyTriesStartNewGame() {
-    hideDiv('#banner-dashboard');
+    hideDiv('#max-card-click-count-exceeded')
     hideDiv('#banner-1');
     hideDiv('#banner-2');
     hideDiv('#banner-3');
@@ -354,7 +371,10 @@ function tooManyTriesStartNewGame() {
     hideDiv('#banner-5');
     hideDiv('#banner-6');
     hideDiv('#banner-7');
-    startNewGame();
+    hideDiv('#banner-8');
+    targetDiv.classList.add(hiddenClass);
+    refresh();
+    startGame();
 }
 
 // helper function for startNewGame
@@ -362,6 +382,10 @@ function refresh() {
     //reset cards to initial state
     cards = [];
     matchedCards = [];
+    //reset dashboard to initial state
+    elapsedTimeDiv.innerHTML = elapsedTimeInitialHTML;
+    ratingDiv.innerHTML = threeStarsInnerHTML;
+    clickCountDiv.innerHTML = clickCountDivInitialHTML;
 }
 
 // CARD CLICKING SECTION
@@ -430,17 +454,36 @@ function testMaxCorrectCardCount() {
 
 //  test mode for makeConfetti() and animateConfetti() to facilitate testing
     if (board.animationState == true) {
+        stopElapsedTimeUpdate();
         hideDiv('#pre-game');
-        hideDiv('#banner');
+        hideDiv('#banner-1');
+        hideDiv('#banner-2');
+        hideDiv('#banner-3');
+        hideDiv('#banner-4');
+        hideDiv('#banner-5');
+        hideDiv('#banner-6');
+        hideDiv('#banner-7');
+        hideDiv('#banner-8');
+        targetDiv.classList.add(hiddenClass);
+        unhideDiv('#banner-dashboard');
         unhideDiv('#post-game');
         makeConfetti();
     }
 
 //  non-test mode part of function begins here
     if (board.cardMatchCount  >= numberCards) {
-        // window.alert('CONGRATUALTIONS! board.cardMatchCount >= ' + numberCards);
+        stopElapsedTimeUpdate();
         hideDiv('#pre-game');
-        hideDiv('#banner');
+        hideDiv('#banner-1');
+        hideDiv('#banner-2');
+        hideDiv('#banner-3');
+        hideDiv('#banner-4');
+        hideDiv('#banner-5');
+        hideDiv('#banner-6');
+        hideDiv('#banner-7');
+        hideDiv('#banner-8');
+        targetDiv.classList.add(hiddenClass);
+        unhideDiv('#banner-dashboard');
         unhideDiv('#post-game');
         makeConfetti();
     }   else  {
@@ -454,20 +497,20 @@ function iterateCardClickCount() {
     // console.log('before ' + board.cardClickCount);
     board.cardClickCount += 1;
     // console.log('after increment ' + board.cardClickCount);
-    // increment #click-count-div
-    dashboardClickCount += 1;
-    clickCountDiv.innerHTML = dashboardClickCount;
+    clickCountDiv.innerHTML = board.cardClickCount;
 }
 
 
 // tests whether player loses a star in ratings statistics for too many cards clicked
 function testStarRating() {
-    if ((board.cardClickCount  >= (0.75 * maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 2)) {
+    if ((board.cardClickCount  >= (oneStarThreshold * maxNumberCardsMultiplier *
+            numberCards)) && (board.ratingStars == 2)) {
         board.ratingStars = 1;
         ratingDiv.innerHTML = oneStarInnerHTML;
         window.alert('You have one star left in the ratings.  Keep going!');
 
-    }   else if ((board.cardClickCount  >= (0.5 * maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 3)) {
+    }   else if ((board.cardClickCount  >= (twoStarsThreshold *
+            maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 3)) {
         board.ratingStars = 2;
         ratingDiv.innerHTML = twoStarsInnerHTML;
         window.alert('You have two stars left.  You can still finish well!');
@@ -479,11 +522,23 @@ function testStarRating() {
 // tests whether the number of cards clicked exceeds a pre-determined maximum number of tries
 function testMaxCardClickCount() {
     if (board.cardClickCount  >= (maxNumberCardsMultiplier * numberCards)) {
+        stopElapsedTimeUpdate();
         // console.log(board.cardClickCount);
         window.alert('Sorry, you have exceeded the maximum number of tries.  Please try again.');
-        maxCardClickCountExceeded = true;
-        tooManyTriesStartNewGame();
-    }   else if (board.cardClickCount  >= ((0.75 * maxNumberCardsMultiplier) * numberCards)) {
+        hideDiv('#banner-1');
+        hideDiv('#banner-2');
+        hideDiv('#banner-3');
+        hideDiv('#banner-4');
+        hideDiv('#banner-5');
+        hideDiv('#banner-6');
+        hideDiv('#banner-7');
+        hideDiv('#banner-8');
+        targetDiv.classList.add(hiddenClass);
+        unhideDiv('#max-card-click-count-exceeded');
+        // clickCountWarningInterval determines frequency of warnings past threshold
+    }   else if ((board.cardClickCount  >= ((clickCountWarningFactor *
+            maxNumberCardsMultiplier) * numberCards)) &&
+            (board.cardClickCount % clickCountWarningInterval == 0)) {
         window.alert('You are getting close to the maximum number of tries.  ' +
             'You have only ' + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
             ' tries left, before the game will start over.')
@@ -518,11 +573,16 @@ function onMouseClickNEW(evt) {
         // if first card clicked and elapsedTimeDiv.innerHTML == '',
         //  then begin setInterval for elapsed time, which will be displayed
         //  in new user dashboard
-        if (elapsedTimeDiv.innerHTML == '') {
+        if (elapsedTimeDiv.innerHTML == elapsedTimeInitialHTML) {
             // constant for setInterval for elapsed time display in new user dashboard
+            // NOTE: for testing, convenient to set ms from 1000 to 10
             //  based on https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
-            //  consulted 2019-05-03
-            const elapsedTimeInterval = setInterval(updateElapsedTime, 10);
+            //  consulted 2019-05-03--04
+                    // NOTE: See "Return Value" section:
+                    //     Return value identifies the timer created.
+                    // NOTE: See "Example 2: Alternating two colors"
+                    //     Uses variable as parameter for clearInterval
+            elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
         }
     } else {
         window.alert('You did not click on a card.  Please try again.')
@@ -868,6 +928,7 @@ function animateConfetti() {
         confettiAnimator(confettiPiece, i);
         board.confettiCount += 1;
     }
+}
 
 function confettiAnimator(confettiPiece) {
 // configuration variables for fine-tuning animation
@@ -1040,7 +1101,6 @@ function confettiAnimator(confettiPiece) {
                 unhideDiv('#contact-information');
             }, false);
         }
-    }
     board.confettiState = 'postConfetti';
 }
 
@@ -1091,27 +1151,7 @@ targetDiv.addEventListener('click', onMouseClickNEW, true);
 
 playAgainInput.addEventListener('click', startNewGame);
 
-/*
-TODO:   Add new functionality based on 2019-04 revised project rubric
-        2019-04-29: Try putting something at top of <section id="banner">
-
-        1.  Victory "modal"
-            A.  How much time
-            B.  Star rating
-            C.  ADDL: Number of moves
-        2.  Star rating display
-            3 descending to 1 at some point
-        3.  Timer
-        4.  Move counter
-
-TODO:   Explore something like progress bars in bootstrap
-            https://getbootstrap.com/docs/4.0/components/progress/
-
-TODO:   Control div sizes dynamically with
-            window.innerHeight
-            window.innerWidth
-
-*/
+tooManyClicksInput.addEventListener('click', startNewGame);
 
 
 /*
@@ -1130,7 +1170,12 @@ TODO:   Control div sizes dynamically with
     B.  Regarding animating multiple elements, especially:
         https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
         I don't recall the exact date, but I can probably estimate it if necessary.
-    C.  NOTE:   When running "The Memory Game" in Chrome 72.0.3626.121 (Official Build) (64-bit),
+    C.  NOTE-C: Regarding the banner-dashboard in general, and the use of (1) setInterval,
+            and (2) clearInterval:
+                https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
+                https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+    D.  NOTE-C:   When running an earlier version of "The Memory Game"
+                in Chrome 72.0.3626.121 (Official Build) (64-bit),
                 I repeatedly got the following error message in the DevTools console:
                     "Unchecked runtime.lastError: Could not establish connection.
                     Receiving end does not exist."
@@ -1138,7 +1183,7 @@ TODO:   Control div sizes dynamically with
                 https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-lasterror-could-not-establish-connection-receivi
                 Based on the above StackOverflow post, I tried toggling my Chrome extensions, and,
                 when I inactivated the "Udacity Front End Feedback" Chrome extension, the error
-                message disappeared.
+                message disappeared.  (FYI: I haven't checked recently to see if this is still showing up.)
 */
 
 
@@ -1146,7 +1191,16 @@ TODO:   Control div sizes dynamically with
 KNOWN ISSUES
 
 KNOWN:  Card sizes will vary for small viewports (e.g., < 375 width)
-KNOWN:  Game winning animation behavior will vary for very large viewports (there doesn't seem to be a particular size at which this behavior appears; instead, it seems to depend on the ratio between the viewport size and the degree of zoom being used within the browser.
+
+KNOWN-C:    The incorrect match animation shows the value of the second card
+            (i.e., the shown state) only momentarily.  Need to figure out how to
+            allow it to be displayed for a longer period of time.
+
+KNOWN:  Game winning animation behavior will vary for very large viewports
+        (there doesn't seem to be a particular size at which this behavior appears;
+        instead, it seems to depend on the ratio between the viewport size and the
+        degree of zoom being used within the browser).
+
 KNOWN:  First and last phases of winning animation will not display properly
         for small and medium sized viewports (e.g., < 768 width)
 
@@ -1177,6 +1231,11 @@ KNOWN:  Fix onMouseOverCard(evt) so it works only on individual cards, not rows
                             85463be2-3206-434e-aa39-4604965daa29
             NOTE: if fixing, also review the window.alert in onMouseClickNEW(evt)
                 which provides related functionality
+
+KNOWN-C:    window.alert will interrupt the elapsed time in the banner-dashboard
+
+KNOWN-C:    when playing through multiple times, the intervals do not reset
+                correctly all of the time --- need to add to the initialization
 */
 
 
@@ -1226,10 +1285,17 @@ FUTURE:     In makeRndColorComponentArray(), makeRndColorArray(), and
                     (b) revisit calculation of end of for loop based on
                         current requirements for confettiAnimator(), or, alternatively,
                     (c) just use simpler randomizing mechanisms inside confettiAnimator()
+FUTURE-C:   Explore something like progress bars in bootstrap
+            https://getbootstrap.com/docs/4.0/components/progress/
+
+FUTURE-C:   Control div sizes dynamically with
+            window.innerHeight
+            window.innerWidth
+FUTURE-C:   Figure out how to add a "fast testing" mode
 */
 
 
-/* FUNCTIONS THAT ARE NOT CURRENTLY USED, BUT WITH POTENTIAL FUTURE USES
+/* FUNCTION THAT IS NOT CURRENTLY USED, BUT MAY HAVE POTENTIAL FUTURE USES
 
 // helper function
 // countup digital display, without timer
@@ -1255,36 +1321,3 @@ function oneSecondIncrementClockDisplaySMH() {
 */
 
 
-
-// WIP SCRATCH
-// IN THE MAIN ACKNOWLEDGEMENTS ADD ONE ABOUT setInterval
-// ***AFTER TESTING, RESET THE MILLSECONDS ON THE ELAPSED TIME TIMER TO 1000
-// ***MAYBE ADD A "SPEED TEST" MODE
-// ***ADD SOME STOPS FOR THE SET setInterval
-// ***CHECK ALL THE NEW DASHBOARD VALUES TO MAKE SURE THEY RESET WITH NEW GAME
-//     reset all counters when game starts over
-// ***ADD RESET FOR THE SET INTERVAL ON NEW PLAY;
-//     IN PARTICULAR THE CLOCK SEEMS TO START WHEN HITTING THE PLAY AGAIN BUTTON
-//     AFTER AN INITIAL GAME
-// ***CHECK THE REVIEW ITEMS IN rules.js
-// ***MAKE SURE THE BOARD DOES NOT DISPLAY ON THE LANDING PAGE SECOND TIME THROUGH
-// redo display when too many clicks
-//     ---Currently, the board is shown even though it is the second game
-//     ---Maybe change to "Would you like to play again?"
-// ***CHANGE WARNINGS SO THEY DON NOT OCCUR EVERY TIME THROUGH DURING LAST PART OF PLAY
-// ***ADD INFO RE innerHTML security concern to FUTURE
-
-// feat: added elapsed time functionality
-
-//     function toTDString(wn)
-//     function boardHHMMSS()
-//     function displayNextSecondInHHMMSS()
-//     function updateElapsedTime()
-//     const elapsedTimeInterval
-
-//     TODO: test and improve the elapsed time functionality
-
-// Possible use:
-// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/now
-// https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout

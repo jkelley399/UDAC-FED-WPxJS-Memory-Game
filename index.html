@@ -20,7 +20,6 @@
     <div class="container">
         <section id="pre-game">
             <div class="row pre-game-header col-12 m-2 justify-content-center">
-                <h1 class="row col-12 m-2 justify-content-center">***WARNING: WIP***</h1>
                 <h1 class="row col-12 m-2 justify-content-center">Welcome to the Memory Game</h1>
                 <h2 class="row col-12 m-2 justify-content-center">Would you like to play?</h2>
             </div>
@@ -34,16 +33,16 @@
                     <h1>Your Statistics</h1>
                 </div>
                 <div id="banner-dashboard-main" class="row col-12 justify-content-center text-center">
-                    <div class="col-3 m-1" id="banner-dashboard-time">
+                    <div class="col-3 m-1 border border-dark" id="banner-dashboard-time">
                         <p><b>Elapsed Time</b></p>
-                        <div id="dashboard-elapsed-time"></div>
+                        <div class="border border-dark" id="dashboard-elapsed-time">0</div>
                     </div>
-                    <div class="col-3 m-1" id="banner-dashboard-rating">
+                    <div class="col-3 m-1 border border-dark" id="banner-dashboard-rating">
                         <p><b>Your Rating</b></p>
                             <!-- NOTE: The use of these icons is based on
                             https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
                             I don't recall the first exact dates, but I estimate it was in 2018.  Also reviewed again on 2019-05-02 -->
-                        <div id="dashboard-rating">
+                        <div class="border border-dark" id="dashboard-rating">
                             <span>
                                 <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
                             </span>
@@ -55,9 +54,9 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-3 m-1" id="banner-dashboard-moves">
+                    <div class="col-3 m-1 border border-dark" id="banner-dashboard-moves">
                         <p><b>Number of Picks</b></p>
-                        <div id="dashboard-click-count">0</div>
+                        <div class="border border-dark" id="dashboard-click-count">0</div>
                     </div>
                 </div>
             </div>
@@ -100,6 +99,16 @@
                 </div>
                 <div class="row col-12 m-2 justify-content-center play-again">
                     <button id="play-again-button" class="btn-outline-primary" type="submit">Click here to play again</button>
+                </div>
+            </div>
+        </section>
+        <section id="too-many-clicks">
+            <div id="max-card-click-count-exceeded" class="d-none">
+                <div class="row col-12 m-2 justify-content-center">
+                    <h1>Good try!</h1>
+                </div>
+                <div class="row col-12 m-2 justify-content-center play-again">
+                    <button id="too-many-clicks-button" class="btn-outline-primary" type="submit">Please click here to try again</button>
                 </div>
             </div>
         </section>

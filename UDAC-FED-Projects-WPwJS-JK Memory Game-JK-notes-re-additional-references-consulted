@@ -21,6 +21,7 @@ https://medium.com/@programmiri/my-favored-scss-setup-with-bootstrap-4-547e9ea29
 https://github.com/programmiri/brunch-setup-bootstrap4/blob/master/app/scss/bootstrap/_pre_default.scss
 
 MDN: CSS
+https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/Values_and_units
 https://developer.mozilla.org/en-US/docs/Web/CSS/color
 https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Box_Alignment
 https://developer.mozilla.org/en-US/docs/Web/CSS/gradient
@@ -73,6 +74,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Window/innerHeight
 https://developer.mozilla.org/en-US/docs/Web/API/window/innerWidth
 https://developer.mozilla.org/en-US/docs/Web/API/Window/outerHeight
 https://developer.mozilla.org/en-US/docs/Web/API/Window/outerWidth
+https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout
 https://developer.mozilla.org/en-US/docs/Web/Events/mouseenter
