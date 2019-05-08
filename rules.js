@@ -568,7 +568,9 @@ function onMouseClickNEW(evt) {
 
 //  non-test mode part of function resumes here
 //  FUTURE: consider this functionality if revising onMouseOverCard(evt)
-    if (clickedDivClassList.contains('card')) {
+//  NOTE: Changed test based on 1st code review and as suggested by first reviewer
+//      to avoid counting repeated clicks on same card
+    if ((clickedDivClassList.contains('card')) && (clickedDivClassList.contains(hiddenText))) {
         iterateCardClickCount();
         testStarRating();
         testMaxCardClickCount();
@@ -587,7 +589,12 @@ function onMouseClickNEW(evt) {
             elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
         }
     } else {
-        window.alert('You did not click on a card.  Please try again.')
+        // Adding new follow-on test based upon change to primary test.
+        //     Otherwise, you'd get the "...not click on a card" alert
+        //     simply because the same card was clicked twice.
+        if (!(clickedDivClassList.contains('card'))) {
+            window.alert('You did not click on a card.  Please try again.')
+        }
     }
 
     // clicking on first card
