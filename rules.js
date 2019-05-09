@@ -2,7 +2,8 @@
 
 // constants and other variables used throughout
 const playInput = document.querySelector('#pre-game-button');
-const playAgainInput = document.querySelector('#play-again-button');
+// REVIEW - NOT NECESSARY WITH START OVER BUTTON
+// const playAgainInput = document.querySelector('#play-again-button');
 const tooManyClicksInput = document.querySelector('#too-many-clicks-button');
 const resetInput = document.querySelector('#reset-button');
 const boardFragment = document.createDocumentFragment();
@@ -473,7 +474,9 @@ function testMaxCorrectCardCount() {
     }
 
 //  non-test mode part of function begins here
-    if (board.cardMatchCount  >= numberCards) {
+// NOTE: for testing and debugging, adjust numberCards to (0.25 * numberCards)
+// REVIEW --- set test back to (board.cardMatchCount  >= numberCards)
+    if (board.cardMatchCount  >= (0.25 * numberCards)) {
         stopElapsedTimeUpdate();
         hideDiv('#pre-game');
         hideDiv('#banner-1');
@@ -1158,7 +1161,8 @@ targetDiv.addEventListener('mouseover', onMouseOverCard);
 
 targetDiv.addEventListener('click', onMouseClickNEW, true);
 
-playAgainInput.addEventListener('click', startNewGame);
+// REVIEW - NOT NECESSARY WITH START OVER BUTTON
+// playAgainInput.addEventListener('click', startNewGame);
 
 tooManyClicksInput.addEventListener('click', startNewGame);
 
