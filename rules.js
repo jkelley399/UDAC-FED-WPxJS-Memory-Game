@@ -375,6 +375,8 @@ function startNewGame() {
     hideDiv('#banner-6');
     hideDiv('#banner-7');
     hideDiv('#banner-8');
+    // REVIEW - TESTING IF THIS IS WHAT IS CAUSING PROBLEM WITH HIDDEN CONFETTI 2ND TIME THROUGH
+    unhideDiv('#confetti');
     targetDiv.classList.add(hiddenClass);
     refresh();
     startGame();
@@ -1111,6 +1113,8 @@ function confettiAnimator(confettiPiece) {
                 hideDiv('#confetti');
                 unhideDiv('#post-game-header-2');
                 unhideDiv('#contact-information');
+                // REVIEW -- testing hiding start-over button while animation running
+                unhideDiv('#reset');
             }, false);
         }
     board.confettiState = 'postConfetti';
