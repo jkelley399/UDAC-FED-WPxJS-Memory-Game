@@ -68,7 +68,7 @@ The high-level design of the project can be summarized as follows:
 *   there is a game board;
 *   the area surrounding the game board changes, depending on the state of play;
 *   the game board has representations of sixteen "cards" in a four-by-our grid;
-    *   initially, the cards are arranged face down;
+    *   initially, the cards are shuffled and arranged face down;
 *   the cards, when chosen are intended to reflect playing cards;
     *   for example, "AC" signifies the ace of clubs, and "2D" the two of diamonds;
 *   there are eight pairs of perfectly matching cards;
@@ -85,11 +85,15 @@ The high-level design of the project can be summarized as follows:
         *  if that limit is reached, the player is forced to start completely over;
 *   if all of the cards are succesfully matched before that pre-determined limit has been reached, the player is notified; and
     *   in this project, the player is also given the opportunity to begin the game again immediately.
-*   there is also an area above the game board providing statistics concerning the player's performance:
+*   there is also an area above the game board (sometimes called the "banner-dashboard," providing statistics concerning the player's performance:
     *   elapsed time;
     *   rating (starting with three stars and declining to one); and
     *   cumulative number of picks.
-    
+*   in addition, when the player successfully completes the game, a modal opens and provides the same statistics concerning the player's performance within the modal:
+    *   elapsed time;
+    *   rating (starting with three stars and declining to one); and
+    *   cumulative number of picks.
+
 ### Board Object
 
 The board object, `board`, is initialized from another object, `boardInitial`.  `board` maintains state information concerning the board and the state of play.  (In terms of possible future work on this project, I'd like to learn how to re-implement it with a true object-oriented architecture.  See: [REFACTOR](#refactor), below.)
@@ -113,7 +117,7 @@ The principal files are `index.html`, `rules.js`, and `styles.css`.  In addtion 
 ### Known Bugs or Implementation Problems
 
 *   Card sizes will vary for small viewports (e.g., < 375 width)
-*   The incorrect match animation shows the value of the second card (*i.e.*, the shown state) only momentarily.  
+*   The incorrect match animation shows the value of the second card (*i.e.*, the shown state) only momentarily.
     *   Need to figure out how to allow it to be displayed for a longer period of time.
 *   Game winning animation behavior will vary for very large viewports.
     *   There doesn't seem to be a particular size at which this behavior appears.
@@ -142,7 +146,7 @@ The principal files are `index.html`, `rules.js`, and `styles.css`.  In addtion 
 *   window.alert will interrupt the elapsed time in the banner-dashboard
 *   when playing through multiple times, the intervals do not reset correctly all of the time --- need to add to the initialization
 *   timer still not working properly following animation will
-   
+
 
 ### Implementation Problems
 
@@ -195,8 +199,21 @@ I wish to call out a few references that I relied upon in particular:
     *   [*Animating Many Elements and the Animate Method*](https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm)
 *   Regarding the banner-dashboard in general, and the use of (1) setInterval,and (2) clearInterval:
     *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval]
-    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval]    
-    
+    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval]
+
+#### References: banner-dashboard and setInterval and clearInterval
+
+*   Regarding the banner-dashboard in general, and the use of (1) setInterval, and (2) clearInterval, I relied on:
+    *   the [MDN documentation re setInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval) and
+    *   the [MDN documentation re clearInterval](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval)
+
+*   For debugging the elapsed time timer, and learning how to use setInterval and clearInterval more effectively, I relied on [a helpful stackoverflow post](https://stackoverflow.com/questions/14666924/clearinterval-not-working), consulted 2019-05-09, and especially the comment answered, Feb 2 '13 at 21:56 by Konstantin Dinev
+
+#### References: modal
+
+*   Regarding the modal, I relied on the Bootstrap documentation:
+    *   https://getbootstrap.com/docs/4.0/components/modal/,consulted 2019-05-09
+
 ## TODO
 
 In addition to fixing [known bugs and overcoming implementation problems](#known-bugs-or-implementation-problems),
@@ -238,10 +255,10 @@ In addition to fixing [known bugs and overcoming implementation problems](#known
     *   to create a better way to set end values in `for` loops (right now, simply fixed integers), and
     *   to revisit calculation of end of `for` loop based on current requirements for confettiAnimator(), or, alternatively,
         *   to use simpler randomizing mechanisms inside `confettiAnimator()`
- *   Explore something like [progress bars in bootstrap](https://getbootstrap.com/docs/4.0/components/progress/) 
+ *   Explore something like [progress bars in bootstrap](https://getbootstrap.com/docs/4.0/components/progress/)
  *   Control div sizes dynamically with window.innerHeight and window.innerWidth
  *   Figure out how to add a "fast testing" mode
- 
+
 ## LEARN
 
 *   Need to understand how to move functions into methods and have them work properly with animations.
