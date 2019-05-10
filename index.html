@@ -43,15 +43,6 @@
                             https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
                             I don't recall the first exact dates, but I estimate it was in 2018.  Also reviewed again on 2019-05-02 -->
                         <div class="border border-dark" id="dashboard-rating">
-                            <span>
-                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
-                            </span>
-                            <span>
-                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
-                            </span>
-                            <span>
-                                <i class="fa fa-1x fa-star" aria-hidden="true" title="Font Awesome icon one solid star."></i>
-                            </span>
                         </div>
                     </div>
                     <div class="col-3 m-1 border border-dark" id="banner-dashboard-moves">
@@ -97,19 +88,47 @@
                 <div class="row col-12 m-2 justify-content-center">
                     <h1>Hope you had fun!</h1>
                 </div>
-<!--                 REVIEW - NOT NECESSARY WITH START OVER BUTTON
-                <div class="row col-12 m-2 justify-content-center play-again">
-                    <button id="play-again-button" class="btn-outline-primary" type="submit">Click here to play again</button>
-                </div> -->
             </div>
+        </section>
+        <!-- REVIEW -->
+<!--    NOTE: Adding modal based on 1st code review and as suggested by first reviewer
+            based on https://getbootstrap.com/docs/4.0/components/modal/,
+            specifically, the "Live demo," and "Via JavaScript" sections
+            consulted 2019-05-09
+        -->
+        <section id="game-winning-modal-section">
+            <div class="modal fade" id="game-winning-modal-div" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="game-winning-modal-title">CONGRATULATIONS!</h3>
+                            <button id="game-winning-modal-button-close" class="close" data-dismiss="modal" aria-label="close" type="button">
+                            </button>
+                        </div>
+                        <div class="modal-body" id="game-winning-modal-content">
+                            <h5>Your elapsed time was:</h5>
+                            <h5 id="modal-elapsed-time"></h5>
+                            <h5>Your star rating was:</h5>
+                            <h5 id="modal-star-rating"></h5>
+                            <h5>Your total number of card picks was:</h5>
+                            <h5 id="modal-click-count"></h5>
+                            <h3 class="modal-body-content">
+                            Would you like to play again?</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Footer close</button>
+                            <button type="button" id="modal-play-again-button" class="btn btn-primary">Play again</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </section>
         <section id="too-many-clicks">
             <div id="max-card-click-count-exceeded" class="d-none">
                 <div class="row col-12 m-2 justify-content-center">
-                    <h1>Good try!</h1>
-                </div>
-                <div class="row col-12 m-2 justify-content-center play-again">
-                    <button id="too-many-clicks-button" class="btn-outline-primary" type="submit">Please click here to try again</button>
+                    <h1>You used too many clicks, but good try!</h1>
                 </div>
             </div>
         </section>

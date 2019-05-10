@@ -2,10 +2,10 @@
 
 // constants and other variables used throughout
 const playInput = document.querySelector('#pre-game-button');
-// REVIEW - NOT NECESSARY WITH START OVER BUTTON
-// const playAgainInput = document.querySelector('#play-again-button');
 const tooManyClicksInput = document.querySelector('#too-many-clicks-button');
 const resetInput = document.querySelector('#reset-button');
+// new input for modal
+const modalPlayAgainInput = document.querySelector('#modal-play-again-button');
 const boardFragment = document.createDocumentFragment();
 const confettiFragment = document.createDocumentFragment();
 const newRow = document.createElement('div');
@@ -31,24 +31,22 @@ let board = {};
 const elapsedTimeDiv = document.querySelector('#dashboard-elapsed-time');
 const ratingDiv = document.querySelector('#dashboard-rating');
 const clickCountDiv = document.querySelector('#dashboard-click-count');
-const threeStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>' +
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>'+
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>';
-const twoStarsInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>' +
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>';
 const oneStarInnerHTML = '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
-                          'title="Font Awesome icon one solid star."></i></span>' +
-                          '<span><i class="fa fa-1x fa-star" aria-hidden="true"' +
                           'title="Font Awesome icon one solid star."></i></span>';
+// based on https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat
+//     consulted 2019-05-09
+const twoStarsInnerHTML = oneStarInnerHTML.repeat(2);
+const threeStarsInnerHTML = oneStarInnerHTML.repeat(3);
+
 const twoStarsThreshold = .5; // its product with numberCards should be even
 const oneStarThreshold = .75; // its product with numberCards should be even
 const elapsedTimeInitialHTML = '0';
 const clickCountDivInitialHTML = '0';
+
+// constants for new game-winning modal
+const modalElapsedTime = document.querySelector('#modal-elapsed-time');
+const modalRating = document.querySelector('#modal-star-rating');
+const modalClickCount = document.querySelector('#modal-click-count');
 
 // variable for new user dashboard
 // NOTE: the click count for the dashboard comes from board.cardClickCount
@@ -192,6 +190,8 @@ function displayNextSecondInHHMMSS() {
 //          so, instead of using 1000ms, better value may be, e.g., 990ms
 function updateElapsedTime() {
         elapsedTimeDiv.innerHTML = displayNextSecondInHHMMSS();
+        // keeping modal in sync with dashboard
+        modalElapsedTime.innerHTML = elapsedTimeDiv.innerHTML;
 }
 
 // helper function
@@ -204,6 +204,7 @@ function updateElapsedTime() {
     //     Uses variable as parameter for clearInterval
 function stopElapsedTimeUpdate() {
     clearInterval(elapsedTimeInterval);
+    // console.log('clearInterval has been called - elapsedTime should freeze');
 }
 
 
@@ -314,7 +315,12 @@ function startGame() {
     unhideDiv('#banner-dashboard');
     unhideDiv('#banner-1');
     unhideDiv('#reset');
-    // create cares
+    // set up ratingDiv
+    ratingDiv.innerHTML = threeStarsInnerHTML;
+    //set up modal rating
+    modalRating.innerHTML = threeStarsInnerHTML;
+
+    // create cards
     makeCards();
 
     // CORE SECTION
@@ -375,9 +381,21 @@ function startNewGame() {
     hideDiv('#banner-6');
     hideDiv('#banner-7');
     hideDiv('#banner-8');
-    // REVIEW - TESTING IF THIS IS WHAT IS CAUSING PROBLEM WITH HIDDEN CONFETTI 2ND TIME THROUGH
     unhideDiv('#confetti');
     targetDiv.classList.add(hiddenClass);
+    // NOTE: Adding call to close game-winning-modal after having added it based on 1st code review
+    //          based on https://getbootstrap.com/docs/4.0/components/modal/,
+    //          specifically, the "Methods" sections
+    //          consulted 2019-05-09
+    // NOTE: using .hide is necessary, because clicking on the play button does not close modal
+    $('#game-winning-modal-div').modal('hide');
+    // NOTE: necessary to stop elapsedTimeInterval, because can continue to run after
+    //     start over button is clicked
+    stopElapsedTimeUpdate();
+    // NOTE: because of new test for creating elapsedTimeInterval, if it exists, reset it
+    if (elapsedTimeInterval) {
+        elapsedTimeInterval = undefined;
+    }
     refresh();
     startGame();
 }
@@ -391,6 +409,10 @@ function refresh() {
     elapsedTimeDiv.innerHTML = elapsedTimeInitialHTML;
     ratingDiv.innerHTML = threeStarsInnerHTML;
     clickCountDiv.innerHTML = clickCountDivInitialHTML;
+    //reset game-winning-modal to initial state
+    modalElapsedTime.innerHTML = elapsedTimeInitialHTML;
+    modalRating.innerHTML = threeStarsInnerHTML;
+    modalClickCount.innerHTML = clickCountDivInitialHTML;
 }
 
 // CARD CLICKING SECTION
@@ -477,8 +499,7 @@ function testMaxCorrectCardCount() {
 
 //  non-test mode part of function begins here
 // NOTE: for testing and debugging, adjust numberCards to (0.25 * numberCards)
-// REVIEW --- set test back to (board.cardMatchCount  >= numberCards)
-    if (board.cardMatchCount  >= (0.25 * numberCards)) {
+    if (board.cardMatchCount  >= numberCards) {
         stopElapsedTimeUpdate();
         hideDiv('#pre-game');
         hideDiv('#banner-1');
@@ -505,6 +526,8 @@ function iterateCardClickCount() {
     board.cardClickCount += 1;
     // console.log('after increment ' + board.cardClickCount);
     clickCountDiv.innerHTML = board.cardClickCount;
+    // keeping modal in sync with dashboard
+    modalClickCount.innerHTML = clickCountDiv.innerHTML;
 }
 
 
@@ -514,12 +537,16 @@ function testStarRating() {
             numberCards)) && (board.ratingStars == 2)) {
         board.ratingStars = 1;
         ratingDiv.innerHTML = oneStarInnerHTML;
+        // keeping modal in sync with dashboard
+        modalRating.innerHTML = oneStarInnerHTML;
         window.alert('You have one star left in the ratings.  Keep going!');
 
     }   else if ((board.cardClickCount  >= (twoStarsThreshold *
             maxNumberCardsMultiplier * numberCards)) && (board.ratingStars == 3)) {
         board.ratingStars = 2;
         ratingDiv.innerHTML = twoStarsInnerHTML;
+        // keeping modal in sync with dashboard
+        modalRating.innerHTML = twoStarsInnerHTML;
         window.alert('You have two stars left.  You can still finish well!');
     }   else {
             console.log('');
@@ -550,8 +577,9 @@ function testMaxCardClickCount() {
             'You have only ' + ((maxNumberCardsMultiplier * numberCards) - board.cardClickCount) +
             ' tries left, before the game will start over.')
     }   else  {
-            console.log('board.cardClickCount still less than ' +
-                '((0.75 * maxNumberCardsMultiplier) * numberCards)');
+            console.log('');
+            // console.log('board.cardClickCount still less than ' +
+            //     '((0.75 * maxNumberCardsMultiplier) * numberCards)');
     }
 }
 
@@ -582,6 +610,8 @@ function onMouseClickNEW(evt) {
         // if first card clicked and elapsedTimeDiv.innerHTML == '',
         //  then begin setInterval for elapsed time, which will be displayed
         //  in new user dashboard
+
+        // to keep elapsed time from starting when clicking a button
         if (elapsedTimeDiv.innerHTML == elapsedTimeInitialHTML) {
             // constant for setInterval for elapsed time display in new user dashboard
             // NOTE: for testing, convenient to set ms from 1000 to 10
@@ -591,7 +621,18 @@ function onMouseClickNEW(evt) {
                     //     Return value identifies the timer created.
                     // NOTE: See "Example 2: Alternating two colors"
                     //     Uses variable as parameter for clearInterval
-            elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
+            // NOTE: Adding new test to prevent setting multiple intervals, which can be
+            // difficult to stop
+            // NOTE: based on
+            // https://stackoverflow.com/questions/14666924/clearinterval-not-working
+            // consulted 2019-05-09
+            //     I relied upon this, and especially the comment answered
+            //     Feb 2 '13 at 21:56 by Konstantin Dinev
+            if (elapsedTimeInterval == undefined) {
+                elapsedTimeInterval = setInterval(updateElapsedTime, 1000);
+            } else {
+                console.log('elapsedTimeInterval already set, so no new interval')
+            }
         }
     } else {
         // Adding new follow-on test based upon change to primary test.
@@ -1113,8 +1154,13 @@ function confettiAnimator(confettiPiece) {
                 hideDiv('#confetti');
                 unhideDiv('#post-game-header-2');
                 unhideDiv('#contact-information');
-                // REVIEW -- testing hiding start-over button while animation running
+                // TODO: maybe test hiding start-over button while animation running
                 unhideDiv('#reset');
+                // NOTE: Adding call to modal based on 1st code review and as suggested by first reviewer
+                //          based on https://getbootstrap.com/docs/4.0/components/modal/,
+                //          specifically, the "Live demo," and "Via JavaScript" sections
+                //          consulted 2019-05-09
+                $('#game-winning-modal-div').modal('show');
             }, false);
         }
     board.confettiState = 'postConfetti';
@@ -1165,12 +1211,10 @@ targetDiv.addEventListener('mouseover', onMouseOverCard);
 
 targetDiv.addEventListener('click', onMouseClickNEW, true);
 
-// REVIEW - NOT NECESSARY WITH START OVER BUTTON
-// playAgainInput.addEventListener('click', startNewGame);
-
-tooManyClicksInput.addEventListener('click', startNewGame);
-
 resetInput.addEventListener('click', startNewGame);
+
+// new for modal
+modalPlayAgainInput.addEventListener('click', startNewGame);
 
 /*
 1.  I consulted a variety of other sources in connection with this project.
@@ -1189,9 +1233,16 @@ resetInput.addEventListener('click', startNewGame);
         https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm
         I don't recall the exact date, but I can probably estimate it if necessary.
     C.  NOTE-C: Regarding the banner-dashboard in general, and the use of (1) setInterval,
-            and (2) clearInterval:
+                and (2) clearInterval:
                 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
                 https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval
+        FURTHER NOTE: for debugging the timer, and learning how to use setInterval and clearInterval
+                        more effectively:
+                        https://stackoverflow.com/questions/14666924/clearinterval-not-working
+                        consulted 2019-05-09
+                I relied upon this, and especially the comment answered
+                Feb 2 '13 at 21:56 by Konstantin Dinev in debugging the elapsed time
+                functionality.
     D.  NOTE-C:   When running an earlier version of "The Memory Game"
                 in Chrome 72.0.3626.121 (Official Build) (64-bit),
                 I repeatedly got the following error message in the DevTools console:

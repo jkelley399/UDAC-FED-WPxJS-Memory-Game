@@ -39,6 +39,7 @@ https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/id
 MDN: JavaScript
 https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Return_values
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat
 https://developer.mozilla.org/en-US/docs/Web/API/Animation
 https://developer.mozilla.org/en-US/docs/Web/API/Animation/onfinish
 https://developer.mozilla.org/en-US/docs/Web/API/Console/time
@@ -136,6 +137,10 @@ https://stackoverflow.com/questions/54619817/how-to-fix-unchecked-runtime-laster
                 "Unchecked runtime.lastError: Could not establish connection.
                 Receiving end does not exist."
             Based on the above StackOverflow post, I tried toggling my Chrome extensions, and, when I inactivated the "Udacity Front End Feedback" Chrome extension, the error message disappeared.
+
+https://stackoverflow.com/questions/14666924/clearinterval-not-working
+    consulted 2019-05-09
+    NOTE:   I relied upon this, and especially the comment answered Feb 2 '13 at 21:56 by   Konstantin Dinev in debugging the elapsed time functionality.
 
 
 
