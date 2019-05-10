@@ -208,8 +208,7 @@ I wish to call out a few references that I relied upon in particular:
 
 #### References: modal
 
-*   Regarding the modal, I relied on the Bootstrap documentation:
-    *   https://getbootstrap.com/docs/4.0/components/modal/,consulted 2019-05-09
+*   Regarding the modal, I relied on the [Bootstrap modal documentation](https://getbootstrap.com/docs/4.0/components/modal/),consulted 2019-05-09
 
 ## TODO
 
