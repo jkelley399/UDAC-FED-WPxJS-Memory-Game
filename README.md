@@ -197,9 +197,6 @@ I wish to call out a few references that I relied upon in particular:
     *   [*CSS Animations vs Web Animations API*](https://css-tricks.com/css-animations-vs-web-animations-api/)
 *   Regarding animating multiple elements, especially:
     *   [*Animating Many Elements and the Animate Method*](https://www.kirupa.com/html5/animating_multiple_elements_animate_method.htm)
-*   Regarding the banner-dashboard in general, and the use of (1) setInterval,and (2) clearInterval:
-    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval]
-    *   [https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setInterval]
 
 #### References: banner-dashboard and setInterval and clearInterval
 
